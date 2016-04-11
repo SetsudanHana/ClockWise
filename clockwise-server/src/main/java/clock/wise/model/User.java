@@ -18,23 +18,15 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private Role role;
-    private boolean expired;
-    private boolean locked;
-    private boolean enabled;
-    private boolean credentialExpired;
 
     protected User() {
 
     }
 
-    public User(String username, String password, Role role, boolean expired, boolean locked, boolean enabled, boolean credentialExpired) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.expired = expired;
-        this.locked = locked;
-        this.enabled = enabled;
-        this.credentialExpired = credentialExpired;
     }
 
     @Override
@@ -54,21 +46,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return !expired;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !locked;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return !credentialExpired;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return true;
     }
 }

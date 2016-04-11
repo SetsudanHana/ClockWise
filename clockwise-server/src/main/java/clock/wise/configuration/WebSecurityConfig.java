@@ -64,11 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             log.info("Creating SUPER ADMIN user");
             User superAdmin = new User(superUserUsername,
                     encoder.encode(superUserPassword),
-                    Role.ROLE_SUPER_ADMIN,
-                    false,
-                    false,
-                    true,
-                    false);
+                    Role.ROLE_SUPER_ADMIN);
             userDao.save(superAdmin);
         }
     }
