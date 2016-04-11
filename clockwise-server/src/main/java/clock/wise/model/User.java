@@ -17,15 +17,17 @@ public class User implements UserDetails {
     private long id;
     private String username;
     private String password;
+    private String email;
     private Role role;
 
     protected User() {
 
     }
 
-    public User(String username, String password, Role role) {
+    public User(String username, String password, String email, Role role) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.role = role;
     }
 
@@ -42,6 +44,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     @Override
