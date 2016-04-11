@@ -4,13 +4,15 @@ import clock.wise.dao.UserDao;
 import clock.wise.model.User;
 import clock.wise.model.User_;
 import clock.wise.model.roles.Role;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 
-public abstract class UserDaoImpl extends GenericDaoImpl< User, Long > implements UserDao
+@Repository
+public class UserDaoImpl extends GenericDaoImpl< User, Long > implements UserDao
 {
     @PersistenceContext
     protected EntityManager entityManager;
