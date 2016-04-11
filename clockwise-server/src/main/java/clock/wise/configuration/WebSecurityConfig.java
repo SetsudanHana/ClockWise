@@ -30,6 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private String superUserUsername;
     @Value("${default.superadmin.password}")
     private String superUserPassword;
+    @Value("${default.superadmin.email}")
+    private String superUserEmail;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -51,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService()).passwordEncoder(encoder);
+        checkAndCreateSuperAdmin();
     }
 
     @Override
@@ -63,11 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             log.info("Creating SUPER ADMIN user");
             User superAdmin = new User(superUserUsername,
                     encoder.encode(superUserPassword),
-                    Role.ROLE_SUPER_ADMIN,
-                    false,
-                    false,
-                    true,
-                    false);
+                    superUserEmail,
+                    Role.ROLE_SUPER_ADMIN);
             userDao.save(superAdmin);
         }
     }
