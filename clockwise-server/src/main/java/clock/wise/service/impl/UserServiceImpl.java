@@ -38,4 +38,22 @@ public class UserServiceImpl implements UserService
         return userDto;
     }
 
+    @Override
+    public UserDto getUser( long id )
+    {
+        return null;
+    }
+
+    @Override
+    public UserDto updateUser( UserDto userDto )
+    {
+        return null;
+    }
+
+    @Override
+    public UserDto removeUser( long id )
+    {
+        return null;
+    }
+
 }
