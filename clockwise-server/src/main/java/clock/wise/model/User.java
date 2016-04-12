@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "Users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "email"}))
 public class User implements UserDetails {
 
     @Id
@@ -44,6 +44,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getEmail() {
