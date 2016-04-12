@@ -1,8 +1,12 @@
 package clock.wise.dtos;
 
-/**
- * Created by Gniewko on 2016-04-11.
- */
-public class UserDto
-{
+import clock.wise.model.roles.Role;
+
+public class UserDto {
+
+    private long id;
+    private String username;
+    private String email;
+    private Role role;
+
 }
