@@ -4,7 +4,6 @@ import {Row, Input, Button, Col, Alert} from 'react-bootstrap';
 class Login extends React.Component {
 	render() {
 		const {error} = this.props;
-		console.log(error);
 		return (
 			<Row>
 				<Col xs={6} md={4}>
@@ -24,7 +23,7 @@ class Login extends React.Component {
 		e.preventDefault();
 		const {loginUser} = this.props;
 		const {login, password} = this.refs;
-		loginUser(login.value, password.value);
+		loginUser(login.refs.input.value, password.refs.input.value);
 		login.value = '';
 		password.value = '';
 	}
