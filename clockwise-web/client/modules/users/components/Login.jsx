@@ -1,16 +1,19 @@
 import React from 'react';
+import {Row, Input, ButtonInput, Col} from 'react-bootstrap';
 
 class Login extends React.Component {
 	render() {
 		return (
-			<div>
-				<h1>Login</h1>
-				<form>
-					<input ref="email" type="email" placeholder="Email" />
-					<input ref="password" type="password" placeholder="Password" />
-					<button type="submit">Login</button>
-				</form>
-			</div>
+			<Row>
+				<Col xs={6} md={4}>
+					<h1>Login</h1>
+					<form>
+						<Input type="text" label="Text" placeholder="Enter text" />
+	    				<Input type="password" label="Password" />
+	    				<ButtonInput bsStyle="primary" type="submit" value="Zaloguj" />
+					</form>
+				</Col>
+			</Row>
 		);
 	}
 }
