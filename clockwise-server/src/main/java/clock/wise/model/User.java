@@ -20,7 +20,7 @@ public class User implements UserDetails {
     private String email;
     private Role role;
 
-    protected User() {
+    public User() {
 
     }
 
