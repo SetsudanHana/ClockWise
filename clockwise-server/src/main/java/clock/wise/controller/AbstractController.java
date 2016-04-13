@@ -5,6 +5,8 @@ import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -65,6 +67,22 @@ public abstract class AbstractController
     @ExceptionHandler( IndexOutOfBoundsException.class )
     @ResponseStatus( value = HttpStatus.BAD_REQUEST )
     protected ErrorDto handleIndexOutOfBoundsException( IndexOutOfBoundsException ex )
+    {
+        logger.error( "Exception: " + ex.getMessage() );
+        return new ErrorDto( ex );
+    }
+
+    @ExceptionHandler( UsernameNotFoundException.class )
+    @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    protected ErrorDto handleUsernameNotFoundException( UsernameNotFoundException ex )
+    {
+        logger.error( "Exception: " + ex.getMessage() );
+        return new ErrorDto( ex );
+    }
+
+    @ExceptionHandler( BadCredentialsException.class )
+    @ResponseStatus( value = HttpStatus.UNAUTHORIZED )
+    protected ErrorDto handleBadCredentialsException( BadCredentialsException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
         return new ErrorDto( ex );
