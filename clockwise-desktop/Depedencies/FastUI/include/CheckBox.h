@@ -10,6 +10,7 @@ namespace FastUI
 		virtual ~CheckBox() = default;
 
 		bool isChecked() { return Checked; }
+		void setChecked(bool Check) { Checked = Check; }
 
 		virtual void onDraw(Renderer& GraphicsRenderer) override;
 

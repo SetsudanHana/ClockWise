@@ -16,7 +16,7 @@ namespace FastUI
 		virtual void invalidate();
 
 		void setParent(Window* ParentWindow);
-
+		void notifyChangeVisibility();
 	private:
 		Window* Parent;
 	};

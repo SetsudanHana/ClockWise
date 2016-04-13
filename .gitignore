@@ -1,0 +1,11 @@
+clockwise-server/build/tmp/jar/MANIFEST.MF
+clockwise-server/build/libs/clockwise-server-0.1.0.jar
+*.original
+clockwise-server/build/classes/main/clock/wise/model/roles/Role.class
+*.class
+clockwise-server/application.properties
+*.properties
+clockwise-server/application.properties
+*.lock
+clockwise-server/.gradle/2.3/taskArtifacts/fileHashes.bin
+*.bin

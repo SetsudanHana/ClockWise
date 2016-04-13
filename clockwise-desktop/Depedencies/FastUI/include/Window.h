@@ -28,6 +28,7 @@ namespace FastUI
 		const Color& getBackgroundColor();
 		void setBackgroundColor(const Color& NewColor);
 		virtual void invalidate() override;
+		void notifyChangeVisibility();
 
 	protected:
 		virtual void onDraw(Renderer& GraphicsRenderer) override;
@@ -48,7 +49,6 @@ namespace FastUI
 
 	private:
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
 		static HWND hWnd;
 		static Window* MainWindow;
 	};

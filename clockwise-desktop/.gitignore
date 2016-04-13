@@ -11,12 +11,6 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
 bld/
 [Bb]in/
 [Oo]bj/
@@ -51,6 +45,7 @@ artifacts/
 *.meta
 *.obj
 *.pch
+*.idb
 *.pdb
 *.pgc
 *.pgd
@@ -68,6 +63,7 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
+*.lastbuildstate
 
 # Chutzpah Test files
 _Chutzpah*
@@ -250,3 +246,6 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+#build logs
+*.1.tlog

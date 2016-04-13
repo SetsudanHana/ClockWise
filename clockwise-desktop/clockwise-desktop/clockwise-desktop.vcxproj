@@ -155,9 +155,12 @@
     <ClInclude Include="Authentication.h" />
     <ClInclude Include="clockwise-desktop.h" />
     <ClInclude Include="Clockwise.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="LoginView.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ServiceCommunicator.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StringUtility.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="WorkView.h" />
@@ -167,6 +170,7 @@
     <ClCompile Include="Authentication.cpp" />
     <ClCompile Include="clockwise-desktop.cpp" />
     <ClCompile Include="LoginView.cpp" />
+    <ClCompile Include="ServiceCommunicator.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

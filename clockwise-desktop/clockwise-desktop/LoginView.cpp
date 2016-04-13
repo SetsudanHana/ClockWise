@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "LoginView.h"
 #include "Authentication.h"
+#include "Config.h"
 
 using namespace FastUI;
 
@@ -8,10 +9,12 @@ LoginView::LoginView(Authentication& AuthSystem) : AuthenticationSystem(AuthSyst
 {
 	LoginTextBox = new TextBox(FastUI::Rect{ 35.0f, 175.0f, 315.0f, 225.0f }, L"Login");
 	PasswordTextBox = new PasswordBox(FastUI::Rect{ 35.0f, 240.0f, 315.0f, 290.0f }, L"Password");
+	RememberMeCheckBox = new CheckBox(FastUI::Rect{ 95.0f, 400.0f, 315.0f, 415.0f }, L"Remember Me");
+
 	LoginTextBox->setTextColor(Color(0.25f, 0.25f, 0.25f, 1.0f));
 	PasswordTextBox->setTextColor(Color(0.25f, 0.25f, 0.25f, 1.0f));
+	fillCredentialsFromSettings();
 
-	RememberMeCheckBox = new CheckBox(FastUI::Rect{ 95.0f, 400.0f, 315.0f, 415.0f }, L"Remember Me");
 	FailedLoginInfo = new Label(FastUI::Rect{ 35.0f, 120.0f, 315.0f, 140.0f }, L"Login failed!");
 	SignInButton = new Button(FastUI::Rect{ 35.0f, 335.0f, 315.0f, 380.0f }, L"Sign In");
 	SignInButton->addEventHandler(Event::Click, [this](const Event& EventData)
@@ -25,7 +28,7 @@ LoginView::LoginView(Authentication& AuthSystem) : AuthenticationSystem(AuthSyst
 		}
 		else
 		{
-			setVisible(false);
+			onSuccesfullLogin();
 		}
 	});
 
@@ -53,4 +56,34 @@ void LoginView::hideFailedLoginInfo()
 	//LoginTextBox->resetColors();
 	//PasswordTextBox->resetColors();
 	FailedLoginInfo->setVisible(false);
+}
+
+void LoginView::onSuccesfullLogin()
+{
+	if (RememberMeCheckBox->isChecked())
+	{
+		Config UserSettings;
+		UserSettings.set("username", LoginTextBox->getText());
+		UserSettings.set("password", PasswordTextBox->getText());
+		UserSettings.set("remember_me", true);
+		UserSettings.save(UserConfigFilename);
+	}
+	else
+	{
+		Config UserSettings;
+		UserSettings.save(UserConfigFilename); //This will truncate settings file
+	}
+
+	setVisible(false);
+}
+
+void LoginView::fillCredentialsFromSettings()
+{
+	Config UserSettings;
+	if (UserSettings.open(UserConfigFilename))
+	{
+		LoginTextBox->setText(UserSettings.getWString("username"));
+		PasswordTextBox->setText(UserSettings.getWString("password"));
+		RememberMeCheckBox->setChecked(UserSettings.getBool("remember_me"));
+	}
 }

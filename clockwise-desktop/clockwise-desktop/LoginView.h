@@ -8,9 +8,12 @@ class LoginView : public FastUI::View
 public:
 	LoginView(Authentication& AuthSystem);
 
+
 private:
 	void displayFailedLoginInfo();
 	void hideFailedLoginInfo();
+	void onSuccesfullLogin();
+	void fillCredentialsFromSettings();
 
 	Authentication& AuthenticationSystem;
 
@@ -19,4 +22,6 @@ private:
 	FastUI::PasswordBox* PasswordTextBox;
 	FastUI::CheckBox* RememberMeCheckBox;
 	FastUI::Label* FailedLoginInfo;
+
+	const std::string UserConfigFilename = "user_settings.cfg";
 };

@@ -1,20 +1,21 @@
 #include "stdafx.h"
 #include "Authentication.h"
 #include "User.h"
-
-#include <cpprest/http_client.h>
-#include <cpprest/filestream.h>
+#include "ServiceCommunicator.h"
+#include "StringUtility.h"
 #include <string>
+#include <cpprest\json.h>
 
-using namespace utility;                    // Common utilities like string conversions
-using namespace web;                        // Common features like URIs.
-using namespace web::http;                  // Common HTTP functionality
-using namespace web::http::client;          // HTTP client features
-using namespace concurrency::streams;       // Asynchronous streams
+using namespace web;
 
-Authentication::Authentication() : LoggedUser(nullptr)
+Authentication::Authentication(ServiceCommunicator& serviceCommunicator) : LoggedUser(nullptr), communicator(serviceCommunicator)
 {
 
+}
+
+Authentication::~Authentication()
+{
+	logout();
 }
 
 User* Authentication::getUser()
@@ -27,56 +28,64 @@ User* Authentication::login(const std::wstring& Username, const std::wstring& Pa
 #ifdef _DEBUG
 	if (Username == L"test" && Password == L"test")
 	{
-		LoggedUser = new User(Username);
+		LoggedUser = new User(Username, L"Username@mail.com", L"TestRole");
 		return LoggedUser;
 	}
 #endif
 
-	post();
+	json::value user;
+	user[L"username"] = json::value::string(Username);
+	user[L"password"] = json::value::string(Password);
+
+	try
+	{
+		auto loginResponse = communicator.unauthenticatedRequest(web::http::methods::POST, user, "api/authenticate");
+
+		if(loginResponse.has_field(L"token"))
+		{
+			SessionCode = StringUtility::ws2s(loginResponse[L"token"].as_string());
+			communicator.registerAuthenticationSystem(*this);
+
+			json::value jsonUsername;
+			jsonUsername[L"username"] = json::value::string(Username);
+			auto userResponse = communicator.request(web::http::methods::GET, jsonUsername, "api/users");
+
+			if (userResponse.has_field(L"username"))
+			{
+				return LoggedUser = new User(userResponse);
+			}
+			else
+			{
+				return nullptr;
+			}
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+	catch (const std::exception& e)
+	{
+		return nullptr;
+	}
 
 	return nullptr;
 }
 
-std::wstring s2ws(const std::string& str)
-{
-	int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
-	std::wstring wstrTo(size_needed, 0);
-	MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
-	return wstrTo;
-}
-
-void Authentication::post()
-{
-	http_client client(U("http://localhost:8080/"));
-
-	json::value user;
-	user[L"Username"] = json::value::string(U("superadmin"));
-	user[L"Password"] = json::value::string(U("123234345b"));
-
-	http_request request(methods::POST);
-	request.headers().set_content_type(L"application/json");
-	request.set_request_uri(U("login"));
-	request.set_body(user);
-
-	auto response = client.request(request)
-		.then([](http_response response) {
-		return response.extract_string();
-	});
-
-	try
-	{
-		response.wait();
-	}
-	catch (const std::exception &e)
-	{
-		OutputDebugStringA((std::string("Error exception: ") + e.what() + std::string("\n")).c_str());
-	}
-
-	return;
-}
-
 void Authentication::logout()
 {
+	try
+	{
+		communicator.request(web::http::methods::POST, web::json::value(), "api/invalidatetoken");
+	}
+	catch (const std::exception& e)
+	{
+		OutputDebugStringA("Couldn't logout");
+	}
+
+	communicator.unregisterAuthenticationSystem();
+
+	SessionCode = "";
 	delete LoggedUser;
 	LoggedUser = nullptr;
 }

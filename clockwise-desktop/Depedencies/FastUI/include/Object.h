@@ -25,7 +25,7 @@ namespace FastUI
 		virtual void onFocus();
 		virtual void onFocusLost();
 
-		void setVisible(bool IsVisible);
+		virtual void setVisible(bool IsVisible);
 
 	protected:
 		virtual void onCreate();
