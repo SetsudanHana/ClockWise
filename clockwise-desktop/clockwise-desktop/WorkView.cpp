@@ -35,6 +35,7 @@ void WorkView::onCreate()
 	{
 		AuthenticationSystem.logout();
 		LogInView.setVisible(true);
+		Created = false;
 	});
 
 	addControl(*BottomRect);

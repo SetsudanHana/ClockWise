@@ -30,6 +30,7 @@ namespace FastUI
 			invalidate();
 		}	
 
+		void close();
 		void invalidate() override;
 		void setParent(ViewContainer* NewParent);
 		virtual void setVisible(bool IsVisible) override;
