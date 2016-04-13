@@ -8,10 +8,14 @@ export default {
       return LocalState.set('LOGIN_ERROR', 'Hasło jest wymagane.');
     }
 
-    LocalState.set('LOGIN_ERROR', null);
+    const {responseToken} = Meteor.subscribe('user.login', login, password);
+    if(responseToken) {
+      FlowRouter.go('/dashboard');
+    } else {
+      return LocalState.set('LOGIN_ERROR', 'Problem przy logowaniu.');
+    }
 
-    // Meteor.loginWithPassword(login, password);
-    // FlowRouter.go('/');
+    LocalState.set('LOGIN_ERROR', null);
   },
 
   clearErrors({LocalState}) {

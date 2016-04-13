@@ -15,4 +15,13 @@ export default function (injectDeps, {FlowRouter}) {
 			});
 		}
 	});
+
+	FlowRouter.route('/dashboard', {
+		name: 'main.dashboard',
+		action() {
+			mount(MainLayoutCtx, {
+				content: () => (<h1>Success</h1>)
+			});
+		}
+	});
 }

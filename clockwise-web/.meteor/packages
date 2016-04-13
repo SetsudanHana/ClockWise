@@ -19,3 +19,4 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 static-html
 kadira:flow-router-ssr
 twbs:bootstrap
+http
