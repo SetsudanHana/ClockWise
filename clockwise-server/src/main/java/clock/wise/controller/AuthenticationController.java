@@ -5,7 +5,6 @@ import clock.wise.dtos.UserFormDto;
 import clock.wise.service.impl.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +24,7 @@ public class AuthenticationController extends AbstractController {
 
     @RequestMapping(value = "/invalidatetoken", method = RequestMethod.POST)
     public void invalidateToken() {
-        authenticationService.invalidateToken((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        authenticationService.invalidateToken((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
 }

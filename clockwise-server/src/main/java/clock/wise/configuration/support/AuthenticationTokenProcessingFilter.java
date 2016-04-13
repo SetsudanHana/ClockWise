@@ -3,7 +3,6 @@ package clock.wise.configuration.support;
 
 import clock.wise.configuration.support.interfaces.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,8 +21,6 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
     @Autowired
     TokenUtils tokenUtils;
-    @Autowired
-    AuthenticationManager authManager;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
@@ -40,10 +37,10 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
                 UserDetails userDetails = tokenUtils.getUserFromToken(token);
                 // build an Authentication object with the user's info
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword());
+                        new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) request));
                 // set the authentication into the SecurityContext
-                SecurityContextHolder.getContext().setAuthentication(authManager.authenticate(authentication));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
         // continue thru the filter chain

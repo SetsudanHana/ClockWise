@@ -8,7 +8,6 @@ import clock.wise.model.User;
 import clock.wise.service.impl.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,8 +39,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void invalidateToken(UserDetails userDetails) {
-        tokenUtils.invalidateToken(userDetails);
+    public void invalidateToken(String username) {
+        tokenUtils.invalidateToken(userDao.findOneByUsername(username));
     }
 
 }
