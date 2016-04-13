@@ -1,7 +1,7 @@
 package clock.wise.service.impl;
 
-import clock.wise.dtos.TokenDto;
-import clock.wise.dtos.UserFormDto;
+import clock.wise.dto.TokenDto;
+import clock.wise.dto.UserFormDto;
 
 public interface AuthenticationService {
 

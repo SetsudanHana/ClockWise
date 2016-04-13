@@ -1,4 +1,4 @@
-package clock.wise.dtos;
+package clock.wise.dto;
 
 public class UserFormDto {
 

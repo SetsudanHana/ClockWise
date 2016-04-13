@@ -1,7 +1,7 @@
 package clock.wise.controller;
 
-import clock.wise.dtos.TokenDto;
-import clock.wise.dtos.UserFormDto;
+import clock.wise.dto.TokenDto;
+import clock.wise.dto.UserFormDto;
 import clock.wise.service.impl.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
