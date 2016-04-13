@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService
     @Transactional
     public List< UserDto > findAll()
     {
-        List<UserDto> userDtoList = new ArrayList<UserDto>();
+        List< UserDto > userDtoList = new ArrayList<>();
 
         Iterable< User > users = userDao.findAll();
         for ( User user : users )
