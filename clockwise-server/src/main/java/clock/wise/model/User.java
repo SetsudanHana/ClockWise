@@ -9,22 +9,24 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "Users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "email"}))
-public class User implements UserDetails {
+@Table( name = "Users", uniqueConstraints = @UniqueConstraint( columnNames = { "username", "email" } ) )
+public class User implements UserDetails
+{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue( strategy = GenerationType.AUTO )
+    private Long id;
     private String username;
     private String password;
     private String email;
     private Role role;
 
-    public User() {
-
+    public User()
+    {
     }
 
-    public User(String username, String password, String email, Role role) {
+    public User( String username, String password, String email, Role role )
+    {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -32,61 +34,84 @@ public class User implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(role);
+    public Collection< ? extends GrantedAuthority > getAuthorities()
+    {
+        return Collections.singletonList( role );
     }
 
     @Override
-    public String getPassword() {
+    public String getPassword()
+    {
         return password;
     }
 
     @Override
-    public String getUsername() {
+    public String getUsername()
+    {
         return username;
     }
 
-    public long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public String getEmail() {
+    public String getEmail()
+    {
         return email;
     }
 
-    public Role getRole() {
+    public Role getRole()
+    {
         return role;
     }
 
-    public void setEmail(String email) {
+    public void setEmail( String email )
+    {
         this.email = email;
     }
 
-    public void setPassword(String password) {
+    public void setPassword( String password )
+    {
         this.password = password;
     }
 
-    public void setRole(Role role) {
+    public void setRole( Role role )
+    {
         this.role = role;
     }
 
+    public void setId( Long id )
+    {
+        this.id = id;
+    }
+
+    public void setUsername( String username )
+    {
+        this.username = username;
+    }
+
     @Override
-    public boolean isAccountNonExpired() {
+    public boolean isAccountNonExpired()
+    {
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked() {
+    public boolean isAccountNonLocked()
+    {
         return true;
     }
 
     @Override
-    public boolean isCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired()
+    {
         return true;
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled()
+    {
         return true;
     }
 }

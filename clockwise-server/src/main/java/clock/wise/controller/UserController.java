@@ -1,8 +1,7 @@
 package clock.wise.controller;
 
-import clock.wise.dtos.UserDto;
+import clock.wise.dto.UserDto;
 import clock.wise.service.UserService;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +14,35 @@ public class UserController extends AbstractController
     private UserService userService;
 
     @RequestMapping( method = RequestMethod.POST )
-    public UserDto addUser( @RequestBody final UserDto userDto ) throws MessagingException
+    @ResponseStatus( HttpStatus.CREATED )
+    public UserDto createUser( @RequestBody final UserDto userDto )
     {
-        return userService.addUser( userDto );
+        return userService.createOrUpdateUser( userDto );
+    }
+
+    @RequestMapping( value = "/{id}", method = RequestMethod.GET )
+    public UserDto findById( @PathVariable( "id" ) final Long id )
+    {
+        return userService.findById( id );
+    }
+
+    @RequestMapping( method = RequestMethod.GET )
+    public UserDto findByUsername( @RequestParam( value = "username" ) final String username )
+    {
+        return userService.findByUsername( username );
+    }
+
+    @RequestMapping( value = "/{id}", method = RequestMethod.PUT )
+    public UserDto updateUser( @PathVariable( "id" ) final Long id, @RequestBody final UserDto userDto )
+    {
+        userDto.setId( id );
+        return userService.createOrUpdateUser( userDto );
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.DELETE )
     @ResponseStatus( HttpStatus.NO_CONTENT )
-    public void deleteUser( @PathVariable( "id" ) final Long id )
+    public void removeUser( @PathVariable( "id" ) final Long id )
     {
-
+        userService.removeUser( id );
     }
 }

@@ -1,4 +1,4 @@
-package clock.wise.dtos;
+package clock.wise.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

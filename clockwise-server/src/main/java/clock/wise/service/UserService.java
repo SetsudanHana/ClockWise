@@ -1,17 +1,17 @@
 package clock.wise.service;
 
-import clock.wise.dtos.UserDto;
+import clock.wise.dto.UserDto;
+import clock.wise.model.roles.Role;
 
-/**
- * Created by Gniewko on 2016-04-12.
- */
 public interface UserService
 {
-    UserDto addUser(final UserDto userDto);
+    UserDto createOrUpdateUser( final UserDto userDto );
 
-    UserDto getUser( long id);
+    UserDto findById( Long id );
 
-    UserDto updateUser(UserDto userDto);
+    UserDto findByUsername( String username );
 
-    UserDto removeUser(long id);
+    UserDto findByRole( Role role );
+
+    void removeUser( Long id );
 }

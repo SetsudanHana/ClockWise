@@ -6,9 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface UserDao extends CrudRepository< User, Long >
 {
-
     User findOneByUsername( String username );
 
     User findOneByRole( Role role );
-
 }
