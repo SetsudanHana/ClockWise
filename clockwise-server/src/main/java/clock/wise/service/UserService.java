@@ -3,6 +3,8 @@ package clock.wise.service;
 import clock.wise.dto.UserDto;
 import clock.wise.model.roles.Role;
 
+import java.util.List;
+
 public interface UserService
 {
     UserDto createOrUpdateUser( final UserDto userDto );
@@ -12,6 +14,8 @@ public interface UserService
     UserDto findByUsername( String username );
 
     UserDto findByRole( Role role );
+
+    List<UserDto> findAll();
 
     void removeUser( Long id );
 }

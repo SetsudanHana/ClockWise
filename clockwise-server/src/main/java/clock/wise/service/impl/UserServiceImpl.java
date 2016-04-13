@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService
 {
@@ -67,6 +70,22 @@ public class UserServiceImpl implements UserService
         }
 
         return modelMapper.map( userDao.findOneByRole( role ), UserDto.class );
+    }
+
+    @Override
+    @Transactional
+    public List< UserDto > findAll()
+    {
+        List< UserDto > userDtoList = new ArrayList<>();
+
+        Iterable< User > users = userDao.findAll();
+        for ( User user : users )
+        {
+            UserDto userDto = modelMapper.map( user, UserDto.class );
+            userDtoList.add( userDto );
+        }
+
+        return userDtoList;
     }
 
     @Override
