@@ -1,19 +1,23 @@
 package clock.wise.configuration;
 
+import clock.wise.configuration.support.AuthenticationTokenProcessingFilter;
+import clock.wise.configuration.support.TokenAuthenticationEntryPoint;
 import clock.wise.dao.UserDao;
 import clock.wise.model.User;
 import clock.wise.model.roles.Role;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +26,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private Logger log = Logger.getLogger(WebSecurityConfig.class);
 
     @Autowired
-    UserDetailsService userDetailsService;
+    TokenAuthenticationEntryPoint tokenAuthenticationEntryPoint;
+
+    @Autowired
+    AuthenticationTokenProcessingFilter authenticationTokenProcessingFilter;
 
     @Autowired
     UserDao userDao;
@@ -41,12 +48,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        http.exceptionHandling()
+                .authenticationEntryPoint(tokenAuthenticationEntryPoint);
+
         http.authorizeRequests()
-                .antMatchers("/user").permitAll()
-                .and()
-                .csrf()
-                .disable()
-                .httpBasic();
+                .antMatchers("/api/authenticate").permitAll()
+                .anyRequest().authenticated();
+
+        http.formLogin()
+                .disable();
+
+        http.logout()
+                .disable();
+
+        http.addFilterBefore(authenticationTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class);
+
+        http.csrf()
+                .disable();
 
     }
 
@@ -56,9 +74,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         checkAndCreateSuperAdmin();
     }
 
-    @Override
-    protected UserDetailsService userDetailsService() {
-        return userDetailsService;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return encoder;
     }
 
     private void checkAndCreateSuperAdmin() {

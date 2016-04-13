@@ -22,11 +22,8 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
     @Autowired
     TokenUtils tokenUtils;
+    @Autowired
     AuthenticationManager authManager;
-
-    public AuthenticationTokenProcessingFilter(AuthenticationManager authManager) {
-        this.authManager = authManager;
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,

@@ -12,5 +12,5 @@ public interface TokenUtils {
 
     UserDetails getUserFromToken(String token);
 
-    void invalidateToken(String token);
+    void invalidateToken(UserDetails userDetails);
 }
