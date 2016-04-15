@@ -22,8 +22,8 @@ public class UserServiceImpl implements UserService
 {
     private final static Logger logger = Logger.getLogger( UserServiceImpl.class );
 
-    private PasswordUtils passwordUtils = new PasswordUtils();
-
+    @Autowired
+    private PasswordUtils passwordUtils;
     @Autowired
     private UserDao userDao;
     @Autowired
