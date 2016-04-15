@@ -5,6 +5,7 @@ import clock.wise.dto.UserDto;
 import clock.wise.model.User;
 import clock.wise.model.roles.Role;
 import clock.wise.service.UserService;
+import clock.wise.utils.PasswordUtils;
 import clock.wise.utils.UserModelMapperUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +22,26 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private UserModelMapperUtils userModelMapper;
 
     @Override
     @Transactional
     public UserDto createOrUpdateUser( final UserDto userDto )
     {
-        User user = UserModelMapperUtils.modelMapper.map( userDto, User.class );
+        validateUserPassword( userDto );
+
+        User user = userModelMapper.getModelMapper().map( userDto, User.class );
         logger.info( "User " + user.getUsername() + " has been created" );
 
-        return UserModelMapperUtils.modelMapper.map( userDao.save( user ), UserDto.class );
+        return userModelMapper.getModelMapper().map( userDao.save( user ), UserDto.class );
     }
 
     @Override
     @Transactional
     public UserDto findById( final Long id )
     {
-        return UserModelMapperUtils.modelMapper.map( userDao.findOne( id ), UserDto.class );
+        return userModelMapper.getModelMapper().map( userDao.findOne( id ), UserDto.class );
     }
 
     @Override
@@ -49,7 +54,7 @@ public class UserServiceImpl implements UserService
             throw new IllegalArgumentException( "Username cannot be null or empty" );
         }
 
-        return UserModelMapperUtils.modelMapper.map( userDao.findOneByUsername( username ), UserDto.class );
+        return userModelMapper.getModelMapper().map( userDao.findOneByUsername( username ), UserDto.class );
     }
 
     @Override
@@ -62,7 +67,7 @@ public class UserServiceImpl implements UserService
             throw new IllegalArgumentException( "Role cannot be null" );
         }
 
-        return UserModelMapperUtils.modelMapper.map( userDao.findOneByRole( role ), UserDto.class );
+        return userModelMapper.getModelMapper().map( userDao.findOneByRole( role ), UserDto.class );
     }
 
     @Override
@@ -74,7 +79,7 @@ public class UserServiceImpl implements UserService
         Iterable< User > users = userDao.findAll();
         for ( User user : users )
         {
-            UserDto userDto = UserModelMapperUtils.modelMapper.map( user, UserDto.class );
+            UserDto userDto = userModelMapper.getModelMapper().map( user, UserDto.class );
             userDtoList.add( userDto );
         }
 
@@ -87,5 +92,15 @@ public class UserServiceImpl implements UserService
     {
         userDao.delete( id );
         logger.info( "User: " + id + " removed" );
+    }
+
+    private void validateUserPassword( final UserDto userDto )
+    {
+        String userPassword = userDto.getPassword();
+        PasswordUtils passwordUtils = new PasswordUtils();
+        passwordUtils.validatePassword( userPassword );
+
+        String hashPassword = passwordUtils.encodePasswordWithBCryptPasswordEncoder( userPassword );
+        userDto.setPassword( hashPassword );
     }
 }
