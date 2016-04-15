@@ -1,7 +1,9 @@
 package clock.wise.service.impl;
 
 import clock.wise.dao.UserDao;
+import clock.wise.dto.PasswordDto;
 import clock.wise.dto.UserDto;
+import clock.wise.exceptions.InvalidPasswordException;
 import clock.wise.model.User;
 import clock.wise.model.roles.Role;
 import clock.wise.service.UserService;
@@ -20,6 +22,8 @@ public class UserServiceImpl implements UserService
 {
     private final static Logger logger = Logger.getLogger( UserServiceImpl.class );
 
+    private PasswordUtils passwordUtils = new PasswordUtils();
+
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -29,7 +33,10 @@ public class UserServiceImpl implements UserService
     @Transactional
     public UserDto createOrUpdateUser( final UserDto userDto )
     {
-        validateUserPassword( userDto );
+        String password = userDto.getPassword();
+
+        validateUserPassword( password );
+        userDto.setPassword( hashUserPassword( password ) );
 
         User user = userModelMapper.getModelMapper().map( userDto, User.class );
         logger.info( "User " + user.getUsername() + " has been created" );
@@ -94,13 +101,32 @@ public class UserServiceImpl implements UserService
         logger.info( "User: " + id + " removed" );
     }
 
-    private void validateUserPassword( final UserDto userDto )
+    @Override
+    @Transactional
+    public void changePassword( final PasswordDto passwordDto )
     {
-        String userPassword = userDto.getPassword();
-        PasswordUtils passwordUtils = new PasswordUtils();
-        passwordUtils.validatePassword( userPassword );
+        User user = userDao.findOne( passwordDto.getUserId() );
+        String currentPassword = user.getPassword();
 
-        String hashPassword = passwordUtils.encodePasswordWithBCryptPasswordEncoder( userPassword );
-        userDto.setPassword( hashPassword );
+        if ( !passwordUtils.matches( passwordDto.getOldPassword(), currentPassword ) )
+        {
+            throw new InvalidPasswordException( "Given password is not equals to the current user password" );
+        }
+
+        String newPassword = passwordDto.getNewPassword();
+        validateUserPassword( newPassword );
+        user.setPassword( hashUserPassword( newPassword ) );
+
+        userDao.save( user );
+    }
+
+    private void validateUserPassword( final String userPassword )
+    {
+        passwordUtils.validatePassword( userPassword );
+    }
+
+    private String hashUserPassword( final String userPassword )
+    {
+        return passwordUtils.encodePasswordWithBCryptPasswordEncoder( userPassword );
     }
 }

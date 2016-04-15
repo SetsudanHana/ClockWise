@@ -16,7 +16,7 @@ public class PasswordUtils
     {
         if ( password == null || password.isEmpty() || password.length() < PASSWORD_LENGTH )
         {
-            throw new InvalidPasswordException( "Password is invalid. Password cannot be null, empty or shorter than 8 characters" );
+            throw new InvalidPasswordException( "Password is invalid. Password cannot be null, empty and shorter than 8 characters" );
         }
         if ( password.contains( " " ) )
         {
@@ -32,5 +32,10 @@ public class PasswordUtils
     {
         encoder = new BCryptPasswordEncoder( STRENGTH_LOG_ROUNDS );
         return encoder.encode( password );
+    }
+
+    public boolean matches( final String givenPassword, final String currentPassword )
+    {
+        return encoder.matches( givenPassword, currentPassword );
     }
 }

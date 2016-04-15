@@ -1,6 +1,7 @@
 package clock.wise.controller;
 
 import clock.wise.dto.ErrorDto;
+import clock.wise.exceptions.InvalidPasswordException;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -92,6 +93,15 @@ public class GlobalControllerExceptionHandler
     @ResponseStatus( value = HttpStatus.UNAUTHORIZED )
     @ResponseBody
     protected ErrorDto handleBadCredentialsException( BadCredentialsException ex )
+    {
+        logger.error( "Exception: " + ex.getMessage() );
+        return new ErrorDto( ex );
+    }
+
+    @ExceptionHandler( InvalidPasswordException.class )
+    @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    @ResponseBody
+    protected ErrorDto handleInvalidPasswordException( InvalidPasswordException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
         return new ErrorDto( ex );

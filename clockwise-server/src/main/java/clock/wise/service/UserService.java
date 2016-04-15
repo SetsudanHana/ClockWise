@@ -1,5 +1,6 @@
 package clock.wise.service;
 
+import clock.wise.dto.PasswordDto;
 import clock.wise.dto.UserDto;
 import clock.wise.model.roles.Role;
 
@@ -15,7 +16,9 @@ public interface UserService
 
     UserDto findByRole( Role role );
 
-    List<UserDto> findAll();
+    List< UserDto > findAll();
+
+    void changePassword( final PasswordDto passwordDto );
 
     void removeUser( Long id );
 }
