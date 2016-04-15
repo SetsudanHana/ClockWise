@@ -81,7 +81,7 @@ public class GlobalControllerExceptionHandler
     }
 
     @ExceptionHandler( UsernameNotFoundException.class )
-    @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    @ResponseStatus( value = HttpStatus.NOT_FOUND )
     @ResponseBody
     protected ErrorDto handleUsernameNotFoundException( UsernameNotFoundException ex )
     {

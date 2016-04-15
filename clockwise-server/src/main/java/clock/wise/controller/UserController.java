@@ -50,7 +50,6 @@ public class UserController
         return new MessageDto( "Password has been changed for user id: " + id );
     }
 
-
     @RequestMapping( value = "/{id}", method = RequestMethod.DELETE )
     @ResponseStatus( HttpStatus.NO_CONTENT )
     public void removeUser( @PathVariable( "id" ) final Long id )
