@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping( "/api/users" )
-public class UserController extends AbstractController
+public class UserController
 {
     @Autowired
     private UserService userService;

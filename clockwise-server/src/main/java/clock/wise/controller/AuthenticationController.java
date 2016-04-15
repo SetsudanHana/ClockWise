@@ -11,20 +11,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
-public class AuthenticationController extends AbstractController {
-
+@RequestMapping( "/api" )
+public class AuthenticationController
+{
     @Autowired
     AuthenticationService authenticationService;
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public TokenDto authenticate(@RequestBody UserFormDto userFormDto) {
-        return authenticationService.authenticate(userFormDto);
+    @RequestMapping( value = "/authenticate", method = RequestMethod.POST )
+    public TokenDto authenticate( @RequestBody UserFormDto userFormDto )
+    {
+        return authenticationService.authenticate( userFormDto );
     }
 
-    @RequestMapping(value = "/invalidatetoken", method = RequestMethod.POST)
-    public void invalidateToken() {
-        authenticationService.invalidateToken((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    @RequestMapping( value = "/invalidatetoken", method = RequestMethod.POST )
+    public void invalidateToken()
+    {
+        authenticationService.invalidateToken( ( String ) SecurityContextHolder.getContext().getAuthentication().getPrincipal() );
     }
 
 }

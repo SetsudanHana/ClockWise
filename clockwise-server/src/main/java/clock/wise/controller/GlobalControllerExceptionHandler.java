@@ -7,17 +7,18 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 
-public abstract class AbstractController
+@ControllerAdvice( annotations = RestController.class )
+public class GlobalControllerExceptionHandler
 {
-    private final static Logger logger = Logger.getLogger( AbstractController.class );
+    private final static Logger logger = Logger.getLogger( GlobalControllerExceptionHandler.class );
 
     @ExceptionHandler( EntityNotFoundException.class )
     @ResponseStatus( value = HttpStatus.NOT_FOUND )
+    @ResponseBody
     protected ErrorDto handleEntityNotFoundException( EntityNotFoundException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
@@ -26,6 +27,7 @@ public abstract class AbstractController
 
     @ExceptionHandler( DataIntegrityViolationException.class )
     @ResponseStatus( value = HttpStatus.CONFLICT )
+    @ResponseBody
     protected ErrorDto handleDataIntegrityViolationException( DataIntegrityViolationException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
@@ -34,6 +36,7 @@ public abstract class AbstractController
 
     @ExceptionHandler( IllegalArgumentException.class )
     @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    @ResponseBody
     protected ErrorDto handleIllegalArgumentException( IllegalArgumentException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
@@ -42,6 +45,7 @@ public abstract class AbstractController
 
     @ExceptionHandler( NumberFormatException.class )
     @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    @ResponseBody
     protected ErrorDto handleNumberFormatException( NumberFormatException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
@@ -50,6 +54,7 @@ public abstract class AbstractController
 
     @ExceptionHandler( NullPointerException.class )
     @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    @ResponseBody
     protected ErrorDto handleNullPointerException( NullPointerException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
@@ -58,6 +63,7 @@ public abstract class AbstractController
 
     @ExceptionHandler( MessagingException.class )
     @ResponseStatus( value = HttpStatus.INTERNAL_SERVER_ERROR )
+    @ResponseBody
     protected ErrorDto handleMessagingException( MessagingException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
@@ -66,6 +72,7 @@ public abstract class AbstractController
 
     @ExceptionHandler( IndexOutOfBoundsException.class )
     @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    @ResponseBody
     protected ErrorDto handleIndexOutOfBoundsException( IndexOutOfBoundsException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
@@ -74,6 +81,7 @@ public abstract class AbstractController
 
     @ExceptionHandler( UsernameNotFoundException.class )
     @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    @ResponseBody
     protected ErrorDto handleUsernameNotFoundException( UsernameNotFoundException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
@@ -82,6 +90,7 @@ public abstract class AbstractController
 
     @ExceptionHandler( BadCredentialsException.class )
     @ResponseStatus( value = HttpStatus.UNAUTHORIZED )
+    @ResponseBody
     protected ErrorDto handleBadCredentialsException( BadCredentialsException ex )
     {
         logger.error( "Exception: " + ex.getMessage() );
