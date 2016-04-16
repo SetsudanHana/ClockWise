@@ -132,6 +132,20 @@ public class UserServiceImpl implements UserService
         mailService.sendMessage( userDto, MailTemplateEnum.USER_PASSWORD_UPDATE );
     }
 
+    @Override
+    @Transactional
+    public void resetPassword( final String email )
+    {
+        User user = userDao.findOneByEmail( email );
+        String generatedPassword = passwordUtils.generateRandomPassword();
+        user.setPassword( hashUserPassword( generatedPassword ) );
+
+        UserDto updatedUserDto = userModelMapper.getModelMapper().map( userDao.save( user ), UserDto.class );
+        updatedUserDto.setPassword( generatedPassword );
+
+        mailService.sendMessage( updatedUserDto, MailTemplateEnum.USER_PASSWORD_RESET );
+    }
+
     private void validateUserPassword( final String userPassword )
     {
         passwordUtils.validatePassword( userPassword );

@@ -40,7 +40,7 @@ public class MailServiceImpl implements MailService
             MimeMessage message = createMessage( mailTemplate, userDto, parameters );
 
             mailSender.send( message );
-            logger.info( "Email to user: " + userDto.getEmail() + " has been sent" );
+            logger.info( "Email: " + mailType.getValue() + " to user: " + userDto.getEmail() + " has been sent" );
         }
         catch ( MessagingException e )
         {
@@ -88,9 +88,8 @@ public class MailServiceImpl implements MailService
                 parameters.put( "username", userDto.getUsername() );
                 break;
             case USER_PASSWORD_RESET:
-                //TODO
-                //relacja user -> link i wsadzenie tu wygenerowanego linku do resetu hasla
-                // parameters.put( "username", userDto.getUsername() );
+                parameters.put( "username", userDto.getUsername() );
+                parameters.put( "password", userDto.getPassword() );
                 break;
         }
 

@@ -20,5 +20,7 @@ public interface UserService
 
     void changePassword( final PasswordDto passwordDto );
 
+    void resetPassword( final String email );
+
     void removeUser( Long id );
 }

@@ -5,11 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
+
 @Component
 public class PasswordUtils
 {
     private static final int PASSWORD_LENGTH = 8;
     private static final String PASSWORD_CHARACTERS = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+    private static final char[] PASSWORD_GENERATOR_CHARS = "ABCDEFGHIJKLMNOPRSTQWXYZabcdefghijklmnoprstqwxyz1234567890!@#$%^&*()/".toCharArray();
 
     @Autowired
     private PasswordEncoder encoder;
@@ -38,5 +41,18 @@ public class PasswordUtils
     public boolean matches( final String givenPassword, final String currentPassword )
     {
         return encoder.matches( givenPassword, currentPassword );
+    }
+
+    public String generateRandomPassword()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        Random random = new Random();
+        for ( int i = 0; i < 8; i++ )
+        {
+            char c = PASSWORD_GENERATOR_CHARS[ random.nextInt( PASSWORD_GENERATOR_CHARS.length ) ];
+            stringBuilder.append( c );
+        }
+
+        return stringBuilder.toString();
     }
 }

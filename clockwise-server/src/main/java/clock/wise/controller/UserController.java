@@ -1,6 +1,6 @@
 package clock.wise.controller;
 
-import clock.wise.dto.MessageDto;
+import clock.wise.dto.EmailDto;
 import clock.wise.dto.PasswordDto;
 import clock.wise.dto.UserDto;
 import clock.wise.service.UserService;
@@ -42,12 +42,18 @@ public class UserController
     }
 
     @RequestMapping( value = "/{id}/update_password", method = RequestMethod.PATCH )
-    public MessageDto changeUserPassword( @PathVariable( "id" ) final Long id, @RequestBody final PasswordDto passwordDto )
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void changeUserPassword( @PathVariable( "id" ) final Long id, @RequestBody final PasswordDto passwordDto )
     {
         passwordDto.setUserId( id );
         userService.changePassword( passwordDto );
+    }
 
-        return new MessageDto( "Password has been changed for user id: " + id );
+    @RequestMapping( value = "/reset_password", method = RequestMethod.POST )
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void resetUserPassword( @RequestBody final EmailDto emailDto )
+    {
+        userService.resetPassword( emailDto.getEmail() );
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.DELETE )
