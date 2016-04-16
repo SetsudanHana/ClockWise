@@ -3,9 +3,11 @@ package clock.wise.service.impl;
 import clock.wise.dao.UserDao;
 import clock.wise.dto.PasswordDto;
 import clock.wise.dto.UserDto;
+import clock.wise.enums.MailTemplateEnum;
 import clock.wise.exceptions.InvalidPasswordException;
 import clock.wise.model.User;
 import clock.wise.model.roles.Role;
+import clock.wise.service.MailService;
 import clock.wise.service.UserService;
 import clock.wise.utils.PasswordUtils;
 import clock.wise.utils.UserModelMapperUtils;
@@ -25,9 +27,11 @@ public class UserServiceImpl implements UserService
     @Autowired
     private PasswordUtils passwordUtils;
     @Autowired
+    private UserModelMapperUtils userModelMapper;
+    @Autowired
     private UserDao userDao;
     @Autowired
-    private UserModelMapperUtils userModelMapper;
+    private MailService mailService;
 
     @Override
     @Transactional
@@ -39,9 +43,16 @@ public class UserServiceImpl implements UserService
         userDto.setPassword( hashUserPassword( password ) );
 
         User user = userModelMapper.getModelMapper().map( userDto, User.class );
-        logger.info( "User " + user.getUsername() + " has been created" );
+        User saved = userDao.save( user );
+        UserDto created = userModelMapper.getModelMapper().map( saved, UserDto.class );
 
-        return userModelMapper.getModelMapper().map( userDao.save( user ), UserDto.class );
+        if ( userDao.exists( saved.getId() ) )
+        {
+            logger.info( "User " + created.getUsername() + " has been created" );
+            mailService.sendMessage( created, MailTemplateEnum.NEW_USER_REGISTERED );
+        }
+
+        return created;
     }
 
     @Override
@@ -117,7 +128,8 @@ public class UserServiceImpl implements UserService
         validateUserPassword( newPassword );
         user.setPassword( hashUserPassword( newPassword ) );
 
-        userDao.save( user );
+        UserDto userDto = userModelMapper.getModelMapper().map( userDao.save( user ), UserDto.class );
+        mailService.sendMessage( userDto, MailTemplateEnum.USER_PASSWORD_UPDATE );
     }
 
     private void validateUserPassword( final String userPassword )

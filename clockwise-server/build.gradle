@@ -33,7 +33,10 @@ dependencies {
     compile("postgresql:postgresql:9.1-901-1.jdbc4")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework:spring-context-support")
     compile("org.modelmapper:modelmapper:0.7.5")
+    compile('javax.mail:mail:1.4.1')
+    compile('org.apache.velocity:velocity:1.7')
 
     testCompile("junit:junit")
 }

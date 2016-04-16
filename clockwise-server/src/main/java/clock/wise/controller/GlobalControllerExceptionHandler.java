@@ -2,7 +2,6 @@ package clock.wise.controller;
 
 import clock.wise.dto.ErrorDto;
 import clock.wise.exceptions.InvalidPasswordException;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -10,12 +9,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 
 @ControllerAdvice( annotations = RestController.class )
 public class GlobalControllerExceptionHandler
 {
-    private final static Logger logger = Logger.getLogger( GlobalControllerExceptionHandler.class );
+    private static final Logger logger = Logger.getLogger( GlobalControllerExceptionHandler.class );
 
     @ExceptionHandler( EntityNotFoundException.class )
     @ResponseStatus( value = HttpStatus.NOT_FOUND )
