@@ -5,6 +5,7 @@ import clock.wise.model.User;
 import clock.wise.model.roles.Role;
 import clock.wise.security.AuthenticationTokenProcessingFilter;
 import clock.wise.security.TokenAuthenticationEntryPoint;
+import clock.wise.security.password.BasicPasswordEncoder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${default.superadmin.email}")
     private String superUserEmail;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private PasswordEncoder encoder = new BasicPasswordEncoder();
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
