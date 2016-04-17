@@ -45,8 +45,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void invalidateToken(String username) {
-        tokenManager.invalidateToken(userDao.findOneByUsername(username));
+    public void invalidateToken(User user) {
+        tokenManager.invalidateToken(modelMapperWrapper.getModelMapper().map(user, UserForm.class));
     }
 
 }

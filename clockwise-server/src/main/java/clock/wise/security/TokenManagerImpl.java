@@ -40,7 +40,7 @@ public class TokenManagerImpl implements TokenManager {
     public boolean validate(String token) {
         mLock.readLock().lock();
         try {
-            UUID parsedToken = UUID.fromString(token);
+            UUID parsedToken = UUID.fromString(token);//TODO handle token being invalid
             return mTokenMap.containsValue(parsedToken);
         } finally {
             mLock.readLock().unlock();
