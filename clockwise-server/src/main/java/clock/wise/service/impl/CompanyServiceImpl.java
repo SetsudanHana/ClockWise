@@ -3,11 +3,11 @@ package clock.wise.service.impl;
 import clock.wise.dao.CompanyDao;
 import clock.wise.dto.CompanyDto;
 import clock.wise.dto.UserDto;
+import clock.wise.mapper.UserModelMapperWrapper;
 import clock.wise.model.Company;
 import clock.wise.model.User;
 import clock.wise.service.CompanyService;
 import clock.wise.utils.CompanyModelMapperUtils;
-import clock.wise.utils.UserModelMapperUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class CompanyServiceImpl implements CompanyService
     @Autowired
     private CompanyModelMapperUtils companyModelMapper;
     @Autowired
-    private UserModelMapperUtils userModelMapper;
+    private UserModelMapperWrapper userModelMapperWrapper;
 
     @Override
     @Transactional
@@ -89,7 +89,7 @@ public class CompanyServiceImpl implements CompanyService
         List< UserDto > companyUsers = new ArrayList<>();
         for ( final User user : company.getUsers() )
         {
-            UserDto userDto = userModelMapper.getModelMapper().map( user, UserDto.class );
+            UserDto userDto = userModelMapperWrapper.getModelMapper().map(user, UserDto.class);
             companyUsers.add( userDto );
         }
 

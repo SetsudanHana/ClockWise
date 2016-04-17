@@ -5,12 +5,12 @@ import clock.wise.dto.PasswordDto;
 import clock.wise.dto.UserDto;
 import clock.wise.enums.MailTemplateEnum;
 import clock.wise.exceptions.InvalidPasswordException;
+import clock.wise.mapper.UserModelMapperWrapper;
 import clock.wise.model.User;
 import clock.wise.model.roles.Role;
 import clock.wise.service.MailService;
 import clock.wise.service.UserService;
 import clock.wise.utils.PasswordUtils;
-import clock.wise.utils.UserModelMapperUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService
     @Autowired
     private PasswordUtils passwordUtils;
     @Autowired
-    private UserModelMapperUtils userModelMapper;
+    private UserModelMapperWrapper userModelMapperWrapper;
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -43,9 +43,9 @@ public class UserServiceImpl implements UserService
         validateUserPassword( password );
         userDto.setPassword( hashUserPassword( password ) );
 
-        User user = userModelMapper.getModelMapper().map( userDto, User.class );
+        User user = userModelMapperWrapper.getModelMapper().map(userDto, User.class);
         User saved = userDao.save( user );
-        UserDto created = userModelMapper.getModelMapper().map( saved, UserDto.class );
+        UserDto created = userModelMapperWrapper.getModelMapper().map(saved, UserDto.class);
 
         if ( userDao.exists( saved.getId() ) )
         {
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService
             throw new IllegalArgumentException( "Id cannot be null" );
         }
 
-        return userModelMapper.getModelMapper().map( userDao.findOne( id ), UserDto.class );
+        return userModelMapperWrapper.getModelMapper().map(userDao.findOne(id), UserDto.class);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService
             throw new IllegalArgumentException( "Username cannot be null or empty" );
         }
 
-        return userModelMapper.getModelMapper().map( userDao.findOneByUsername( username ), UserDto.class );
+        return userModelMapperWrapper.getModelMapper().map(userDao.findOneByUsername(username), UserDto.class);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService
             throw new IllegalArgumentException( "Role cannot be null" );
         }
 
-        return userModelMapper.getModelMapper().map( userDao.findOneByRole( role ), UserDto.class );
+        return userModelMapperWrapper.getModelMapper().map(userDao.findOneByRole(role), UserDto.class);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService
         Iterable< User > users = userDao.findAll();
         for ( User user : users )
         {
-            UserDto userDto = userModelMapper.getModelMapper().map( user, UserDto.class );
+            UserDto userDto = userModelMapperWrapper.getModelMapper().map(user, UserDto.class);
             userDtoList.add( userDto );
         }
 
@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService
         validateUserPassword( newPassword );
         user.setPassword( hashUserPassword( newPassword ) );
 
-        UserDto userDto = userModelMapper.getModelMapper().map( userDao.save( user ), UserDto.class );
+        UserDto userDto = userModelMapperWrapper.getModelMapper().map(userDao.save(user), UserDto.class);
         mailService.sendMessage( userDto, MailTemplateEnum.USER_PASSWORD_UPDATE );
     }
 
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService
         String generatedPassword = passwordUtils.generateRandomPassword();
         user.setPassword( hashUserPassword( generatedPassword ) );
 
-        UserDto userDto = userModelMapper.getModelMapper().map( userDao.save( user ), UserDto.class );
+        UserDto userDto = userModelMapperWrapper.getModelMapper().map(userDao.save(user), UserDto.class);
         userDto.setPassword( generatedPassword );
 
         mailService.sendMessage( userDto, MailTemplateEnum.USER_PASSWORD_RESET );

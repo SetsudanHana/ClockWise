@@ -2,9 +2,9 @@ package clock.wise.converter;
 
 import clock.wise.dto.CompanyDto;
 import clock.wise.dto.UserDto;
+import clock.wise.mapper.UserModelMapperWrapper;
 import clock.wise.model.Company;
 import clock.wise.model.User;
-import clock.wise.utils.UserModelMapperUtils;
 import org.modelmapper.AbstractConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +14,7 @@ import java.util.List;
 public class CompanyConverter extends AbstractConverter< Company, CompanyDto >
 {
     @Autowired
-    private UserModelMapperUtils userModelMapper;
+    private UserModelMapperWrapper userModelMapperWrapper;
 
     @Override
     protected CompanyDto convert( final Company company )
@@ -28,7 +28,7 @@ public class CompanyConverter extends AbstractConverter< Company, CompanyDto >
             List< UserDto > usersListDto = new ArrayList<>();
             for ( final User user : company.getUsers() )
             {
-                UserDto userDto = userModelMapper.getModelMapper().map( user, UserDto.class );
+                UserDto userDto = userModelMapperWrapper.getModelMapper().map(user, UserDto.class);
                 usersListDto.add( userDto );
             }
             companyDto.setUsers( usersListDto );
