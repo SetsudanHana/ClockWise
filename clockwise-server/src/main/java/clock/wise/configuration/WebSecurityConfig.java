@@ -1,10 +1,10 @@
 package clock.wise.configuration;
 
-import clock.wise.configuration.support.AuthenticationTokenProcessingFilter;
-import clock.wise.configuration.support.TokenAuthenticationEntryPoint;
 import clock.wise.dao.UserDao;
 import clock.wise.model.User;
 import clock.wise.model.roles.Role;
+import clock.wise.security.AuthenticationTokenProcessingFilter;
+import clock.wise.security.TokenAuthenticationEntryPoint;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

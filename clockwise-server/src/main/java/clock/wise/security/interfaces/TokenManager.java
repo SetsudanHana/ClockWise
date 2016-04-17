@@ -1,8 +1,8 @@
-package clock.wise.configuration.support.interfaces;
+package clock.wise.security.interfaces;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-public interface TokenUtils {
+public interface TokenManager {
 
     String getToken(UserDetails userDetails);
 

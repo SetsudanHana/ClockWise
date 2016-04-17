@@ -1,7 +1,7 @@
-package clock.wise.configuration.support;
+package clock.wise.security;
 
 
-import clock.wise.configuration.support.interfaces.TokenUtils;
+import clock.wise.security.interfaces.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
     @Autowired
-    TokenUtils tokenUtils;
+    TokenManager tokenManager;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
@@ -32,9 +32,9 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
             String token = parms.get("token")[0]; // grab the first "token" parameter
 
             // validate the token
-            if (tokenUtils.validate(token)) {
+            if (tokenManager.validate(token)) {
                 // determine the user based on the (already validated) token
-                UserDetails userDetails = tokenUtils.getUserFromToken(token);
+                UserDetails userDetails = tokenManager.getUserFromToken(token);
                 // build an Authentication object with the user's info
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());

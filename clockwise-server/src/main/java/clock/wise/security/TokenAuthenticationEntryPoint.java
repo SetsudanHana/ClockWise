@@ -1,4 +1,4 @@
-package clock.wise.configuration.support;
+package clock.wise.security;
 
 
 import org.springframework.security.core.AuthenticationException;

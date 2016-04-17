@@ -1,6 +1,6 @@
-package clock.wise.configuration.support;
+package clock.wise.security;
 
-import clock.wise.configuration.support.interfaces.TokenUtils;
+import clock.wise.security.interfaces.TokenManager;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class TokenUtilsImpl implements TokenUtils {
+public class TokenManagerImpl implements TokenManager {
 
     private Map<UserDetails, UUID> mTokenMap = new HashMap<UserDetails, UUID>();
 
