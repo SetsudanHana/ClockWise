@@ -21,6 +21,10 @@ public class User implements UserDetails
     private String email;
     private Role role;
 
+    @ManyToOne
+    @JoinColumn( name = "company_id" )
+    private Company company;
+
     public User()
     {
     }
@@ -91,6 +95,16 @@ public class User implements UserDetails
         this.username = username;
     }
 
+    public Company getCompany()
+    {
+        return company;
+    }
+
+    public void setCompany( Company company )
+    {
+        this.company = company;
+    }
+
     @Override
     public boolean isAccountNonExpired()
     {
@@ -116,18 +130,23 @@ public class User implements UserDetails
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals( Object obj )
+    {
+        if ( this == obj )
+        {
             return true;
-        } else if (obj != null && obj instanceof User) {
-            User other = (User) obj;
-            return username.equals(other.username);
+        }
+        else if ( obj != null && obj instanceof User )
+        {
+            User other = ( User ) obj;
+            return username.equals( other.username );
         }
         return false;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return username.hashCode();
     }
 }

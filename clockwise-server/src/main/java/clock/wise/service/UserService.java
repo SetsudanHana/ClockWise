@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService
 {
-    UserDto createOrUpdateUser( final UserDto userDto );
+    UserDto createOrUpdate( final UserDto userDto );
 
     UserDto findById( Long id );
 
@@ -22,5 +22,7 @@ public interface UserService
 
     void resetPassword( final String email );
 
-    void removeUser( Long id );
+    void removeUserById( final Long id );
+
+    void removeUserByEntity( final UserDto userDto );
 }

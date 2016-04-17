@@ -23,6 +23,10 @@ public class MailTemplate implements Serializable
     @Column
     private String subject;
 
+    public MailTemplate()
+    {
+    }
+
     public Long getId()
     {
         return id;

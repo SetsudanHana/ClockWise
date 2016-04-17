@@ -7,7 +7,7 @@ import org.modelmapper.AbstractConverter;
 public class UserModelConverter extends AbstractConverter< User, UserDto >
 {
     @Override
-    public UserDto convert( final User source )
+    protected UserDto convert( final User source )
     {
         UserDto userDto = new UserDto();
         userDto.setId( source.getId() );

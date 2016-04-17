@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService
 
     @Override
     @Transactional
-    public UserDto createOrUpdateUser( final UserDto userDto )
+    public UserDto createOrUpdate( final UserDto userDto )
     {
         String password = userDto.getPassword();
 
@@ -59,6 +60,12 @@ public class UserServiceImpl implements UserService
     @Transactional
     public UserDto findById( final Long id )
     {
+        if ( id == null )
+        {
+            logger.error( "Error while searching user by id: " + id );
+            throw new IllegalArgumentException( "Id cannot be null" );
+        }
+
         return userModelMapper.getModelMapper().map( userDao.findOne( id ), UserDto.class );
     }
 
@@ -93,7 +100,6 @@ public class UserServiceImpl implements UserService
     public List< UserDto > findAll()
     {
         List< UserDto > userDtoList = new ArrayList<>();
-
         Iterable< User > users = userDao.findAll();
         for ( User user : users )
         {
@@ -106,10 +112,31 @@ public class UserServiceImpl implements UserService
 
     @Override
     @Transactional
-    public void removeUser( final Long id )
+    public void removeUserById( final Long id )
     {
+        if ( id == null )
+        {
+            logger.error( "Error while removing user by id: " + id );
+            throw new IllegalArgumentException( "Id cannot be null" );
+        }
+
         userDao.delete( id );
         logger.info( "User: " + id + " removed" );
+    }
+
+    @Override
+    @Transactional
+    public void removeUserByEntity( final UserDto userDto )
+    {
+        if ( !userDao.exists( userDto.getId() ) )
+        {
+            logger.error( "User with id: " + userDto.getId() + " does not exist" );
+            throw new EntityNotFoundException( "User with id: " + userDto.getId() + " does not exist" );
+        }
+
+        User user = userDao.findOne( userDto.getId() );
+        userDao.delete( user );
+        logger.info( "User: " + userDto.getId() + " removed" );
     }
 
     @Override
@@ -140,10 +167,10 @@ public class UserServiceImpl implements UserService
         String generatedPassword = passwordUtils.generateRandomPassword();
         user.setPassword( hashUserPassword( generatedPassword ) );
 
-        UserDto updatedUserDto = userModelMapper.getModelMapper().map( userDao.save( user ), UserDto.class );
-        updatedUserDto.setPassword( generatedPassword );
+        UserDto userDto = userModelMapper.getModelMapper().map( userDao.save( user ), UserDto.class );
+        userDto.setPassword( generatedPassword );
 
-        mailService.sendMessage( updatedUserDto, MailTemplateEnum.USER_PASSWORD_RESET );
+        mailService.sendMessage( userDto, MailTemplateEnum.USER_PASSWORD_RESET );
     }
 
     private void validateUserPassword( final String userPassword )

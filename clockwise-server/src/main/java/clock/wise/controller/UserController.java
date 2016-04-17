@@ -19,7 +19,7 @@ public class UserController
     @ResponseStatus( HttpStatus.CREATED )
     public UserDto createUser( @RequestBody final UserDto userDto )
     {
-        return userService.createOrUpdateUser( userDto );
+        return userService.createOrUpdate( userDto );
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.GET )
@@ -38,7 +38,7 @@ public class UserController
     public UserDto updateUser( @PathVariable( "id" ) final Long id, @RequestBody final UserDto userDto )
     {
         userDto.setId( id );
-        return userService.createOrUpdateUser( userDto );
+        return userService.createOrUpdate( userDto );
     }
 
     @RequestMapping( value = "/{id}/update_password", method = RequestMethod.PATCH )
@@ -58,8 +58,15 @@ public class UserController
 
     @RequestMapping( value = "/{id}", method = RequestMethod.DELETE )
     @ResponseStatus( HttpStatus.NO_CONTENT )
-    public void removeUser( @PathVariable( "id" ) final Long id )
+    public void removeUserById( @PathVariable( "id" ) final Long id )
     {
-        userService.removeUser( id );
+        userService.removeUserById( id );
+    }
+
+    @RequestMapping( method = RequestMethod.DELETE )
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void removeUserByEntity( @RequestBody final UserDto userDto )
+    {
+        userService.removeUserByEntity( userDto );
     }
 }

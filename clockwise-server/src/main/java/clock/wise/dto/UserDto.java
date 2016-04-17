@@ -9,6 +9,7 @@ public class UserDto
     private String password;
     private String email;
     private Role role;
+    private CompanyDto companyDto;
 
     public Long getId()
     {
@@ -58,5 +59,15 @@ public class UserDto
     public void setRole( Role role )
     {
         this.role = role;
+    }
+
+    public CompanyDto getCompanyDto()
+    {
+        return companyDto;
+    }
+
+    public void setCompanyDto( CompanyDto companyDto )
+    {
+        this.companyDto = companyDto;
     }
 }

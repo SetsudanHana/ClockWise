@@ -23,7 +23,7 @@ public class PasswordUtils
         {
             throw new InvalidPasswordException( "Password is invalid. Password cannot be null, empty and shorter than 8 characters" );
         }
-        if ( password.contains( " " ) )
+        if ( password.matches( "\\s" ) )
         {
             throw new InvalidPasswordException( "Password cannot contains whitespaces" );
         }
@@ -47,7 +47,7 @@ public class PasswordUtils
     {
         StringBuilder stringBuilder = new StringBuilder();
         Random random = new Random();
-        for ( int i = 0; i < 8; i++ )
+        for ( int i = 0; i < PASSWORD_LENGTH; ++i )
         {
             char c = PASSWORD_GENERATOR_CHARS[ random.nextInt( PASSWORD_GENERATOR_CHARS.length ) ];
             stringBuilder.append( c );
