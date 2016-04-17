@@ -5,6 +5,8 @@ import clock.wise.dto.TokenDto;
 import clock.wise.dto.UserFormDto;
 import clock.wise.model.User;
 import clock.wise.security.interfaces.TokenManager;
+import clock.wise.security.mapper.UserFormModelMapperWrapper;
+import clock.wise.security.model.UserForm;
 import clock.wise.service.impl.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,13 +26,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    UserFormModelMapperWrapper modelMapperWrapper;
+
     @Override
     public TokenDto authenticate(UserFormDto userFormDto) {
-        User user = userDao.findOneByUsername(userFormDto.username);
+        UserForm userForm = modelMapperWrapper.getModelMapper().map(userFormDto, UserForm.class);
+        User user = userDao.findOneByUsername(userForm.getUsername());
         if (user != null) {
-            if (passwordEncoder.matches(userFormDto.password, user.getPassword())) {
+            if (passwordEncoder.matches(userForm.getPassword(), user.getPassword())) {
                 TokenDto tokenDto = new TokenDto();
-                tokenDto.token = tokenManager.getToken(user);
+                tokenDto.token = tokenManager.getToken(userForm);
                 return tokenDto;
             }
             throw new BadCredentialsException("Invalid password for username: " + userFormDto.username);
