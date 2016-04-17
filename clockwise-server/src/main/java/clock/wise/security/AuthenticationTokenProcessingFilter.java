@@ -16,7 +16,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Map;
 
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
@@ -29,12 +28,14 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        @SuppressWarnings("unchecked")
-        Map<String, String[]> parms = request.getParameterMap();
+        String token = null;
 
-        if (parms.containsKey("token")) {
-            String token = parms.get("token")[0]; // grab the first "token" parameter
+        if (request instanceof HttpServletRequest) {
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            token = httpServletRequest.getHeader("ClockWise-Token");
+        }
 
+        if (token != null) {
             // validate the token
             if (tokenManager.validate(token)) {
                 // determine the user based on the (already validated) token
