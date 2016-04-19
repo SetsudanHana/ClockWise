@@ -3,6 +3,7 @@
 #include "User.h"
 #include "ServiceCommunicator.h"
 #include "StringUtility.h"
+#include "Logger.h"
 #include <string>
 #include <cpprest\json.h>
 
@@ -20,7 +21,7 @@ Authentication::~Authentication()
 
 User* Authentication::getUser()
 {
-	return LoggedUser;
+	return LoggedUser.get();
 }
 
 User* Authentication::login(const std::wstring& Username, const std::wstring& Password)
@@ -28,44 +29,37 @@ User* Authentication::login(const std::wstring& Username, const std::wstring& Pa
 #ifdef _DEBUG
 	if (Username == L"test" && Password == L"test")
 	{
-		LoggedUser = new User(Username, L"Username@mail.com", L"TestRole");
-		return LoggedUser;
+		LoggedUser = std::make_unique<User>(Username, L"Username@mail.com", L"TestRole");
+		return LoggedUser.get();
 	}
 #endif
 
-	json::value user;
-	user[L"username"] = json::value::string(Username);
-	user[L"password"] = json::value::string(Password);
-
 	try
 	{
-		auto loginResponse = communicator.unauthenticatedRequest(web::http::methods::POST, user, "api/authenticate");
+		json::value Credentials;
+		Credentials[L"username"] = json::value::string(Username);
+		Credentials[L"password"] = json::value::string(Password);
 
-		if(loginResponse.has_field(L"token"))
+		auto LoginResponse = communicator.post("api/authenticate", Credentials);
+
+		if(LoginResponse.has_field(L"token"))
 		{
-			SessionCode = StringUtility::ws2s(loginResponse[L"token"].as_string());
+			std::unique_lock<std::shared_timed_mutex> lock(SessionMutex);
+			Token = StringUtility::ws2s(LoginResponse[L"token"].as_string());
 			communicator.registerAuthenticationSystem(*this);
+			lock.unlock();
 
-			json::value jsonUsername;
-			jsonUsername[L"username"] = json::value::string(Username);
-			auto userResponse = communicator.request(web::http::methods::GET, jsonUsername, "api/users");
-
-			if (userResponse.has_field(L"username"))
-			{
-				return LoggedUser = new User(userResponse);
-			}
-			else
-			{
-				return nullptr;
-			}
+			return loadUser(Username);
 		}
 		else
 		{
+			LOG_ERROR("Failed to get user data(and should be able to!)");
 			return nullptr;
 		}
 	}
 	catch (const std::exception& e)
 	{
+		LOG_ERROR(e.what());
 		return nullptr;
 	}
 
@@ -76,21 +70,45 @@ void Authentication::logout()
 {
 	try
 	{
-		communicator.request(web::http::methods::POST, web::json::value(), "api/invalidatetoken");
+		communicator.post("api/invalidatetoken", web::json::value());
 	}
 	catch (const std::exception& e)
 	{
-		OutputDebugStringA("Couldn't logout");
+		LOG_ERROR("Couldn't logout: ");
+		LOG_ERROR(e.what());
 	}
-
+	std::unique_lock<std::shared_timed_mutex> lock(SessionMutex);
 	communicator.unregisterAuthenticationSystem();
+	lock.unlock();
 
-	SessionCode = "";
-	delete LoggedUser;
-	LoggedUser = nullptr;
+	Token = "";
+	LoggedUser.reset();
+}
+
+const std::string& Authentication::getSessionCode()
+{
+	std::shared_lock<std::shared_timed_mutex> lock(SessionMutex);
+	return Token;
 }
 
 bool Authentication::isLogged()
 {
 	return LoggedUser != nullptr;
+}
+
+User* Authentication::loadUser(const std::wstring& Username)
+{
+	std::map<std::string, std::string> Parameters;
+	Parameters["username"] = StringUtility::ws2s(Username);
+	auto userResponse = communicator.get("api/users", Parameters);
+
+	if (userResponse.has_field(L"username"))
+	{
+		LoggedUser = std::make_unique<User>(userResponse);
+		return LoggedUser.get();
+	}
+	else
+	{
+		return nullptr;
+	}
 }

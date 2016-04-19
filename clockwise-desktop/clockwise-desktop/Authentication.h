@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <memory>
+#include <shared_mutex>
 
 class User;
 class ServiceCommunicator;
@@ -10,16 +12,20 @@ public:
 	Authentication(ServiceCommunicator& communicator);
 	~Authentication();
 
+	bool isLogged();
+
 	User* getUser();
+
 	User* login(const std::wstring& Username, const std::wstring& Password);
 	void logout();
 
-	bool isLogged();
-
-	const std::string& getSessionCode() { return SessionCode; }
+	const std::string& getSessionCode();
 
 private:
+	User* loadUser(const std::wstring& Username);
+
 	ServiceCommunicator& communicator;
-	User* LoggedUser;
-	std::string SessionCode;
+	std::unique_ptr<User> LoggedUser;
+	std::string Token;
+	std::shared_timed_mutex SessionMutex;
 };

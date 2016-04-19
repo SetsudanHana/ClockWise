@@ -2,6 +2,7 @@
 #include "LoginView.h"
 #include "Authentication.h"
 #include "Config.h"
+#include "Enviroment.h"
 
 using namespace FastUI;
 
@@ -66,12 +67,12 @@ void LoginView::onSuccesfullLogin()
 		UserSettings.set("username", LoginTextBox->getText());
 		UserSettings.set("password", PasswordTextBox->getText());
 		UserSettings.set("remember_me", true);
-		UserSettings.save(UserConfigFilename);
+		UserSettings.save(getUserConfigPath());	
 	}
 	else
 	{
 		Config UserSettings;
-		UserSettings.save(UserConfigFilename); //This will truncate settings file
+		UserSettings.save(Enviroment::getAppDataPath() + UserConfigFilename); //This will truncate settings file
 	}
 
 	setVisible(false);
@@ -80,10 +81,15 @@ void LoginView::onSuccesfullLogin()
 void LoginView::fillCredentialsFromSettings()
 {
 	Config UserSettings;
-	if (UserSettings.open(UserConfigFilename))
+	if (UserSettings.open(Enviroment::getAppDataPath() + UserConfigFilename))
 	{
 		LoginTextBox->setText(UserSettings.getWString("username"));
 		PasswordTextBox->setText(UserSettings.getWString("password"));
 		RememberMeCheckBox->setChecked(UserSettings.getBool("remember_me"));
 	}
+}
+
+std::wstring LoginView::getUserConfigPath()
+{
+	return Enviroment::getAppDataPath() + UserConfigFilename;
 }
