@@ -21,7 +21,7 @@ public class User implements UserDetails, Serializable
     private String email;
     private Role role;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "companyId" )
     private Company company;
 

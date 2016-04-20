@@ -17,7 +17,7 @@ public class Company implements Serializable
     @Column
     private String name;
 
-    @OneToMany( mappedBy = "company", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List< User > users = new ArrayList<>();
 
     public Company()
