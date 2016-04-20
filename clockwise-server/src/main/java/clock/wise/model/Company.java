@@ -2,6 +2,7 @@ package clock.wise.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class Company implements Serializable
     private String name;
 
     @OneToMany( mappedBy = "company", cascade = CascadeType.ALL )
-    private List< User > users;
+    private List< User > users = new ArrayList<>();
 
     public Company()
     {

@@ -5,14 +5,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 
 @Entity
 @Table( name = "Users", uniqueConstraints = @UniqueConstraint( columnNames = { "username", "email" } ) )
-public class User implements UserDetails
+public class User implements UserDetails, Serializable
 {
-
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private Long id;
@@ -22,7 +22,7 @@ public class User implements UserDetails
     private Role role;
 
     @ManyToOne
-    @JoinColumn( name = "company_id" )
+    @JoinColumn( name = "companyId" )
     private Company company;
 
     public User()

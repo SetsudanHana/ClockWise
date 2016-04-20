@@ -17,6 +17,10 @@ public interface CompanyService
 
     List< UserDto > findAllCompanyUsers( final Long id );
 
+    UserDto findCompanyUserById( final Long companyId, final Long userId );
+
+    void addUserToCompany( final Long companyId, final Long userId );
+
     void removeCompanyById( final Long id );
 
     void removeCompanyByEntity( final CompanyDto company );

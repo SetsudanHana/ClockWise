@@ -6,6 +6,7 @@ import org.modelmapper.AbstractConverter;
 
 public class UserModelConverter extends AbstractConverter< User, UserDto >
 {
+
     @Override
     protected UserDto convert( final User source )
     {
