@@ -127,9 +127,17 @@ public class CompanyServiceImpl implements CompanyService
             throw new IllegalArgumentException( "UserId or CompanyId cannot be null" );
         }
 
+        if ( !companyDao.exists( companyId ) || !userDao.exists( userId ) )
+        {
+            logger.error( "Company or user does not exist in database" );
+            throw new EntityNotFoundException( "Company or user does not exist in database" );
+        }
+
         Company company = companyDao.findOne( companyId );
         User user = userDao.findOne( userId );
         user.setCompany( company );
+
+        logger.info( "User id: " + userId + " has been added to company id: " + companyId );
     }
 
     @Override
