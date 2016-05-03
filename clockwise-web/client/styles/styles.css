@@ -1,0 +1,14 @@
+#react-root {
+    margin: 0px;
+}
+
+.wrapper {
+    background: url('background.jpg') no-repeat center center fixed;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+	
+    /* Preserve aspet ratio */
+    min-width: 100%;
+    min-height: 100%;
+}

@@ -9,6 +9,7 @@ mobile-experience       # Packages for a great mobile UX
 mongo                   # The database Meteor supports right now
 reactive-var            # Reactive variable for tracker
 jquery                  # Helpful client-side library
+session                 # Client-side reactive dictionary for your app
 tracker                 # Meteor's client-side reactive programming library
 
 standard-minifier-css   # CSS minifier run for production mode
@@ -20,3 +21,6 @@ static-html
 kadira:flow-router-ssr
 twbs:bootstrap
 http
+reactive-dict
+audit-argument-checks
+check

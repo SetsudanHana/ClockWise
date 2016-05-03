@@ -8,7 +8,9 @@ export default {
       return LocalState.set('LOGIN_ERROR', 'Hasło jest wymagane.');
     }
 
-    const {responseToken} = Meteor.subscribe('user.login', login, password);
+    console.log("Getting ready for subscription");
+
+    var responseToken = Meteor.subscribe('user.login', login, password);
     if(responseToken) {
       FlowRouter.go('/dashboard');
     } else {
@@ -16,6 +18,24 @@ export default {
     }
 
     LocalState.set('LOGIN_ERROR', null);
+  },
+  
+  register({Meteor, FlowRouter, LocalState}, email, password, confirmPassword) {
+      if (!email) {
+        return LocalState.set('CREATE_USER_ERROR', 'Email is required.');
+      }
+
+      if (!password || !confirmPassword) {
+        return LocalState.set('CREATE_USER_ERROR', 'Password is required.');
+      }
+      
+      if(password !== confirmPassword) {
+        return LocalState.get('CREATE_USER_ERROR', "Passwords don't match.");
+      }
+      
+      LocalState.set('CREATE_USER_ERROR', null);
+
+      FlowRouter.go('/dashboard');
   },
 
   clearErrors({LocalState}) {
