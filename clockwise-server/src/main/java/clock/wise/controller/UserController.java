@@ -2,7 +2,9 @@ package clock.wise.controller;
 
 import clock.wise.dto.EmailDto;
 import clock.wise.dto.PasswordDto;
+import clock.wise.dto.StatisticDto;
 import clock.wise.dto.UserDto;
+import clock.wise.service.StatisticService;
 import clock.wise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,8 @@ public class UserController
 {
     @Autowired
     private UserService userService;
+    @Autowired
+    private StatisticService statisticService;
 
     @RequestMapping( method = RequestMethod.POST )
     @ResponseStatus( HttpStatus.CREATED )
@@ -39,6 +43,18 @@ public class UserController
     {
         userDto.setId( id );
         return userService.createOrUpdate( userDto );
+    }
+
+    @RequestMapping( value = "/{id}/statistics", method = RequestMethod.POST )
+    public StatisticDto updateUserStatistics( @PathVariable( "id" ) final Long id, @RequestBody final StatisticDto statisticDto )
+    {
+        return statisticService.createOrUpdate( statisticDto, id );
+    }
+
+    @RequestMapping( value = "/{id}/statistics", method = RequestMethod.GET )
+    public StatisticDto getUserStatistics( @PathVariable( "id" ) final Long id )
+    {
+        return statisticService.findStatisticByUserId( id );
     }
 
     @RequestMapping( value = "/{id}/update_password", method = RequestMethod.PATCH )

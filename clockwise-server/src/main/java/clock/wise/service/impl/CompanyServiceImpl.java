@@ -1,14 +1,16 @@
 package clock.wise.service.impl;
 
 import clock.wise.dao.CompanyDao;
+import clock.wise.dao.UserDao;
 import clock.wise.dto.CompanyDto;
 import clock.wise.dto.UserDto;
+import clock.wise.mapper.CompanyModelMapperWrapper;
 import clock.wise.mapper.UserModelMapperWrapper;
 import clock.wise.model.Company;
 import clock.wise.model.User;
 import clock.wise.service.CompanyService;
-import clock.wise.utils.CompanyModelMapperUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +27,9 @@ public class CompanyServiceImpl implements CompanyService
     @Autowired
     private CompanyDao companyDao;
     @Autowired
-    private CompanyModelMapperUtils companyModelMapper;
+    private UserDao userDao;
+    @Autowired
+    private CompanyModelMapperWrapper companyModelMapperWrapper;
     @Autowired
     private UserModelMapperWrapper userModelMapperWrapper;
 
@@ -33,11 +37,19 @@ public class CompanyServiceImpl implements CompanyService
     @Transactional
     public CompanyDto createOrUpdate( final CompanyDto companyDto )
     {
-        Company company = companyModelMapper.getModelMapper().map( companyDto, Company.class );
-        Company saved = companyDao.save( company );
-        logger.info( "Company " + saved.getName() + " has been changed" );
+        Company company = companyModelMapperWrapper.getModelMapper().map( companyDto, Company.class );
+        for ( final User user : company.getUsers() )
+        {
+            user.setCompany( company );
+        }
 
-        return companyModelMapper.getModelMapper().map( saved, CompanyDto.class );
+        Company saved = companyDao.save( company );
+        if ( companyDao.exists( saved.getId() ) )
+        {
+            logger.info( "Company " + saved.getName() + " has been changed" );
+        }
+
+        return companyModelMapperWrapper.getModelMapper().map( saved, CompanyDto.class );
     }
 
     @Override
@@ -50,7 +62,7 @@ public class CompanyServiceImpl implements CompanyService
             throw new IllegalArgumentException( "Company's name cannot be null or empty" );
         }
 
-        return companyModelMapper.getModelMapper().map( companyDao.findByName( name ), CompanyDto.class );
+        return companyModelMapperWrapper.getModelMapper().map( companyDao.findByName( name ), CompanyDto.class );
     }
 
     @Override
@@ -63,7 +75,7 @@ public class CompanyServiceImpl implements CompanyService
             throw new IllegalArgumentException( "Id cannot be null" );
         }
 
-        return companyModelMapper.getModelMapper().map( companyDao.findOne( id ), CompanyDto.class );
+        return companyModelMapperWrapper.getModelMapper().map( companyDao.findOne( id ), CompanyDto.class );
     }
 
     @Override
@@ -74,7 +86,7 @@ public class CompanyServiceImpl implements CompanyService
         Iterable< Company > companies = companyDao.findAll();
         for ( final Company company : companies )
         {
-            CompanyDto companyDto = companyModelMapper.getModelMapper().map( company, CompanyDto.class );
+            CompanyDto companyDto = companyModelMapperWrapper.getModelMapper().map( company, CompanyDto.class );
             companiesListDto.add( companyDto );
         }
 
@@ -86,14 +98,46 @@ public class CompanyServiceImpl implements CompanyService
     public List< UserDto > findAllCompanyUsers( final Long id )
     {
         Company company = companyDao.findOne( id );
+        Hibernate.initialize( company.getUsers() );
         List< UserDto > companyUsers = new ArrayList<>();
         for ( final User user : company.getUsers() )
         {
-            UserDto userDto = userModelMapperWrapper.getModelMapper().map(user, UserDto.class);
+            UserDto userDto = userModelMapperWrapper.getModelMapper().map( user, UserDto.class );
             companyUsers.add( userDto );
         }
 
         return companyUsers;
+    }
+
+    @Override
+    @Transactional
+    public UserDto findCompanyUserById( final Long companyId, final Long userId )
+    {
+        User companyUser = companyDao.findCompanyUserById( companyId, userId );
+        return userModelMapperWrapper.getModelMapper().map( companyUser, UserDto.class );
+    }
+
+    @Override
+    @Transactional
+    public void addUserToCompany( final Long companyId, final Long userId )
+    {
+        if ( userId == null || companyId == null )
+        {
+            logger.error( "UserId or CompanyId cannot be null" );
+            throw new IllegalArgumentException( "UserId or CompanyId cannot be null" );
+        }
+
+        if ( !companyDao.exists( companyId ) || !userDao.exists( userId ) )
+        {
+            logger.error( "Company or user does not exist in database" );
+            throw new EntityNotFoundException( "Company or user does not exist in database" );
+        }
+
+        Company company = companyDao.findOne( companyId );
+        User user = userDao.findOne( userId );
+        user.setCompany( company );
+
+        logger.info( "User id: " + userId + " has been added to company id: " + companyId );
     }
 
     @Override
@@ -104,6 +148,11 @@ public class CompanyServiceImpl implements CompanyService
         {
             logger.error( "Error while removing company by id: " + id );
             throw new IllegalArgumentException( "Id cannot be null" );
+        }
+        else if ( !companyDao.exists( id ) )
+        {
+            logger.error( "Company with id: " + id + " does not exist" );
+            throw new EntityNotFoundException( "Company with id: " + id + " does not exist" );
         }
 
         companyDao.delete( id );

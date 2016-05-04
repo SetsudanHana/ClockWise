@@ -4,10 +4,10 @@ import {ReactiveDict} from 'meteor/reactive-dict';
 import {Tracker} from 'meteor/tracker';
 
 export default function () {
-  return {
-    Meteor,
-    FlowRouter,
-    LocalState: new ReactiveDict(),
-    Tracker
-  };
+    return {
+        Meteor,
+        FlowRouter,
+        LocalState: new ReactiveDict(),
+        Tracker
+    };
 }

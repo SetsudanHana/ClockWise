@@ -1,5 +1,6 @@
 package clock.wise.service.impl;
 
+import clock.wise.dao.CompanyDao;
 import clock.wise.dao.UserDao;
 import clock.wise.dto.PasswordDto;
 import clock.wise.dto.UserDto;
@@ -31,6 +32,8 @@ public class UserServiceImpl implements UserService
     private UserModelMapperWrapper userModelMapperWrapper;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private CompanyDao companyDao;
     @Autowired
     private MailService mailService;
 
@@ -101,7 +104,7 @@ public class UserServiceImpl implements UserService
     {
         List< UserDto > userDtoList = new ArrayList<>();
         Iterable< User > users = userDao.findAll();
-        for ( User user : users )
+        for ( final User user : users )
         {
             UserDto userDto = userModelMapperWrapper.getModelMapper().map(user, UserDto.class);
             userDtoList.add( userDto );
