@@ -4,16 +4,41 @@ import clock.wise.security.interfaces.TokenManager;
 import clock.wise.security.model.Token;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class TokenManagerImpl implements TokenManager {
 
+    private static final long CLEAN_UP_TASK_INTERVAL = TimeUnit.MINUTES.toMillis(10);
+
     private Map<UserDetails, Token> mTokenMap = new HashMap<>();
 
     private final ReentrantReadWriteLock mLock = new ReentrantReadWriteLock();
+
+    public TokenManagerImpl() {
+        Timer mCleanUpTimer = new Timer();
+        mCleanUpTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mLock.writeLock().lock();
+                try {
+                    List<UserDetails> expired = new ArrayList<>();
+                    for (Map.Entry<UserDetails, Token> entry : mTokenMap.entrySet()) {
+                        if (entry.getValue().isExpired()) {
+                            expired.add(entry.getKey());
+                        }
+                    }
+
+                    for (UserDetails userDetails : expired) {
+                        mTokenMap.remove(userDetails);
+                    }
+                } finally {
+                    mLock.writeLock().unlock();
+                }
+            }
+        }, 0, CLEAN_UP_TASK_INTERVAL);
+    }
 
     @Override
     public Token getToken(UserDetails userDetails) {
