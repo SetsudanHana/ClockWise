@@ -26,15 +26,27 @@ public class StatisticServiceImpl implements StatisticService
 
     @Override
     @Transactional
-    public StatisticDto createOrUpdate( final StatisticDto statisticDto )
+    public StatisticDto createOrUpdate( final StatisticDto statisticDto, final Long userId )
     {
+        User user = userDao.findOne( userId );
         Statistic statistic = statisticModelMapperWrapper.getModelMapper().map( statisticDto, Statistic.class );
-        statistic.getUser().setStatistic( statistic );
 
-        Statistic saved = statisticDao.save( statistic );
+        Statistic saved;
+        if ( user.getStatistic() != null )
+        {
+            Long id = statisticDao.findOne( user.getStatistic().getId() ).getId();
+            statistic.setId( id );
+            saved = statisticDao.save( statistic );
+        }
+        else
+        {
+            user.setStatistic( statistic );
+            saved = statisticDao.save( statistic );
+        }
+
         if ( statisticDao.exists( saved.getId() ) )
         {
-            logger.info( "Statistics for user id: " + saved.getUser().getId() + " has been created" );
+            logger.info( "Statistics for user id: " + userId + " has been created" );
         }
         return statisticModelMapperWrapper.getModelMapper().map( saved, StatisticDto.class );
     }
@@ -48,29 +60,8 @@ public class StatisticServiceImpl implements StatisticService
             throw new IllegalArgumentException( "User id cannot be null" );
         }
 
-        Statistic statistic = statisticDao.findOneByUserId( userId );
-
-        return statisticModelMapperWrapper.getModelMapper().map( statistic, StatisticDto.class );
-    }
-
-    @Override
-    @Transactional
-    public StatisticDto updateUserStatistics( final Long userId, final StatisticDto statisticDto )
-    {
         User user = userDao.findOne( userId );
-        Statistic statistic = user.getStatistic();
-        if ( statistic == null )
-        {
-            statistic = new Statistic();
-            statistic.setUser( user );
-            statistic.getUser().setStatistic( statistic );
-            statisticDao.save( statistic );
-        }
 
-        statistic.setMouseClickedCount( statisticDto.getMouseClickedCount() );
-        statistic.setKeyboardClickedCount( statisticDto.getKeyboardClickedCount() );
-        userDao.save( user );
-
-        return statisticModelMapperWrapper.getModelMapper().map( statistic, StatisticDto.class );
+        return statisticModelMapperWrapper.getModelMapper().map( user.getStatistic(), StatisticDto.class );
     }
 }

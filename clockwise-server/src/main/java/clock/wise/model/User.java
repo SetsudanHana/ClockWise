@@ -26,7 +26,7 @@ public class User implements UserDetails, Serializable
     @JoinColumn( name = "companyId" )
     private Company company;
 
-    @OneToOne( mappedBy = "user", cascade = CascadeType.ALL )
+    @OneToOne( cascade = CascadeType.ALL )
     private Statistic statistic;
 
     public User()

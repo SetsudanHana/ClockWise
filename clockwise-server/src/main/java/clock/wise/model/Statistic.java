@@ -17,10 +17,6 @@ public class Statistic implements Serializable
     @Column
     private int keyboardClickedCount;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private User user;
-
     public Statistic()
     {
     }
@@ -53,15 +49,5 @@ public class Statistic implements Serializable
     public void setKeyboardClickedCount( int keyboardClickedCount )
     {
         this.keyboardClickedCount = keyboardClickedCount;
-    }
-
-    public User getUser()
-    {
-        return user;
-    }
-
-    public void setUser( User user )
-    {
-        this.user = user;
     }
 }

@@ -48,7 +48,7 @@ public class UserController
     @RequestMapping( value = "/{id}/statistics", method = RequestMethod.PUT )
     public StatisticDto updateUserStatistics( @PathVariable( "id" ) final Long id, @RequestBody final StatisticDto statisticDto )
     {
-        return statisticService.updateUserStatistics( id, statisticDto );
+        return statisticService.createOrUpdate( statisticDto, id );
     }
 
     @RequestMapping( value = "/{id}/statistics", method = RequestMethod.GET )
