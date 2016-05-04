@@ -1,9 +1,13 @@
 import React from 'react';
 import {mount} from 'react-mounter';
 
+import {Grid} from 'react-bootstrap';
+
 import MainLayout from './components/MainLayout.jsx';
 import Login from '../users/containers/Login.js';
 import Register from '../users/containers/Register.js';
+import BasicChart from '../dashboard/containers/BasicChart.js';
+import NavBar from './components/NavBar.jsx';
 
 export default function (injectDeps, {FlowRouter}) {
     const MainLayoutCtx = injectDeps(MainLayout);
@@ -12,7 +16,11 @@ export default function (injectDeps, {FlowRouter}) {
         name: 'main.page',
         action() {
             mount(MainLayoutCtx, {
-                content: () => (<Login />)
+                content: () => (<div className="wrapper">
+                                    <Grid>
+                                        <Login />
+                                    </Grid>
+                                </div>)
             });
         }
     });
@@ -21,7 +29,12 @@ export default function (injectDeps, {FlowRouter}) {
         name: 'main.dashboard',
         action() {
             mount(MainLayoutCtx, {
-                content: () => (<h1>Success</h1>)
+                content: () => (<div>
+                                <NavBar/>
+                                <div className="dashboard">
+                                    <BasicChart/>
+                                </div>
+                            </div>)
             });
         }
     });
@@ -30,7 +43,11 @@ export default function (injectDeps, {FlowRouter}) {
         name: 'main.register',
         action() {
             mount(MainLayoutCtx, {
-                content: () => (<Register />)
+                content: () => (<div className="wrapper">
+                                <Grid>
+                                    <Register />
+                                </Grid>
+                                </div>)
             });
         } 
     });

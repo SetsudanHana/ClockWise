@@ -35,7 +35,12 @@ export default {
       
       LocalState.set('CREATE_USER_ERROR', null);
 
-      FlowRouter.go('/dashboard');
+      var responseToken = Meteor.subscribe('user.register', login, password);
+      if(responseToken) {
+        FlowRouter.go('/dashboard');
+      } else {
+        return LocalState.set('CREATE_USER_ERROR', 'Problem przy rejestracji.');
+      }
   },
 
   clearErrors({LocalState}) {

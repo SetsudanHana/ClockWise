@@ -18,4 +18,22 @@ export default function() {
 
 		return responseToken;
 	});
+	
+	Meteor.publish('user.register', function(email, password) {
+		var responseToken = '';
+		HTTP.call('POST', 'http://10.42.0.1:8080/api/register', {
+			data: {
+				"username": login,
+				"password": password
+			}
+		}, function(error, response) {
+			if(error) {
+				console.log("Error", error);
+			} else {
+				responseToken = response;
+			}
+		});
+
+		return responseToken;
+	});
 }

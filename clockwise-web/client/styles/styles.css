@@ -9,3 +9,11 @@
     -o-background-size: cover;
     background-size: cover;
 }
+
+.container {
+    width: 100%;
+}
+
+.dashboard {
+    margin-left: 10%;
+}
