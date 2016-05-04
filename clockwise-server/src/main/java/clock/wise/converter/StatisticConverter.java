@@ -13,6 +13,8 @@ public class StatisticConverter extends AbstractConverter< Statistic, StatisticD
         statisticDto.setId( source.getId() );
         statisticDto.setKeyboardClickedCount( source.getKeyboardClickedCount() );
         statisticDto.setMouseClickedCount( source.getMouseClickedCount() );
+        statisticDto.setMouseMovementCount( source.getMouseMovementCount() );
+        statisticDto.setDate( source.getDate() );
 
         return statisticDto;
     }
