@@ -4,6 +4,10 @@
 #include "User.h"
 #include "Authentication.h"
 #include <thread>
+#include <chrono>
+#include <ctime>
+#include "StringUtility.h"
+#include <time.h>
 
 WorkObserver::WorkObserver(const std::string& EndpointAddress, Authentication& AuthSystem)
 	: Communicator(EndpointAddress, AuthSystem), UpdateNotifier([](){})
@@ -30,6 +34,16 @@ void WorkObserver::start()
 	ThreadExecutor.start(60s, std::bind(&WorkObserver::run, this));
 }
 
+std::string get_date_string()
+{
+	std::time_t t = std::time(NULL);
+	tm tmStruct;
+	gmtime_s(&tmStruct, &t);
+	char mbstr[100];
+	std::strftime(mbstr, sizeof(mbstr), "%FT%T", &tmStruct);
+	return std::string(mbstr);
+}
+
 void WorkObserver::run()
 {
 	UpdateCounters();
@@ -45,6 +59,7 @@ void WorkObserver::run()
 	Statistics[L"keyboardClickedCount"] = KeyboardClicksPerMinute;
 	Statistics[L"mouseClickedCount"] = MouseClicksPerMinute;
 	Statistics[L"mouseMovementCount"] = MouseDistancePerMinute;
+	Statistics[L"date"] = web::json::value::string(StringUtility::s2ws(get_date_string()));
 
 	auto userId = std::to_string(AuthSystem->getUser()->getUserId());
 	Communicator.post("api/users/" + userId + "/statistics", Statistics);
