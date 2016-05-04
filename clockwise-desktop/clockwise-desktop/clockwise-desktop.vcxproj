@@ -156,19 +156,28 @@
     <ClInclude Include="clockwise-desktop.h" />
     <ClInclude Include="Clockwise.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Enviroment.h" />
+    <ClInclude Include="HookErrorCodes.h" />
+    <ClInclude Include="ISystemHooks.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="LoginView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ServiceCommunicator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringUtility.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TimedExecutor.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="WorkObserver.h" />
     <ClInclude Include="WorkView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationWindow.cpp" />
     <ClCompile Include="Authentication.cpp" />
     <ClCompile Include="clockwise-desktop.cpp" />
+    <ClCompile Include="Clockwise.cpp" />
+    <ClCompile Include="Enviroment.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LoginView.cpp" />
     <ClCompile Include="ServiceCommunicator.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -177,6 +186,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TimedExecutor.cpp" />
+    <ClCompile Include="WorkObserver.cpp" />
     <ClCompile Include="WorkView.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +199,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WindowsHooks\WindowsHooks.vcxproj">
+      <Project>{0cb8427d-0553-452f-b6e4-829bedc4cae1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

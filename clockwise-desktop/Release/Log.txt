@@ -1,0 +1,23 @@
+04/19/16 23:08:33 [ERROR]: Request failed with code: 401 and message: HTTP/1.1 401 Unauthorized
+Content-Type: application/json;charset=UTF-8
+Date: Tue, 19 Apr 2016 21:08:33 GMT
+Pragma: no-cache
+Server: Jetty(9.2.15.v20160210)
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+
+{"timestamp":1461100113546,"status":401,"error":"Unauthorized","message":"Unauthorized: Authentication token was either missing or invalid.","path":"/api/invalidatetoken"}
+04/19/16 23:08:33 [ERROR]: Couldn't logout: 
+04/19/16 23:08:33 [ERROR]: Request failed with code: 401 and message: HTTP/1.1 401 Unauthorized
+Content-Type: application/json;charset=UTF-8
+Date: Tue, 19 Apr 2016 21:08:33 GMT
+Pragma: no-cache
+Server: Jetty(9.2.15.v20160210)
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+
+{"timestamp":1461100113546,"status":401,"error":"Unauthorized","message":"Unauthorized: Authentication token was either missing or invalid.","path":"/api/invalidatetoken"}

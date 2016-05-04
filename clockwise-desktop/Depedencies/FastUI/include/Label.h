@@ -8,7 +8,7 @@ namespace FastUI
 	class FASTUI_API Label : public Control
 	{
 	public:
-		Label(const Rect& ButtonSize, const std::wstring& NewText);
+		Label(const Rect& ButtonSize, const std::wstring& NewText = L"Label");
 		virtual ~Label() = default;
 
 		virtual void onDraw(Renderer& GraphicsRenderer) override;

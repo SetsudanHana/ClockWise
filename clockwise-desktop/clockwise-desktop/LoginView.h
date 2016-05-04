@@ -15,6 +15,8 @@ private:
 	void onSuccesfullLogin();
 	void fillCredentialsFromSettings();
 
+	std::wstring getUserConfigPath();
+
 	Authentication& AuthenticationSystem;
 
 	FastUI::Button* SignInButton;
@@ -23,5 +25,5 @@ private:
 	FastUI::CheckBox* RememberMeCheckBox;
 	FastUI::Label* FailedLoginInfo;
 
-	const std::string UserConfigFilename = "user_settings.cfg";
+	const std::wstring UserConfigFilename = L"user_settings.cfg";
 };

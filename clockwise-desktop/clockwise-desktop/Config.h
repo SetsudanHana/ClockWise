@@ -4,17 +4,18 @@
 #include <fstream>
 #include <algorithm>
 #include "StringUtility.h"
+#include "Enviroment.h"
 
 class Config
 {
 public:
 	Config() = default;
-	Config(const std::string& Filename)
+	Config(const std::wstring& Filename)
 	{
 		open(Filename);
 	}
 
-	bool open(const std::string& Filename)
+	bool open(const std::wstring& Filename)
 	{
 		std::fstream File(Filename);
 		if (!File.is_open())
@@ -45,12 +46,19 @@ public:
 		return true;
 	}
 
-	bool save(const std::string& Filename) const
+	bool save(const std::wstring& Filename) const
 	{
 		std::fstream File(Filename, std::ios::out | std::ios::trunc);
 		if (!File.is_open())
 		{
-			return false;
+			Enviroment::createPath(Enviroment::getPath(Filename));
+			File.open(Filename, std::ios::out | std::ios::trunc);
+
+			if (!File.is_open())
+			{
+				OutputDebugStringW((L"Failed to open config file: " + Filename).c_str());
+				return false;
+			}
 		}
 
 		for (auto& MapItem : Values)

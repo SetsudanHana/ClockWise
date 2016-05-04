@@ -2,9 +2,7 @@
 #include "ServiceCommunicator.h"
 #include "Authentication.h"
 #include "StringUtility.h"
-
-//#include <cpprest/http_client.h>
-//#include <cpprest/filestream.h>
+#include "Logger.h"
 
 using namespace utility;                    
 using namespace web;
@@ -13,9 +11,14 @@ using namespace web::http::client;
 using namespace concurrency::streams;
 
 ServiceCommunicator::ServiceCommunicator(const std::string& ServiceAddress)
-	: Address(ServiceAddress), AuthenticationSystem(nullptr)
+	: AuthenticationSystem(nullptr), WebClient(StringUtility::s2ws(ServiceAddress))
 {
+}
 
+ServiceCommunicator::ServiceCommunicator(const std::string& ServiceAddress, Authentication& InitializedAuthentication)
+	: WebClient(StringUtility::s2ws(ServiceAddress))
+{
+	registerAuthenticationSystem(InitializedAuthentication);
 }
 
 void ServiceCommunicator::registerAuthenticationSystem(Authentication& InitializedAuthentication)
@@ -28,100 +31,88 @@ void ServiceCommunicator::unregisterAuthenticationSystem()
 	AuthenticationSystem = nullptr;
 }
 
-web::json::value ServiceCommunicator::request(web::http::method requestMethod, web::json::value& Values, const std::string& UriString)
+web::json::value ServiceCommunicator::post(const std::string& UriString, web::json::value& Values, const std::map<std::string, std::string>& Parameters)
 {
-	if (!AuthenticationSystem)
+	http_request ServiceRequest(methods::POST);
+	ServiceRequest.headers().set_content_type(L"application/json");
+	addAuthenticationToken(ServiceRequest);
+
+	uri_builder UriBuilder(StringUtility::s2ws(UriString));
+	for (auto& Parameter : Parameters)
 	{
-		throw std::exception("Authentication system is not initialized. Cannot build authorized request.");
+		UriBuilder.append_query(StringUtility::s2ws(Parameter.first), StringUtility::s2ws(Parameter.second));
 	}
 
-	http_client httpClient(StringUtility::s2ws(Address));
+	ServiceRequest.set_request_uri(UriBuilder.to_uri());
+	ServiceRequest.set_body(Values);
 
-	if (requestMethod == methods::GET)
-	{
-		http_request service_request(requestMethod);
-		//service_request.headers().set_content_type(L"application/json");
-
-		uri_builder builder(StringUtility::s2ws(UriString));
-		builder.append_query(L"token", StringUtility::s2ws(AuthenticationSystem->getSessionCode()));
-		builder.append_query(L"username", Values[L"username"].as_string());
-
-		service_request.set_request_uri(builder.to_uri());
-
-		auto jsonResponse = httpClient.request(service_request)
-			.then([](http_response response)
-		{
-			return response.extract_json();
-		});
-
-		try
-		{
-			jsonResponse.wait();
-		}
-		catch (const std::exception &e)
-		{
-			OutputDebugStringA(e.what());
-			throw e;
-		}
-
-		return jsonResponse.get();
-	}
-	else
-	{
-		http_request service_request(requestMethod);
-		service_request.headers().set_content_type(L"application/json");
-		service_request.set_request_uri(
-			uri_builder(StringUtility::s2ws(UriString))
-			.append_query(L"token", StringUtility::s2ws(AuthenticationSystem->getSessionCode()))
-			.to_uri());
-
-		service_request.set_body(Values);
-
-		auto jsonResponse = httpClient.request(service_request)
-			.then([](http_response response)
-		{
-			return response.extract_json();
-		});
-
-		try
-		{
-			jsonResponse.wait();
-		}
-		catch (const std::exception &e)
-		{
-			OutputDebugStringA(e.what());
-			throw e;
-		}
-
-		return jsonResponse.get();
-	}
-
+	return sendRequest(ServiceRequest);
 }
 
-web::json::value ServiceCommunicator::unauthenticatedRequest(web::http::method requestMethod, web::json::value& Values, const std::string& UriString)
+web::json::value ServiceCommunicator::get(const std::string& UriString, const std::map<std::string, std::string>& Parameters)
 {
-	http_client httpClient(StringUtility::s2ws(Address));
+	http_request ServiceRequest(methods::GET);
+	ServiceRequest.headers().set_content_type(L"application/json");
+	addAuthenticationToken(ServiceRequest);
 
-	http_request service_request(requestMethod);
-	service_request.headers().set_content_type(L"application/json");
-	service_request.set_request_uri(uri_builder(StringUtility::s2ws(UriString)).to_uri());
-	service_request.set_body(Values);
+	uri_builder UriBuilder(StringUtility::s2ws(UriString));
 
-	auto jsonResponse = httpClient.request(service_request)
-		.then([](http_response response) 
+	for (auto& Parameter : Parameters)
 	{
-		return response.extract_json();
+		UriBuilder.append_query(StringUtility::s2ws(Parameter.first), StringUtility::s2ws(Parameter.second));
+	}
+
+	ServiceRequest.set_request_uri(UriBuilder.to_uri());
+
+	return sendRequest(ServiceRequest);
+}
+
+void ServiceCommunicator::addAuthenticationToken(http_request& ServiceRequest) const
+{
+	if ((Authentication*)AuthenticationSystem != nullptr)
+	{
+		ServiceRequest.headers().add(L"ClockWise-Token", StringUtility::s2ws(((Authentication*)AuthenticationSystem)->getSessionCode()));
+	}
+}
+
+web::json::value ServiceCommunicator::request(web::http::method RequestMethod, const std::string& UriString, const std::map<std::string, std::string>& Parameters, web::json::value& Values)
+{
+	if (RequestMethod == methods::GET)
+	{
+		return get(UriString, Parameters);
+	}
+	else if (RequestMethod == methods::POST)
+	{
+		return post(UriString, Values);
+	}
+
+	assert(false); //should not get here;
+	return json::value();
+}
+
+web::json::value ServiceCommunicator::sendRequest(const web::http::http_request& ServiceRequest)
+{
+	auto JsonResponse = WebClient.request(ServiceRequest)
+		.then([](http_response Response)
+	{
+		if (Response.status_code() != web::http::status_codes::OK)
+		{
+			auto ErrorMessage = "Request failed with code: " + std::to_string(Response.status_code()) 
+				+ " and message: " + StringUtility::ws2s(Response.to_string());
+			throw std::exception(ErrorMessage.c_str());
+		}
+		return Response.extract_json();
 	});
 
 	try
 	{
-		jsonResponse.wait();
+		JsonResponse.wait();
 	}
-	catch (const std::exception &e)
+	catch (const std::exception& e)
 	{
-		OutputDebugStringA(e.what());
+		LOG_ERROR(e.what());
 		throw e;
 	}
 
-	return jsonResponse.get();
+	return JsonResponse.get();
 }
