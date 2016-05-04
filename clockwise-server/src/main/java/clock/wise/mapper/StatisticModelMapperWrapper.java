@@ -4,15 +4,17 @@ import clock.wise.converter.StatisticConverter;
 import org.modelmapper.AbstractConverter;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class StatisticModelMapperWrapper extends ModelMapperWrapper
 {
     @Override
-    protected List< AbstractConverter > convertersList()
+    protected List<AbstractConverter> convertersList()
     {
-        return Arrays.asList( new StatisticConverter() );
+        List<AbstractConverter> converters = new ArrayList<>();
+        converters.add(new StatisticConverter());
+        return converters;
     }
 }

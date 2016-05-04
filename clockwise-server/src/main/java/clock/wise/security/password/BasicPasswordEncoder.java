@@ -7,7 +7,7 @@ import clock.wise.security.utils.SHA1Utils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BasicPasswordEncoder implements PasswordEncoder {
@@ -16,8 +16,12 @@ public class BasicPasswordEncoder implements PasswordEncoder {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(SECURITY_STRENGTH);
 
-    private List<PasswordMatcherStrategy> passwordMatcherStrategies =
-            Arrays.asList(new SimplePasswordMatcherStrategy(encoder), new BasicPasswordMatcherStrategy(encoder));
+    private List<PasswordMatcherStrategy> passwordMatcherStrategies = new ArrayList<>();
+
+    {
+        passwordMatcherStrategies.add(new SimplePasswordMatcherStrategy(encoder));
+        passwordMatcherStrategies.add(new BasicPasswordMatcherStrategy(encoder));
+    }
 
     public BasicPasswordEncoder() {
     }

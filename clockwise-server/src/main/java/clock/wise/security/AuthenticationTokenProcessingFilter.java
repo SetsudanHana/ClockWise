@@ -1,7 +1,10 @@
 package clock.wise.security;
 
 
+import clock.wise.dto.TokenDto;
 import clock.wise.security.interfaces.TokenManager;
+import clock.wise.security.mapper.TokenModelMapperWrapper;
+import clock.wise.security.model.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +28,9 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    TokenModelMapperWrapper tokenModelMapperWrapper;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
@@ -36,16 +42,17 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         }
 
         if (token != null) {
-            // validate the token
-            if (tokenManager.validate(token)) {
-                // determine the user based on the (already validated) token
-                UserDetails userDetails = tokenManager.getUserFromToken(token);
-                // build an Authentication object with the user's info
+            TokenDto tokenDto = new TokenDto();
+            tokenDto.token = token;
+            Token tokenModel = tokenModelMapperWrapper.getModelMapper().map(tokenDto, Token.class);
+            if (tokenManager.validate(tokenModel)) {
+                UserDetails userDetails = tokenManager.getUserFromToken(tokenModel);
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) request));
-                // set the authentication into the SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authentication));
+            } else {
+                tokenManager.invalidateToken(tokenModel);
             }
         }
         // continue thru the filter chain

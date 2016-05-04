@@ -5,7 +5,9 @@ import clock.wise.dto.TokenDto;
 import clock.wise.dto.UserFormDto;
 import clock.wise.model.User;
 import clock.wise.security.interfaces.TokenManager;
+import clock.wise.security.mapper.TokenModelMapperWrapper;
 import clock.wise.security.mapper.UserFormModelMapperWrapper;
+import clock.wise.security.model.Token;
 import clock.wise.security.model.UserForm;
 import clock.wise.service.impl.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +29,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserFormModelMapperWrapper modelMapperWrapper;
+    UserFormModelMapperWrapper userFormModelMapperWrapper;
+
+    @Autowired
+    TokenModelMapperWrapper tokenModelMapperWrapper;
 
     @Override
     public TokenDto authenticate(UserFormDto userFormDto) {
-        UserForm userForm = modelMapperWrapper.getModelMapper().map(userFormDto, UserForm.class);
+        UserForm userForm = userFormModelMapperWrapper.getModelMapper().map(userFormDto, UserForm.class);
         User user = userDao.findOneByUsername(userForm.getUsername());
         if (user != null) {
             if (passwordEncoder.matches(userForm.getPassword(), user.getPassword())) {
-                TokenDto tokenDto = new TokenDto();
-                tokenDto.token = tokenManager.getToken(userForm);
-                return tokenDto;
+                Token token = tokenManager.getToken(userForm);
+                return tokenModelMapperWrapper.getModelMapper().map(token, TokenDto.class);
             }
             throw new BadCredentialsException("Invalid password for username: " + userFormDto.username);
         }
@@ -46,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void invalidateToken(User user) {
-        tokenManager.invalidateToken(modelMapperWrapper.getModelMapper().map(user, UserForm.class));
+        tokenManager.invalidateToken(userFormModelMapperWrapper.getModelMapper().map(user, UserForm.class));
     }
 
 }

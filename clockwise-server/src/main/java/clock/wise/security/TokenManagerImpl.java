@@ -1,6 +1,7 @@
 package clock.wise.security;
 
 import clock.wise.security.interfaces.TokenManager;
+import clock.wise.security.model.Token;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.HashMap;
@@ -10,48 +11,58 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class TokenManagerImpl implements TokenManager {
 
-    private Map<UserDetails, UUID> mTokenMap = new HashMap<UserDetails, UUID>();
+    private Map<UserDetails, Token> mTokenMap = new HashMap<>();
 
     private final ReentrantReadWriteLock mLock = new ReentrantReadWriteLock();
 
     @Override
-    public String getToken(UserDetails userDetails) {
+    public Token getToken(UserDetails userDetails) {
         mLock.writeLock().lock();
         try {
             mTokenMap.remove(userDetails);
-            UUID token;
+            Token token;
             do {
-                token = UUID.randomUUID();
+                token = new Token(UUID.randomUUID());
             } while (mTokenMap.containsValue(token));
             mTokenMap.put(userDetails, token);
-            return token.toString();
+            return token;
         } finally {
             mLock.writeLock().unlock();
         }
     }
 
     @Override
-    public String getToken(UserDetails userDetails, Long expiration) {
-        //TODO not supported yet
-        return null;
+    public Token getToken(UserDetails userDetails, Long expiration) {
+        mLock.writeLock().lock();
+        try {
+            mTokenMap.remove(userDetails);
+            Token token;
+            do {
+                token = new Token(UUID.randomUUID(), expiration);
+            } while (mTokenMap.containsValue(token));
+            mTokenMap.put(userDetails, token);
+            return token;
+        } finally {
+            mLock.writeLock().unlock();
+        }
     }
 
     @Override
-    public boolean validate(String token) {
+    public boolean validate(Token token) {
         mLock.readLock().lock();
         try {
-            UUID parsedToken = UUID.fromString(token);//TODO handle token being invalid
-            return mTokenMap.containsValue(parsedToken);
+            Map.Entry<UserDetails, Token> entry = findEntryByToken(token);
+            return entry != null && !entry.getValue().isExpired();
         } finally {
             mLock.readLock().unlock();
         }
     }
 
     @Override
-    public UserDetails getUserFromToken(String token) {
+    public UserDetails getUserFromToken(Token token) {
         mLock.readLock().lock();
         try {
-            return findUserByToken(UUID.fromString(token));
+            return findUserByToken(token);
         } finally {
             mLock.readLock().unlock();
         }
@@ -67,10 +78,25 @@ public class TokenManagerImpl implements TokenManager {
         }
     }
 
-    private UserDetails findUserByToken(UUID token) {
-        for (Map.Entry<UserDetails, UUID> entry : mTokenMap.entrySet()) {
+    @Override
+    public void invalidateToken(Token token) {
+        mLock.writeLock().lock();
+        try {
+            mTokenMap.remove(token);
+        } finally {
+            mLock.writeLock().unlock();
+        }
+    }
+
+    private UserDetails findUserByToken(Token token) {
+        Map.Entry<UserDetails, Token> entry = findEntryByToken(token);
+        return entry == null ? null : entry.getKey();
+    }
+
+    private Map.Entry<UserDetails, Token> findEntryByToken(Token token) {
+        for (Map.Entry<UserDetails, Token> entry : mTokenMap.entrySet()) {
             if (entry.getValue().equals(token)) {
-                return entry.getKey();
+                return entry;
             }
         }
         return null;

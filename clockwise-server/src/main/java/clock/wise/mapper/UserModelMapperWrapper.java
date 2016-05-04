@@ -4,13 +4,15 @@ import clock.wise.converter.UserModelConverter;
 import org.modelmapper.AbstractConverter;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserModelMapperWrapper extends ModelMapperWrapper {
     @Override
     protected List<AbstractConverter> convertersList() {
-        return Arrays.asList(new UserModelConverter());
+        List<AbstractConverter> converters = new ArrayList<>();
+        converters.add(new UserModelConverter());
+        return converters;
     }
 }
