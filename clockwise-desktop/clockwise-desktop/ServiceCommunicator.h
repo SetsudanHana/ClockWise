@@ -12,6 +12,7 @@ public:
 	ServiceCommunicator(const std::string& ServiceAddress);
 	ServiceCommunicator(const std::string& ServiceAddress, Authentication& InitializedAuthentication);
 
+	Authentication* getAuthentication() { return AuthenticationSystem; }
 	void registerAuthenticationSystem(Authentication& InitializedAuthentication);
 	void unregisterAuthenticationSystem();
 

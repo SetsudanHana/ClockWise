@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "WorkObserver.h"
 #include "Logger.h"
+#include "User.h"
+#include "Authentication.h"
 #include <thread>
 
 WorkObserver::WorkObserver(const std::string& EndpointAddress, Authentication& AuthSystem)
@@ -32,6 +34,20 @@ void WorkObserver::run()
 {
 	UpdateCounters();
 	UpdateNotifier();
+
+	auto AuthSystem = Communicator.getAuthentication();
+	if (!AuthSystem)
+	{
+		return;
+	}
+
+	web::json::value Statistics;
+	Statistics[L"keyboardClickedCount"] = KeyboardClicksPerMinute;
+	Statistics[L"mouseClickedCount"] = MouseClicksPerMinute;
+	Statistics[L"mouseMovementCount"] = MouseDistancePerMinute;
+
+	auto userId = std::to_string(AuthSystem->getUser()->getUserId());
+	Communicator.post("api/users/" + userId + "/statistics", Statistics);
 }
 
 void WorkObserver::UpdateCounters()
@@ -52,6 +68,9 @@ void WorkObserver::UpdateCounters()
 void WorkObserver::stop()
 {
 	Hooks.stopHooks();
+	LastKeyboardCount = 0;
+	LastMouseCount = 0;
+	LastMouseDelta = 0;
 }
 
 void WorkObserver::terminate()

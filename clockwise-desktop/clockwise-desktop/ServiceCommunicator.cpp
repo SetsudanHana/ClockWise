@@ -38,6 +38,10 @@ web::json::value ServiceCommunicator::post(const std::string& UriString, web::js
 	addAuthenticationToken(ServiceRequest);
 
 	uri_builder UriBuilder(StringUtility::s2ws(UriString));
+	for (auto& Parameter : Parameters)
+	{
+		UriBuilder.append_query(StringUtility::s2ws(Parameter.first), StringUtility::s2ws(Parameter.second));
+	}
 
 	ServiceRequest.set_request_uri(UriBuilder.to_uri());
 	ServiceRequest.set_body(Values);
@@ -104,7 +108,7 @@ web::json::value ServiceCommunicator::sendRequest(const web::http::http_request&
 	{
 		JsonResponse.wait();
 	}
-	catch (const std::exception &e)
+	catch (const std::exception& e)
 	{
 		LOG_ERROR(e.what());
 		throw e;

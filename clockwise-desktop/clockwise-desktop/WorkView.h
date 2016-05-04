@@ -14,7 +14,6 @@ public:
 	WorkView(Authentication& AuthSystem, LoginView& AppLoginView);
 
 	void onStartEndWork();
-
 	virtual void onCreate() override;
 
 private:
@@ -28,6 +27,7 @@ private:
 	TimedExecutor TimeLabelUpdate;
 
 	FastUI::Rectangle* BottomRect;
+	FastUI::Rectangle* WorkBackgroundRect;
 	FastUI::Label* InfoLabel;
 	FastUI::Label* UsernameLabel;
 	FastUI::Label* RoleLabel;

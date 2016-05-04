@@ -37,10 +37,17 @@ WorkView::WorkView(Authentication& AuthSystem, LoginView& AppLoginView)
 		Created = false;
 	});
 
-	KeyboardClicksLabel = new Label(FastUI::Rect{ 30.0f, 450.0f, 330.0f, 465.0f }, L"Keyboard click per minute: 0");
-	MouseClicksLabel = new Label(FastUI::Rect{ 30.0f, 480.0f, 330.0f, 495.0f }, L"Mouse click per minute: 0");
-	MouseDeltaLabel = new Label(FastUI::Rect{ 30.0f, 510.0f, 330.0f, 525.0f }, L"Mouse travelled distance per minute: 0");
-	WorkTimeLabel = new Label(FastUI::Rect{ 30.0f, 430.0f, 330.0f, 445.0f }, L"Work time: ");
+	KeyboardClicksLabel = new Label(FastUI::Rect{ 20.0f, 450.0f, 330.0f, 465.0f }, L"Keyboard click per minute: 0");
+	KeyboardClicksLabel->setTextColor(Color(0.25f, 0.25f, 0.25f, 1.0f));
+
+	MouseClicksLabel = new Label(FastUI::Rect{ 20.0f, 480.0f, 330.0f, 495.0f }, L"Mouse click per minute: 0");
+	MouseClicksLabel->setTextColor(Color(0.25f, 0.25f, 0.25f, 1.0f));
+
+	MouseDeltaLabel = new Label(FastUI::Rect{ 20.0f, 510.0f, 330.0f, 525.0f }, L"Mouse travelled distance per minute: 0");
+	MouseDeltaLabel->setTextColor(Color(0.25f, 0.25f, 0.25f, 1.0f));
+
+	WorkTimeLabel = new Label(FastUI::Rect{ 20.0f, 430.0f, 330.0f, 445.0f }, L"Work time: ");
+	WorkTimeLabel->setTextColor(Color(0.25f, 0.25f, 0.25f, 1.0f));
 
 	StartJobButton = new Button(FastUI::Rect{ 130.0f, 405.0f, 230.0f, 430.0f }, L"Start Work");
 	StartJobButton->addEventHandler(Event::Click, [this](const Event& EventData)
@@ -48,6 +55,12 @@ WorkView::WorkView(Authentication& AuthSystem, LoginView& AppLoginView)
 		onStartEndWork();
 	});
 
+	WorkBackgroundRect = new FastUI::Rectangle(Rect{ 20.0f, 400.0f, 330.0f, 530.0f });
+	WorkBackgroundRect->setBackgroundColor(Color(0.95f, 0.95f, 0.95f, 1.0f));
+	WorkBackgroundRect->setBorderColor(Color::LightGray());
+	WorkBackgroundRect->setBorderWidth(1);
+
+	addControl(*WorkBackgroundRect);
 	addControl(*WorkTimeLabel);
 	addControl(*KeyboardClicksLabel);
 	addControl(*MouseClicksLabel);
