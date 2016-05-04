@@ -16,8 +16,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
+
+    private static final long TOKEN_EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(30);
 
     @Autowired
     UserDao userDao;
@@ -40,7 +44,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userDao.findOneByUsername(userForm.getUsername());
         if (user != null) {
             if (passwordEncoder.matches(userForm.getPassword(), user.getPassword())) {
-                Token token = tokenManager.getToken(userForm);
+                Token token = tokenManager.getToken(userForm, TOKEN_EXPIRATION_TIME);
                 return tokenModelMapperWrapper.getModelMapper().map(token, TokenDto.class);
             }
             throw new BadCredentialsException("Invalid password for username: " + userFormDto.username);
