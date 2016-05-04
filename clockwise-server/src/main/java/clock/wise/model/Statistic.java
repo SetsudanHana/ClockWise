@@ -2,6 +2,7 @@ package clock.wise.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 public class Statistic implements Serializable
@@ -15,7 +16,18 @@ public class Statistic implements Serializable
     private int mouseClickedCount;
 
     @Column
+    private int mouseMovementCount;
+
+    @Column
     private int keyboardClickedCount;
+
+    @ManyToOne( fetch = FetchType.LAZY )
+    @JoinColumn( name = "userId" )
+    private User user;
+
+    @Column
+    @Temporal( TemporalType.TIMESTAMP )
+    private Date date;
 
     public Statistic()
     {
@@ -49,5 +61,35 @@ public class Statistic implements Serializable
     public void setKeyboardClickedCount( int keyboardClickedCount )
     {
         this.keyboardClickedCount = keyboardClickedCount;
+    }
+
+    public User getUser()
+    {
+        return user;
+    }
+
+    public void setUser( User user )
+    {
+        this.user = user;
+    }
+
+    public Date getDate()
+    {
+        return date;
+    }
+
+    public void setDate( Date date )
+    {
+        this.date = date;
+    }
+
+    public int getMouseMovementCount()
+    {
+        return mouseMovementCount;
+    }
+
+    public void setMouseMovementCount( int mouseMovementCount )
+    {
+        this.mouseMovementCount = mouseMovementCount;
     }
 }

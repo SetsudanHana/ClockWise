@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class StatisticServiceImpl implements StatisticService
 {
@@ -31,19 +34,8 @@ public class StatisticServiceImpl implements StatisticService
         User user = userDao.findOne( userId );
         Statistic statistic = statisticModelMapperWrapper.getModelMapper().map( statisticDto, Statistic.class );
 
-        Statistic saved;
-        if ( user.getStatistic() != null )
-        {
-            Long id = statisticDao.findOne( user.getStatistic().getId() ).getId();
-            statistic.setId( id );
-            saved = statisticDao.save( statistic );
-        }
-        else
-        {
-            user.setStatistic( statistic );
-            saved = statisticDao.save( statistic );
-        }
-
+        statistic.setUser( user );
+        Statistic saved = statisticDao.save( statistic );
         if ( statisticDao.exists( saved.getId() ) )
         {
             logger.info( "Statistics for user id: " + userId + " has been created" );
@@ -53,15 +45,21 @@ public class StatisticServiceImpl implements StatisticService
 
     @Override
     @Transactional
-    public StatisticDto findStatisticByUserId( final Long userId )
+    public List< StatisticDto > findStatisticsByUserId( final Long userId )
     {
         if ( userId == null )
         {
             throw new IllegalArgumentException( "User id cannot be null" );
         }
 
-        User user = userDao.findOne( userId );
+        List< StatisticDto > statisticDtoList = new ArrayList<>();
+        Iterable< Statistic > statistics = userDao.findOne( userId ).getStatistic();
+        for ( final Statistic statistic : statistics )
+        {
+            StatisticDto statisticDto = statisticModelMapperWrapper.getModelMapper().map( statistic, StatisticDto.class );
+            statisticDtoList.add( statisticDto );
+        }
 
-        return statisticModelMapperWrapper.getModelMapper().map( user.getStatistic(), StatisticDto.class );
+        return statisticDtoList;
     }
 }

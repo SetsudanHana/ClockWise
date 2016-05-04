@@ -1,10 +1,14 @@
 package clock.wise.dto;
 
+import java.util.Date;
+
 public class StatisticDto
 {
     private Long id;
     private int mouseClickedCount;
     private int keyboardClickedCount;
+    private int mouseMovementCount;
+    private Date date;
 
     public Long getId()
     {
@@ -34,5 +38,25 @@ public class StatisticDto
     public void setKeyboardClickedCount( int keyboardClickedCount )
     {
         this.keyboardClickedCount = keyboardClickedCount;
+    }
+
+    public Date getDate()
+    {
+        return date;
+    }
+
+    public void setDate( Date date )
+    {
+        this.date = date;
+    }
+
+    public int getMouseMovementCount()
+    {
+        return mouseMovementCount;
+    }
+
+    public void setMouseMovementCount( int mouseMovementCount )
+    {
+        this.mouseMovementCount = mouseMovementCount;
     }
 }
