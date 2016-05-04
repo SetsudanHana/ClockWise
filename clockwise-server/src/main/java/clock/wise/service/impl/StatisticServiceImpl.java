@@ -56,8 +56,8 @@ public class StatisticServiceImpl implements StatisticService
         Iterable< Statistic > statistics = userDao.findOne( userId ).getStatistic();
         for ( final Statistic statistic : statistics )
         {
-            StatisticDto companyDto = statisticModelMapperWrapper.getModelMapper().map( statistic, StatisticDto.class );
-            statisticDtoList.add( companyDto );
+            StatisticDto statisticDto = statisticModelMapperWrapper.getModelMapper().map( statistic, StatisticDto.class );
+            statisticDtoList.add( statisticDto );
         }
 
         return statisticDtoList;
