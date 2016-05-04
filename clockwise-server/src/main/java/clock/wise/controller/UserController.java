@@ -45,7 +45,7 @@ public class UserController
         return userService.createOrUpdate( userDto );
     }
 
-    @RequestMapping( value = "/{id}/statistics", method = RequestMethod.PUT )
+    @RequestMapping( value = "/{id}/statistics", method = RequestMethod.POST )
     public StatisticDto updateUserStatistics( @PathVariable( "id" ) final Long id, @RequestBody final StatisticDto statisticDto )
     {
         return statisticService.createOrUpdate( statisticDto, id );
