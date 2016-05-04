@@ -34,9 +34,8 @@ public class StatisticServiceImpl implements StatisticService
         User user = userDao.findOne( userId );
         Statistic statistic = statisticModelMapperWrapper.getModelMapper().map( statisticDto, Statistic.class );
 
-        Statistic saved;
         statistic.setUser( user );
-        saved = statisticDao.save( statistic );
+        Statistic saved = statisticDao.save( statistic );
         if ( statisticDao.exists( saved.getId() ) )
         {
             logger.info( "Statistics for user id: " + userId + " has been created" );
@@ -46,21 +45,21 @@ public class StatisticServiceImpl implements StatisticService
 
     @Override
     @Transactional
-    public List<StatisticDto> findStatisticsByUserId( final Long userId )
+    public List< StatisticDto > findStatisticsByUserId( final Long userId )
     {
         if ( userId == null )
         {
             throw new IllegalArgumentException( "User id cannot be null" );
         }
 
-        List< StatisticDto > statisticDtos = new ArrayList<>();
+        List< StatisticDto > statisticDtoList = new ArrayList<>();
         Iterable< Statistic > statistics = userDao.findOne( userId ).getStatistic();
         for ( final Statistic statistic : statistics )
         {
             StatisticDto companyDto = statisticModelMapperWrapper.getModelMapper().map( statistic, StatisticDto.class );
-            statisticDtos.add( companyDto );
+            statisticDtoList.add( companyDto );
         }
 
-        return statisticDtos;
+        return statisticDtoList;
     }
 }

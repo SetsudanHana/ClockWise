@@ -54,7 +54,7 @@ public class UserController
     }
 
     @RequestMapping( value = "/{id}/statistics", method = RequestMethod.GET )
-    public List<StatisticDto> getUserStatistics( @PathVariable( "id" ) final Long id )
+    public List< StatisticDto > getUserStatistics( @PathVariable( "id" ) final Long id )
     {
         return statisticService.findStatisticsByUserId( id );
     }
