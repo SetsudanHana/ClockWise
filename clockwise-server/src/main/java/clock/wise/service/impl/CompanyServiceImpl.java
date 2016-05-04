@@ -38,7 +38,7 @@ public class CompanyServiceImpl implements CompanyService
     public CompanyDto createOrUpdate( final CompanyDto companyDto )
     {
         Company company = companyModelMapperWrapper.getModelMapper().map( companyDto, Company.class );
-        for ( User user : company.getUsers() )
+        for ( final User user : company.getUsers() )
         {
             user.setCompany( company );
         }

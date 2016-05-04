@@ -1,6 +1,7 @@
 package clock.wise.model;
 
 import clock.wise.model.roles.Role;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -24,6 +25,9 @@ public class User implements UserDetails, Serializable
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "companyId" )
     private Company company;
+
+    @OneToOne( mappedBy = "user", cascade = CascadeType.ALL )
+    private Statistic statistic;
 
     public User()
     {
@@ -103,6 +107,16 @@ public class User implements UserDetails, Serializable
     public void setCompany( Company company )
     {
         this.company = company;
+    }
+
+    public Statistic getStatistic()
+    {
+        return statistic;
+    }
+
+    public void setStatistic( Statistic statistic )
+    {
+        this.statistic = statistic;
     }
 
     @Override
