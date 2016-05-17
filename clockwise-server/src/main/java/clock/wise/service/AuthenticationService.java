@@ -1,4 +1,4 @@
-package clock.wise.service.impl;
+package clock.wise.service;
 
 import clock.wise.dto.TokenDto;
 import clock.wise.dto.UserFormDto;

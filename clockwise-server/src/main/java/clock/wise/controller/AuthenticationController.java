@@ -3,7 +3,7 @@ package clock.wise.controller;
 import clock.wise.dto.TokenDto;
 import clock.wise.dto.UserFormDto;
 import clock.wise.model.User;
-import clock.wise.service.impl.AuthenticationService;
+import clock.wise.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;

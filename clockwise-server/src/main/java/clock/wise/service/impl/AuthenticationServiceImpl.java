@@ -1,4 +1,4 @@
-package clock.wise.service;
+package clock.wise.service.impl;
 
 import clock.wise.dao.UserDao;
 import clock.wise.dto.TokenDto;
@@ -9,7 +9,7 @@ import clock.wise.security.mapper.TokenModelMapperWrapper;
 import clock.wise.security.mapper.UserFormModelMapperWrapper;
 import clock.wise.security.model.Token;
 import clock.wise.security.model.UserForm;
-import clock.wise.service.impl.AuthenticationService;
+import clock.wise.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
