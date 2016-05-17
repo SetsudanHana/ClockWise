@@ -9,7 +9,7 @@ public class UserDto
     private String password;
     private String email;
     private Role role;
-    private CompanyDto companyDto;
+    private Long companyId;
 
     public Long getId()
     {
@@ -61,13 +61,13 @@ public class UserDto
         this.role = role;
     }
 
-    public CompanyDto getCompanyDto()
+    public Long getCompanyId()
     {
-        return companyDto;
+        return companyId;
     }
 
-    public void setCompanyDto( CompanyDto companyDto )
+    public void setCompanyId(Long companyId)
     {
-        this.companyDto = companyDto;
+        this.companyId = companyId;
     }
 }

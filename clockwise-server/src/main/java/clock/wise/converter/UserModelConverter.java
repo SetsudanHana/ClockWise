@@ -16,6 +16,7 @@ public class UserModelConverter extends AbstractConverter< User, UserDto >
         userDto.setEmail( source.getEmail() );
         userDto.setRole( source.getRole() );
         userDto.setPassword( "" );
+        userDto.setCompanyId(source.getCompany().getId());
 
         return userDto;
     }
