@@ -6,10 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Entity
 @Table( name = "Users", uniqueConstraints = @UniqueConstraint( columnNames = { "username", "email" } ) )
@@ -26,9 +24,6 @@ public class User implements UserDetails, Serializable
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "companyId" )
     private Company company;
-
-    @OneToMany( mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    private List< Statistic > statistic = new ArrayList<>();
 
     public User()
     {
@@ -108,16 +103,6 @@ public class User implements UserDetails, Serializable
     public void setCompany( Company company )
     {
         this.company = company;
-    }
-
-    public List< Statistic > getStatistic()
-    {
-        return statistic;
-    }
-
-    public void setStatistic( List< Statistic > statistic )
-    {
-        this.statistic = statistic;
     }
 
     @Override

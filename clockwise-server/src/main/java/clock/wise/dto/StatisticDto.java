@@ -9,6 +9,7 @@ public class StatisticDto
     private int keyboardClickedCount;
     private int mouseMovementCount;
     private Date date;
+    private Long userId;
 
     public Long getId()
     {
@@ -58,5 +59,13 @@ public class StatisticDto
     public void setMouseMovementCount( int mouseMovementCount )
     {
         this.mouseMovementCount = mouseMovementCount;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

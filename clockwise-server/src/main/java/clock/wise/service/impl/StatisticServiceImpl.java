@@ -53,7 +53,7 @@ public class StatisticServiceImpl implements StatisticService
         }
 
         List< StatisticDto > statisticDtoList = new ArrayList<>();
-        Iterable< Statistic > statistics = userDao.findOne( userId ).getStatistic();
+        Iterable<Statistic> statistics = statisticDao.findByUserId(userId);
         for ( final Statistic statistic : statistics )
         {
             StatisticDto statisticDto = statisticModelMapperWrapper.getModelMapper().map( statistic, StatisticDto.class );
