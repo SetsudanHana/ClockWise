@@ -10,7 +10,6 @@ import clock.wise.model.Company;
 import clock.wise.model.User;
 import clock.wise.service.CompanyService;
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,10 +96,8 @@ public class CompanyServiceImpl implements CompanyService
     @Transactional
     public List< UserDto > findAllCompanyUsers( final Long id )
     {
-        Company company = companyDao.findOne( id );
-        Hibernate.initialize( company.getUsers() );
         List< UserDto > companyUsers = new ArrayList<>();
-        for ( final User user : company.getUsers() )
+        for (final User user : userDao.findByCompanyId(id))
         {
             UserDto userDto = userModelMapperWrapper.getModelMapper().map( user, UserDto.class );
             companyUsers.add( userDto );

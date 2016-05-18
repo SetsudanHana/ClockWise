@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService
         userDto.setPassword( hashUserPassword( password ) );
 
         User user = userModelMapperWrapper.getModelMapper().map(userDto, User.class);
+        user.setCompany(companyDao.findOne(userDto.getCompanyId()));
         User saved = userDao.save( user );
         UserDto created = userModelMapperWrapper.getModelMapper().map(saved, UserDto.class);
 
