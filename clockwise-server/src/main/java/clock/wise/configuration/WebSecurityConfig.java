@@ -1,6 +1,8 @@
 package clock.wise.configuration;
 
+import clock.wise.dao.CompanyDao;
 import clock.wise.dao.UserDao;
+import clock.wise.model.Company;
 import clock.wise.model.User;
 import clock.wise.model.roles.Role;
 import clock.wise.security.AuthenticationTokenProcessingFilter;
@@ -37,6 +39,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    CompanyDao companyDao;
 
     @Value("${default.superadmin.login}")
     private String superUserUsername;
@@ -90,11 +95,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private void checkAndCreateSuperAdmin() {
         if (userDao.findOneByRole(Role.ROLE_SUPER_ADMIN) == null) {
+            Company company = new Company();
+            company.setName("Default");
+            company = companyDao.save(company);
+
             log.info("Creating SUPER ADMIN user");
             User superAdmin = new User(superUserUsername,
                     encoder.encode(superUserPassword),
                     superUserEmail,
                     Role.ROLE_SUPER_ADMIN);
+            superAdmin.setCompany(company);
             userDao.save(superAdmin);
         }
     }
