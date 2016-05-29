@@ -11,7 +11,6 @@ class Clockwise : public FastUI::Application
 public:
 	Clockwise();;
 
-
 private:
 	Config AppConfig;
 	ServiceCommunicator Communicator;

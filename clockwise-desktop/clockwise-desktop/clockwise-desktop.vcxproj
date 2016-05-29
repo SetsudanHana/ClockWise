@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="ApplicationWindow.h" />
     <ClInclude Include="Authentication.h" />
+    <ClInclude Include="Base64.h" />
     <ClInclude Include="clockwise-desktop.h" />
     <ClInclude Include="Clockwise.h" />
     <ClInclude Include="Config.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LoginView.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ScreenCapturer.h" />
     <ClInclude Include="ServiceCommunicator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringUtility.h" />
@@ -174,11 +176,13 @@
   <ItemGroup>
     <ClCompile Include="ApplicationWindow.cpp" />
     <ClCompile Include="Authentication.cpp" />
+    <ClCompile Include="Base64.cpp" />
     <ClCompile Include="clockwise-desktop.cpp" />
     <ClCompile Include="Clockwise.cpp" />
     <ClCompile Include="Enviroment.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LoginView.cpp" />
+    <ClCompile Include="ScreenCapturer.cpp" />
     <ClCompile Include="ServiceCommunicator.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

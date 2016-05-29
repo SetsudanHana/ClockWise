@@ -6,6 +6,8 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <windef.h>
+#include <atomic>
 
 namespace FastUI
 {
@@ -29,6 +31,11 @@ namespace FastUI
 		void setBackgroundColor(const Color& NewColor);
 		virtual void invalidate() override;
 		void notifyChangeVisibility();
+		virtual void fireEvent(const EventCode Code, const Event& EventData) override;
+		static void PaintCustomCaption(HWND hWnd, HDC hdc);
+		static LRESULT CustomCaptionProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, bool* pfCallDWP);
+		static LRESULT AppWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+		void DrawTitlebar(HDC hdc);
 
 	protected:
 		virtual void onDraw(Renderer& GraphicsRenderer) override;
@@ -46,9 +53,13 @@ namespace FastUI
 		std::unique_ptr<Renderer> WindowRenderer;
 		std::unique_ptr<ViewContainer> MainViewContainer;
 		Color BackgroundColor;
+		std::atomic_bool IsDrawing;
+		std::atomic_bool RedrawAgain;
 
 	private:
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+
 		static HWND hWnd;
 		static Window* MainWindow;
 	};

@@ -15,7 +15,7 @@ namespace FastUI
 		virtual ~Object() = default;
 
 		void addEventHandler(const EventCode Code, const EventHandler& Handler);
-		void fireEvent(const EventCode Code, const Event& EventData);
+		virtual void fireEvent(const EventCode Code, const Event& EventData);
 
 		virtual bool isVisible() const;
 		virtual void invalidate();

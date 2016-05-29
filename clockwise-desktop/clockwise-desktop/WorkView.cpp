@@ -31,6 +31,7 @@ WorkView::WorkView(Authentication& AuthSystem, LoginView& AppLoginView)
 
 	LogoutButton->addEventHandler(Event::Click, [this](const Event& EventData)
 	{
+		TimeLabelUpdate.stop();
 		getBackgroundObserver()->terminate();
 		AuthenticationSystem.logout();
 		LogInView.setVisible(true);
@@ -60,8 +61,12 @@ WorkView::WorkView(Authentication& AuthSystem, LoginView& AppLoginView)
 	WorkBackgroundRect->setBorderColor(Color::LightGray());
 	WorkBackgroundRect->setBorderWidth(1);
 
+	ScreenshotPictureBox = new FastUI::PictureBox(Rect{ 20.0f, 250.0f, 330.0f, 390.0f });
+	ScreenshotImage = nullptr;
+
 	addControl(*WorkBackgroundRect);
 	addControl(*WorkTimeLabel);
+	addControl(*ScreenshotPictureBox);
 	addControl(*KeyboardClicksLabel);
 	addControl(*MouseClicksLabel);
 	addControl(*MouseDeltaLabel);
@@ -103,6 +108,13 @@ void WorkView::onCountersUpdate()
 	KeyboardClicksLabel->setText(L"Keyboard click per minute: " + std::to_wstring(BackgroundWorkObserver->getLastKeybordClickPerMinute()));
 	MouseClicksLabel->setText(L"Mouse click per minute: " + std::to_wstring(BackgroundWorkObserver->getLastMouseClickPerMinute()));
 	MouseDeltaLabel->setText(L"Mouse travelled distance per minute: " + std::to_wstring(BackgroundWorkObserver->getLastMouseDistancePerMinute()));
+
+	if (ScreenshotImage == nullptr || (ScreenshotImage->getFilename() != BackgroundWorkObserver->getLastScreenshotFilename()))
+	{
+		delete ScreenshotImage;
+		ScreenshotImage = new FastUI::Image(BackgroundWorkObserver->getLastScreenshotFilename());
+		ScreenshotPictureBox->setImage(*ScreenshotImage);
+	}
 }
 
 void WorkView::onStartEndWork()

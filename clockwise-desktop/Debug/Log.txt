@@ -1,0 +1,11 @@
+05/29/16 12:45:13 [ERROR]: WinHttpReceiveResponse: 12152: Serwer zwrócił nieprawidłową lub nie rozpoznaną odpowiedź.
+
+05/29/16 12:45:13 [ERROR]: Couldn't logout: 
+05/29/16 12:45:13 [ERROR]: Unknown exception
+05/29/16 12:45:23 [ERROR]: WinHttpReceiveResponse: 12152: Serwer zwrócił nieprawidłową lub nie rozpoznaną odpowiedź.
+
+05/29/16 12:45:23 [ERROR]: Unknown exception
+05/29/16 12:45:24 [ERROR]: WinHttpReceiveResponse: 12152: Serwer zwrócił nieprawidłową lub nie rozpoznaną odpowiedź.
+
+05/29/16 12:45:24 [ERROR]: Couldn't logout: 
+05/29/16 12:45:24 [ERROR]: Unknown exception

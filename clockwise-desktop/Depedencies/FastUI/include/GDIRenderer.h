@@ -23,7 +23,7 @@ namespace FastUI
 		virtual void drawRectangle(const Rect& RectangleSize, int LineWidth, const Color& RectangleColor, const Color& BackgroundColor);
 
 		virtual void drawText(const std::wstring& Text, const Rect& RectSize, const Color& RectangleColor, unsigned int FontSize, Alignment TextAlignment = Alignment::Left) override;
-		virtual void drawImage(const Image& Bitmap, const Point& Position) override;
+		virtual void drawImage(const Image& Bitmap, const Rect& BoundingBox) override;
 		virtual void drawRoundedRectangle(const Rect& RectangleSize, int LineWidth, int Round, const Color& RectangleColor, const Color& BackgroundColor) override;
 
 	private:

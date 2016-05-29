@@ -26,6 +26,9 @@ private:
 	std::chrono::time_point<std::chrono::system_clock> StartTime;
 	TimedExecutor TimeLabelUpdate;
 
+	FastUI::Image* ScreenshotImage;
+
+	FastUI::PictureBox* ScreenshotPictureBox;
 	FastUI::Rectangle* BottomRect;
 	FastUI::Rectangle* WorkBackgroundRect;
 	FastUI::Label* InfoLabel;
