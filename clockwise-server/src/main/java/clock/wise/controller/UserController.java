@@ -48,9 +48,15 @@ public class UserController
     }
 
     @RequestMapping( value = "/{id}/statistics", method = RequestMethod.POST )
-    public StatisticDto updateUserStatistics( @PathVariable( "id" ) final Long id, @RequestBody final StatisticDto statisticDto )
+    public StatisticDto updateUserStatistics( @PathVariable( "id" ) final Long userId, @RequestBody final StatisticDto statisticDto )
     {
-        return statisticService.createOrUpdate( statisticDto, id );
+        return statisticService.createOrUpdateStatistic( statisticDto, userId );
+    }
+
+    @RequestMapping( value = "/{id}/statistics/all", method = RequestMethod.POST )
+    public List<StatisticDto> updateUserStatistics( @PathVariable( "id" ) final Long userId, @RequestBody final List<StatisticDto> statistics )
+    {
+        return statisticService.createOrUpdateStatistics( statistics, userId );
     }
 
     @RequestMapping( value = "/{id}/statistics", method = RequestMethod.GET )
