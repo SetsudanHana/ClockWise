@@ -53,7 +53,7 @@ public class UserController
         return statisticService.createOrUpdateStatistic( statisticDto, userId );
     }
 
-    @RequestMapping( value = "/{id}/statistics/all", method = RequestMethod.POST )
+    @RequestMapping( value = "/{id}/statistics", method = RequestMethod.PUT )
     public List<StatisticDto> updateUserStatistics( @PathVariable( "id" ) final Long userId, @RequestBody final List<StatisticDto> statistics )
     {
         return statisticService.createOrUpdateStatistics( statistics, userId );
