@@ -7,7 +7,12 @@ import clock.wise.model.Screenshot;
 import clock.wise.model.User;
 import clock.wise.service.ScreenshotService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -16,6 +21,8 @@ import java.util.List;
 @Service
 public class ScreenshotServiceImpl implements ScreenshotService {
 
+    private static final String SORTING_PARAM = "date";
+
     @Autowired
     ScreenshotDao screenshotDao;
 
@@ -23,6 +30,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
     ScreenshotModelMapperWrapper modelMapperWrapper;
 
     @Override
+    @Transactional
     public ScreenshotDto create(ScreenshotDto screenshotDto, User user) {
         Screenshot screenshot = modelMapperWrapper.getModelMapper().map(screenshotDto, Screenshot.class);
         screenshot.setUser(user);
@@ -40,14 +48,32 @@ public class ScreenshotServiceImpl implements ScreenshotService {
     }
 
     @Override
+    @Transactional
     public List<ScreenshotDto> findByUserId(Long userId) {
         List<ScreenshotDto> screenshotDtos = new ArrayList<>();
-        for (Screenshot screenshot : screenshotDao.findByUserId(userId)) {
+        for (Screenshot screenshot : screenshotDao.findByUserId(userId, new Sort(Sort.Direction.ASC, SORTING_PARAM))) {
             screenshotDtos.add(modelMapperWrapper.getModelMapper().map(screenshot, ScreenshotDto.class));
         }
         return screenshotDtos;
     }
 
+    @Override
+    @Transactional
+    public Page<ScreenshotDto> findPageByUserId(Long userId, Integer page, Integer size) {
+        if (page == null || size == null) {
+            throw new IllegalArgumentException("Page and size can not be null");
+        }
+
+        if (page < 0 || size < 0) {
+            throw new IllegalArgumentException("Page and size must be not negative numbers");
+        }
+
+        Pageable pageable = new PageRequest(page, size, Sort.Direction.ASC, SORTING_PARAM);
+        Page<Screenshot> out = screenshotDao.findByUserId(userId, pageable);
+        return out.map(source -> modelMapperWrapper.getModelMapper().map(source, ScreenshotDto.class));
+    }
+
+    @Transactional
     private Screenshot getScreenshotById(Long id) {
         Screenshot screenshot = screenshotDao.findOne(id);
         if (screenshot == null) {

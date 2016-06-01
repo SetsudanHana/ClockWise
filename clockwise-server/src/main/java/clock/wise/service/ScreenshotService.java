@@ -2,6 +2,7 @@ package clock.wise.service;
 
 import clock.wise.dto.ScreenshotDto;
 import clock.wise.model.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface ScreenshotService {
 
     List<ScreenshotDto> findByUserId(Long userId);
 
+    Page<ScreenshotDto> findPageByUserId(Long userId, Integer page, Integer pageLength);
 }
