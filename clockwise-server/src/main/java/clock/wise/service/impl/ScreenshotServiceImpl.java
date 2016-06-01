@@ -9,6 +9,7 @@ import clock.wise.service.ScreenshotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +31,12 @@ public class ScreenshotServiceImpl implements ScreenshotService {
 
     @Override
     public ScreenshotDto findById(Long id) {
-        return modelMapperWrapper.getModelMapper().map(screenshotDao.findOne(id), ScreenshotDto.class);
+        return modelMapperWrapper.getModelMapper().map(getScreenshotById(id), ScreenshotDto.class);
     }
 
     @Override
     public byte[] getImageDataById(Long id) {
-        return screenshotDao.findOne(id).getImage();
+        return getScreenshotById(id).getImage();
     }
 
     @Override
@@ -45,5 +46,13 @@ public class ScreenshotServiceImpl implements ScreenshotService {
             screenshotDtos.add(modelMapperWrapper.getModelMapper().map(screenshot, ScreenshotDto.class));
         }
         return screenshotDtos;
+    }
+
+    private Screenshot getScreenshotById(Long id) {
+        Screenshot screenshot = screenshotDao.findOne(id);
+        if (screenshot == null) {
+            throw new EntityNotFoundException("Screenshot with id: " + id + " not found");
+        }
+        return screenshot;
     }
 }
