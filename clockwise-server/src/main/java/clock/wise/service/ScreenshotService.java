@@ -15,6 +15,8 @@ public interface ScreenshotService {
 
     byte[] getImageDataById(Long id);
 
+    byte[] getThumbnailDataById(Long id);
+
     List<ScreenshotDto> findByUserId(Long userId);
 
     Page<ScreenshotDto> findPageByUserId(Long userId, Integer page, Integer pageLength);

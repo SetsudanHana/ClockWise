@@ -14,6 +14,10 @@ public class Screenshot {
     @Basic(fetch = FetchType.LAZY, optional = false)
     private byte[] image;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] thumbnail;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId")
     private User user;
@@ -42,6 +46,10 @@ public class Screenshot {
         return user;
     }
 
+    public byte[] getThumbnail() {
+        return thumbnail;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -56,5 +64,9 @@ public class Screenshot {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setThumbnail(byte[] thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

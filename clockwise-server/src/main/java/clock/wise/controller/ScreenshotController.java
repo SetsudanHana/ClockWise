@@ -37,6 +37,11 @@ public class ScreenshotController {
         return screenshotService.getImageDataById(id);
     }
 
+    @RequestMapping(value = "/{id}/thumbnail", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getScreenshotThumbnail(@PathVariable("id") final Long id) {
+        return screenshotService.getThumbnailDataById(id);
+    }
+
     @RequestMapping(value = "/all/{userId}", method = RequestMethod.GET)
     public List<ScreenshotDto> getAllScreenshotsForUser(@PathVariable("userId") final Long userId) {
         return screenshotService.findByUserId(userId);

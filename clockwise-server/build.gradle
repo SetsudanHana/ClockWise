@@ -38,6 +38,8 @@ dependencies {
     compile('javax.mail:mail:1.4.1')
     compile('org.apache.velocity:velocity:1.7')
 
+    compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
+
     testCompile("junit:junit")
 }
 

@@ -49,6 +49,11 @@ public class ScreenshotServiceImpl implements ScreenshotService {
     }
 
     @Override
+    public byte[] getThumbnailDataById(Long id) {
+        return getScreenshotById(id).getThumbnail();
+    }
+
+    @Override
     @Transactional
     public List<ScreenshotDto> findByUserId(Long userId) {
         List<ScreenshotDto> screenshotDtos = new ArrayList<>();
