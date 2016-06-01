@@ -11,7 +11,7 @@ public class Screenshot {
     private Long id;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY, optional = false)
     private byte[] image;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -19,6 +19,7 @@ public class Screenshot {
     private User user;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Basic(optional = false)
     private Date date;
 
     public Screenshot() {
