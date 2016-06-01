@@ -11,7 +11,6 @@ public class DtoToScreenshotConverter extends AbstractConverter<ScreenshotDto, S
     @Override
     protected Screenshot convert(ScreenshotDto source) {
         Screenshot out = new Screenshot();
-        out.setId(source.getId());
         out.setDate(source.getDate());
         out.setImage(Base64.getDecoder().decode(source.getBase64Data()));
         return out;
