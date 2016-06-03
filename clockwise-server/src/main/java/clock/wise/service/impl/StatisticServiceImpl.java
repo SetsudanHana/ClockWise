@@ -71,7 +71,7 @@ public class StatisticServiceImpl implements StatisticService
 
     @Override
     @Transactional
-    public List< StatisticDto > findStatsBetweenDates( final Date startDate, final Date endDate )
+    public List< StatisticDto > findByDateBetween( final Date startDate, final Date endDate )
     {
         if ( startDate == null || endDate == null )
         {
@@ -79,7 +79,7 @@ public class StatisticServiceImpl implements StatisticService
         }
 
         List< StatisticDto > statisticsDtoList = new ArrayList<>();
-        List< Statistic > statistics = statisticDao.findStatsBetweenDates( startDate, endDate );
+        List< Statistic > statistics = statisticDao.findByDateBetween( startDate, endDate );
         convertStatisticsToDto( statisticsDtoList, statistics );
 
         logger.info( "Stats between " + startDate + " and " + endDate + " received" );
@@ -89,7 +89,7 @@ public class StatisticServiceImpl implements StatisticService
 
     @Override
     @Transactional
-    public List< StatisticDto > findStatsBetweenDatesForUser( final Long userId, final Date startDate, final Date endDate )
+    public List< StatisticDto > findByUserIdAndDateBetween( final Long userId, final Date startDate, final Date endDate )
     {
         if ( userId == null )
         {
@@ -102,7 +102,7 @@ public class StatisticServiceImpl implements StatisticService
         }
 
         List< StatisticDto > statisticsDtoList = new ArrayList<>();
-        List< Statistic > statistics = statisticDao.findStatsBetweenDatesForUser( userId, startDate, endDate );
+        List< Statistic > statistics = statisticDao.findByUserIdAndDateBetween( userId, startDate, endDate );
         convertStatisticsToDto( statisticsDtoList, statistics );
 
         logger.info( "Stats for user " + userId + ", between " + startDate + " and " + endDate + " received" );

@@ -17,14 +17,14 @@ public class StatisticController
     private StatisticService statisticService;
 
     @RequestMapping( method = RequestMethod.GET )
-    public List< StatisticDto > findStatsBetweenDates( @RequestParam( "start" ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) final Date startDate, @RequestParam( "end" ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) final Date endDate )
+    public List< StatisticDto > findByDateBetween( @RequestParam( "start" ) @DateTimeFormat( iso = DateTimeFormat.ISO.DATE ) final Date startDate, @RequestParam( "end" ) @DateTimeFormat( iso = DateTimeFormat.ISO.DATE ) final Date endDate )
     {
-        return statisticService.findStatsBetweenDates( startDate, endDate );
+        return statisticService.findByDateBetween(startDate, endDate);
     }
 
     @RequestMapping( value = "/users/{id}", method = RequestMethod.GET )
-    public List< StatisticDto > findStatsBetweenDatesForUser( @PathVariable( "id" ) final Long userId, @RequestParam( "start" ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) final Date startDate, @RequestParam( "end" ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) final Date endDate )
+    public List< StatisticDto > findByUserIdAndDateBetween( @PathVariable( "id" ) final Long userId, @RequestParam( "start" ) @DateTimeFormat( iso = DateTimeFormat.ISO.DATE ) final Date startDate, @RequestParam( "end" ) @DateTimeFormat( iso = DateTimeFormat.ISO.DATE ) final Date endDate )
     {
-        return statisticService.findStatsBetweenDatesForUser( userId, startDate, endDate );
+        return statisticService.findByUserIdAndDateBetween(userId, startDate, endDate);
     }
 }

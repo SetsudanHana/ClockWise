@@ -16,10 +16,8 @@ public interface StatisticDao extends CrudRepository< Statistic, Long >
 
     List< Statistic > findByUserId( Long userId );
 
-    @Query( "select s from Statistic s where s.date between :startDate and :endDate" )
-    List< Statistic > findStatsBetweenDates( @Param( "startDate" ) @Temporal( TemporalType.DATE ) final Date startDate, @Param( "endDate" ) @Temporal( TemporalType.DATE ) final Date endDate );
+    List< Statistic > findByDateBetween( final Date startDate, Date endDate );
 
-    @Query( "select s from Statistic s where s.date between :startDate and :endDate and s.user.id = :userId" )
-    List< Statistic > findStatsBetweenDatesForUser( @Param( "userId" ) final Long userId, @Param( "startDate" ) @Temporal( TemporalType.DATE ) final Date startDate, @Param( "endDate" ) @Temporal( TemporalType.DATE ) final Date endDate );
+    List< Statistic > findByUserIdAndDateBetween( final Long userId, final Date startDate, final Date endDate );
 
 }

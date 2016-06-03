@@ -13,7 +13,7 @@ public interface StatisticService
 
     List< StatisticDto > findStatisticsByUserId( final Long userId );
 
-    List< StatisticDto > findStatsBetweenDates( final Date startDate, final Date endDate );
+    List< StatisticDto > findByDateBetween( final Date startDate, final Date endDate );
 
-    List< StatisticDto > findStatsBetweenDatesForUser( final Long userId, final Date startDate, final Date endDate );
+    List< StatisticDto > findByUserIdAndDateBetween( final Long userId, final Date startDate, final Date endDate );
 }
