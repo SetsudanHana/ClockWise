@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table( uniqueConstraints = @UniqueConstraint( columnNames = { "name" } ) )
+@Table( uniqueConstraints = @UniqueConstraint( columnNames = { "name", "email" } ) )
 public class Company implements Serializable
 {
     @Id
@@ -16,6 +16,9 @@ public class Company implements Serializable
 
     @Column
     private String name;
+
+    @Column
+    private String email;
 
     @OneToMany( mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List< User > users = new ArrayList<>();
@@ -52,5 +55,15 @@ public class Company implements Serializable
     public void setUsers( List< User > users )
     {
         this.users = users;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail( String email )
+    {
+        this.email = email;
     }
 }

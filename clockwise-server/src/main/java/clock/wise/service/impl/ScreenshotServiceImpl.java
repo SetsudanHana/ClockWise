@@ -26,7 +26,6 @@ public class ScreenshotServiceImpl implements ScreenshotService {
 
     @Autowired
     ScreenshotDao screenshotDao;
-
     @Autowired
     ScreenshotModelMapperWrapper modelMapperWrapper;
 

@@ -7,6 +7,7 @@ public class CompanyDto
 {
     private Long id;
     private String name;
+    private String email;
     private List< UserDto > users = new ArrayList<>(  );
 
     public Long getId()
@@ -37,5 +38,15 @@ public class CompanyDto
     public void setUsers( List< UserDto > users )
     {
         this.users = users;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail( String email )
+    {
+        this.email = email;
     }
 }
