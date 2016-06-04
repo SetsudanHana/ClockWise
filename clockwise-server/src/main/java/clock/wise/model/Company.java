@@ -1,5 +1,7 @@
 package clock.wise.model;
 
+import org.hibernate.validator.constraints.Email;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class Company implements Serializable
     private String name;
 
     @Column
+    @Email
     private String email;
 
     @OneToMany( mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

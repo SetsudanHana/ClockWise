@@ -108,7 +108,7 @@ public class GlobalControllerExceptionHandler
         return new ErrorDto(ex);
     }
 
-    @ExceptionHandler( InvalidPasswordException.class )
+    @ExceptionHandler( MailSenderException.class )
     @ResponseStatus( value = HttpStatus.BAD_REQUEST )
     @ResponseBody
     protected ErrorDto handleMailSenderException( MailSenderException ex )
