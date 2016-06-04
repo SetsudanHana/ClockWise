@@ -128,9 +128,11 @@ public class MailServiceImpl implements MailService
         {
             case NEW_COMPANY_CREATED:
                 parameters.put("company", companyDto.getName());
+                //FIXME - add real link for creating new user
                 parameters.put("link", "https://localhost:8080/create/new/user");
                 break;
         }
+
         return parameters;
     }
 
