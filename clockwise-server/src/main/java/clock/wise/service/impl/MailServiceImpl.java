@@ -69,8 +69,8 @@ public class MailServiceImpl implements MailService
         }
         catch ( MessagingException e )
         {
-            logger.error("Error while sending email to user: " + companyDto.getEmail());
-            throw new MailSenderException("Error while sending email to user: " + companyDto.getEmail());
+            logger.error("Error while sending email to company: " + companyDto.getEmail());
+            throw new MailSenderException("Error while sending email to company: " + companyDto.getEmail());
         }
     }
 
