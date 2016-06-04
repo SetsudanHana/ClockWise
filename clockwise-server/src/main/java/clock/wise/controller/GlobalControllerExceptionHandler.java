@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice( annotations = RestController.class )
 public class GlobalControllerExceptionHandler
@@ -112,6 +113,15 @@ public class GlobalControllerExceptionHandler
     @ResponseStatus( value = HttpStatus.BAD_REQUEST )
     @ResponseBody
     protected ErrorDto handleMailSenderException( MailSenderException ex )
+    {
+        logger.error("Exception: " + ex.getMessage());
+        return new ErrorDto(ex);
+    }
+
+    @ExceptionHandler( ConstraintViolationException.class )
+    @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    @ResponseBody
+    protected ErrorDto handleConstraintViolationException( ConstraintViolationException ex )
     {
         logger.error("Exception: " + ex.getMessage());
         return new ErrorDto(ex);
