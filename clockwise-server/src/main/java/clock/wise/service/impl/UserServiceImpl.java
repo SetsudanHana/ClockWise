@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService
     @Transactional
     public UserDto findByUsername( final String username )
     {
-        if ( StringUtils.isNotEmpty(username) )
+        if ( StringUtils.isEmpty(username) )
         {
             logger.error("Error while searching user by username: " + username);
             throw new IllegalArgumentException("Username cannot be null or empty");
