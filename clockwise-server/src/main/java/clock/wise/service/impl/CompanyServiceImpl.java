@@ -67,7 +67,7 @@ public class CompanyServiceImpl implements CompanyService
     @Transactional
     public CompanyDto findByName( final String name )
     {
-        if ( StringUtils.isNotEmpty(name) )
+        if ( StringUtils.isEmpty(name) )
         {
             logger.error("Error while searching company by name: " + name);
             throw new IllegalArgumentException("Company's name cannot be null or empty");
@@ -98,7 +98,7 @@ public class CompanyServiceImpl implements CompanyService
 
         if ( companies == null )
         {
-            throw new EntityNotFoundException("Ther is no companies in database");
+            throw new EntityNotFoundException("There are no companies in database");
         }
 
         for ( final Company company : companies )
@@ -119,7 +119,7 @@ public class CompanyServiceImpl implements CompanyService
         List< User > users = userDao.findByCompanyId(id);
         if ( ListUtils.isEmpty(users) )
         {
-            throw new EntityNotFoundException("There is no users in database");
+            throw new EntityNotFoundException("There are no users in database");
         }
 
         for ( final User user : users )
