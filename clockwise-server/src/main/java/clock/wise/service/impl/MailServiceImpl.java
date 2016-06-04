@@ -4,6 +4,7 @@ import clock.wise.dao.MailTemplateDao;
 import clock.wise.dto.CompanyDto;
 import clock.wise.dto.UserDto;
 import clock.wise.enums.MailTemplateEnum;
+import clock.wise.exceptions.MailSenderException;
 import clock.wise.model.MailTemplate;
 import clock.wise.service.MailService;
 import org.apache.commons.collections.MapUtils;
@@ -49,7 +50,7 @@ public class MailServiceImpl implements MailService
         catch ( MessagingException e )
         {
             logger.error("Error while sending email to user: " + userDto.getEmail());
-            e.printStackTrace();
+            throw new MailSenderException("Error while sending email to user: " + userDto.getEmail());
         }
     }
 
@@ -69,7 +70,7 @@ public class MailServiceImpl implements MailService
         catch ( MessagingException e )
         {
             logger.error("Error while sending email to user: " + companyDto.getEmail());
-            e.printStackTrace();
+            throw new MailSenderException("Error while sending email to user: " + companyDto.getEmail());
         }
     }
 

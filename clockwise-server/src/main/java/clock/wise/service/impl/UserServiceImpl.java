@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService
         if ( users == null )
         {
             logger.error("There are no users in databse");
-            throw new EntityNotFoundException("There are no users in databse");
+            throw new EntityNotFoundException("There are no users in database");
         }
 
         for ( final User user : users )
@@ -177,6 +177,7 @@ public class UserServiceImpl implements UserService
     {
         if ( StringUtils.isEmpty(email) )
         {
+            logger.error("Email cannot be null or empty");
             throw new IllegalArgumentException("Email cannot be null or empty");
         }
 
