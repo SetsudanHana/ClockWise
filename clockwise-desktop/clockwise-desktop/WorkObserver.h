@@ -1,7 +1,8 @@
 #pragma once
-#include "..\WindowsHooks\WindowsHooks.h"
 #include "ServiceCommunicator.h"
 #include "TimedExecutor.h"
+#include "ScreenshotWorker.h"
+#include "StatisticsWorker.h"
 
 class Authentication;
 
@@ -13,8 +14,6 @@ public:
 
 	void start();
 
-	void CreateNewScreenshotInterval();
-
 	void terminate();
 	bool isRunning();
 
@@ -25,36 +24,16 @@ public:
 
 	void setUpdateNotifier(const std::function<void(void)>& Callback);
 
-private:
-	void captureScreenshot();
+private:	
 	void run();
 	void stop();
 
-	void loadScreenshotBackup();
-	void loadStatisticsBackup();
-
-	void updateCounters();
-	void uploadScreenshots();
-	void uploadSingleScreenshot(const std::wstring& Filename);
-	void uploadStatistics(Authentication * AuthSystem);
-
-	WindowsSystemHooks Hooks;
 	ServiceCommunicator Communicator;
 	TimedExecutor ThreadExecutor;
+	ScreenshotWorker ScreenshotAppWorker;
+	StatisticsWorker StatisticsAppWorker;
 	std::function<void(void)> UpdateNotifier;
-	std::vector<web::json::value> CachedValues;
-	std::vector<std::wstring> CachedScreenshotsNames;
 
 	bool FirstRun;
-	unsigned int KeyboardClicksPerMinute;
-	unsigned int MouseClicksPerMinute;
-	unsigned int MouseDistancePerMinute;
-	std::wstring ScreenshotFilename;
-
-	unsigned int LastKeyboardCount;
-	unsigned int LastMouseCount;
-	unsigned int LastMouseDelta;
-
-	unsigned int ScreenshotInterval;
 	unsigned int UpdatesCount;
 };

@@ -1,23 +1,7 @@
-05/04/16 21:57:08 [ERROR]: Request failed with code: 401 and message: HTTP/1.1 401 Unauthorized
-Content-Type: application/json;charset=UTF-8
-Date: Wed, 04 May 2016 19:57:08 GMT
-Pragma: no-cache
-Server: Jetty(9.2.15.v20160210)
-Transfer-Encoding: chunked
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-
-{"timestamp":1462391828055,"status":401,"error":"Unauthorized","message":"Unauthorized: Authentication token was either missing or invalid.","path":"/api/invalidatetoken"}
-05/04/16 21:57:08 [ERROR]: Couldn't logout: 
-05/04/16 21:57:08 [ERROR]: Request failed with code: 401 and message: HTTP/1.1 401 Unauthorized
-Content-Type: application/json;charset=UTF-8
-Date: Wed, 04 May 2016 19:57:08 GMT
-Pragma: no-cache
-Server: Jetty(9.2.15.v20160210)
-Transfer-Encoding: chunked
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-
-{"timestamp":1462391828055,"status":401,"error":"Unauthorized","message":"Unauthorized: Authentication token was either missing or invalid.","path":"/api/invalidatetoken"}
+06/05/16 20:54:15 [ERROR]: WinHttpSendRequest: 12029: Nie można ustanowić połączenia z serwerem.
+
+06/05/16 20:54:15 [ERROR]: Unknown exception
+06/05/16 20:54:20 [ERROR]: WinHttpSendRequest: 12029: Nie można ustanowić połączenia z serwerem.
+
+06/05/16 20:54:20 [ERROR]: Couldn't logout: 
+06/05/16 20:54:20 [ERROR]: Unknown exception

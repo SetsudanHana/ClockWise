@@ -157,6 +157,7 @@
     <ClInclude Include="clockwise-desktop.h" />
     <ClInclude Include="Clockwise.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="EncryptedConfig.h" />
     <ClInclude Include="Enviroment.h" />
     <ClInclude Include="HookErrorCodes.h" />
     <ClInclude Include="ISystemHooks.h" />
@@ -164,7 +165,10 @@
     <ClInclude Include="LoginView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScreenCapturer.h" />
+    <ClInclude Include="ScreenshotWorker.h" />
     <ClInclude Include="ServiceCommunicator.h" />
+    <ClInclude Include="SettingsView.h" />
+    <ClInclude Include="StatisticsWorker.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringUtility.h" />
     <ClInclude Include="targetver.h" />
@@ -183,7 +187,10 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LoginView.cpp" />
     <ClCompile Include="ScreenCapturer.cpp" />
+    <ClCompile Include="ScreenshotWorker.cpp" />
     <ClCompile Include="ServiceCommunicator.cpp" />
+    <ClCompile Include="SettingsView.cpp" />
+    <ClCompile Include="StatisticsWorker.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -7,7 +7,7 @@ namespace FastUI
 	//Event: 0 - 19
 	//Keyboard: 20 - 39
 	//Mouse: 40 - 59
-	//Touch: 60 - 70
+	//Touch: 60 - 79
 
 	typedef int EventCode;
 
@@ -15,5 +15,7 @@ namespace FastUI
 	{
 		static const EventCode Any = 0;
 		static const EventCode Click = 1;
+		static const EventCode WindowClose = 2;
+		static const EventCode WindowDestroy = 3;
 	};
 }

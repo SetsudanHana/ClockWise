@@ -1,0 +1,3 @@
+06/05/16 21:43:47 [ERROR]: WinHttpSendRequest: 12029: Nie można ustanowić połączenia z serwerem.
+
+06/05/16 21:43:47 [ERROR]: Unknown exception

@@ -15,7 +15,7 @@ public:
 		open(Filename);
 	}
 
-	bool open(const std::wstring& Filename)
+	virtual bool open(const std::wstring& Filename)
 	{
 		std::fstream File(Filename);
 		if (!File.is_open())
@@ -46,7 +46,7 @@ public:
 		return true;
 	}
 
-	bool save(const std::wstring& Filename) const
+	virtual bool save(const std::wstring& Filename) const
 	{
 		std::fstream File(Filename, std::ios::out | std::ios::trunc);
 		if (!File.is_open())
