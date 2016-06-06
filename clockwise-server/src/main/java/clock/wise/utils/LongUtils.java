@@ -7,7 +7,7 @@ public class LongUtils
 {
     public static boolean isEmpty( final Long number )
     {
-        return number != null;
+        return number == null;
     }
 
     public static boolean isNotEmpty( final Long number )

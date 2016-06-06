@@ -9,7 +9,7 @@ public class ListUtils
 {
     public static boolean isEmpty( final Collection list )
     {
-        return list != null && !list.isEmpty();
+        return list == null || list.isEmpty();
     }
 
     public static boolean isNotEmpty( final Collection list )
