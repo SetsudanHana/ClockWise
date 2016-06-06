@@ -23,6 +23,7 @@ namespace FastUI
 
 	protected:
 		virtual void drawText(Renderer& GraphicsRenderer, Color TextColor, Rect TextRect);
+		void handlePaste();
 		void onKeyboardPressed(const KeyboardEvent& Key);
 
 		std::wstring InputText;

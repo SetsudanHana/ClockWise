@@ -12,6 +12,8 @@ public:
 	ServiceCommunicator(const std::string& ServiceAddress);
 	ServiceCommunicator(const std::string& ServiceAddress, Authentication& InitializedAuthentication);
 
+	void initWebClient(const std::string& ServiceAddress);
+
 	Authentication* getAuthentication() { return AuthenticationSystem; }
 	void registerAuthenticationSystem(Authentication& InitializedAuthentication);
 	void unregisterAuthenticationSystem();
@@ -26,5 +28,5 @@ private:
 	web::json::value sendRequest(const web::http::http_request& ServiceRequest);
 
 	Authentication* AuthenticationSystem;
-	web::http::client::http_client WebClient;
+	std::unique_ptr<web::http::client::http_client> WebClient;
 };

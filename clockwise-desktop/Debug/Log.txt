@@ -1,0 +1,4 @@
+06/02/16 00:03:00 [ERROR]: WinHttpSendRequest: 12029: Nie można ustanowić połączenia z serwerem.
+
+06/02/16 00:03:00 [ERROR]: Couldn't logout: 
+06/02/16 00:03:00 [ERROR]: Unknown exception

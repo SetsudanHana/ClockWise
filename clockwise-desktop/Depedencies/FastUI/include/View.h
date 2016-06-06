@@ -34,6 +34,7 @@ namespace FastUI
 		void invalidate() override;
 		void setParent(ViewContainer* NewParent);
 		virtual void setVisible(bool IsVisible) override;
+		virtual void fireEvent(const EventCode Code, const Event& EventData) override;
 
 	protected:
 		virtual void onDraw(Renderer& GraphicsRenderer) override;
@@ -45,6 +46,7 @@ namespace FastUI
 		void onMouseEnter(const MouseEvent& ClickPoint);
 		void onMouseLeave(const MouseEvent& ClickPoint);
 		void onMouseMove(const MouseEvent& ClickPoint);
+		void rerouteEvent(const EventCode Code, const Event& EventData);
 
 
 	private:

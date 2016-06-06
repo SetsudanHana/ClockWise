@@ -54,8 +54,6 @@ void LoginView::hideFailedLoginInfo()
 {
 	LoginTextBox->setBorderColor(Color(0.85f, 0.85f, 0.85f, 1.0f));
 	PasswordTextBox->setBorderColor(Color(0.85f, 0.85f, 0.85f, 1.0f));
-	//LoginTextBox->resetColors();
-	//PasswordTextBox->resetColors();
 	FailedLoginInfo->setVisible(false);
 }
 

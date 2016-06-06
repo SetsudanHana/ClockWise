@@ -11,14 +11,23 @@ using namespace web::http::client;
 using namespace concurrency::streams;
 
 ServiceCommunicator::ServiceCommunicator(const std::string& ServiceAddress)
-	: AuthenticationSystem(nullptr), WebClient(StringUtility::s2ws(ServiceAddress))
+	: AuthenticationSystem(nullptr)
 {
+	initWebClient(ServiceAddress);
 }
 
 ServiceCommunicator::ServiceCommunicator(const std::string& ServiceAddress, Authentication& InitializedAuthentication)
-	: WebClient(StringUtility::s2ws(ServiceAddress))
 {
+	initWebClient(ServiceAddress);
 	registerAuthenticationSystem(InitializedAuthentication);
+}
+
+void ServiceCommunicator::initWebClient(const std::string& ServiceAddress)
+{
+	web::http::client::http_client_config WebConfig;
+	WebConfig.set_validate_certificates(false);
+
+	WebClient = std::make_unique<web::http::client::http_client>(StringUtility::s2ws(ServiceAddress), WebConfig);
 }
 
 void ServiceCommunicator::registerAuthenticationSystem(Authentication& InitializedAuthentication)
@@ -92,10 +101,10 @@ web::json::value ServiceCommunicator::request(web::http::method RequestMethod, c
 
 web::json::value ServiceCommunicator::sendRequest(const web::http::http_request& ServiceRequest)
 {
-	auto JsonResponse = WebClient.request(ServiceRequest)
+	auto JsonResponse = WebClient->request(ServiceRequest)
 		.then([](http_response Response)
 	{
-		if (Response.status_code() != web::http::status_codes::OK)
+		if (!(Response.status_code() >= web::http::status_codes::OK && Response.status_code() < web::http::status_codes::MultipleChoices))
 		{
 			auto ErrorMessage = "Request failed with code: " + std::to_string(Response.status_code()) 
 				+ " and message: " + StringUtility::ws2s(Response.to_string());

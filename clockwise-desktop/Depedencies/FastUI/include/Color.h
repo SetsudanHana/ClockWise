@@ -24,6 +24,11 @@ namespace FastUI
 		float B;
 		float A;
 
+		static Color White()
+		{
+			return Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		}
+
 		static Color CornflowerBlue()
 		{
 			return Color{ 100.0f / 255.0f, 149.0f / 255.0f, 237.0f / 255.0f, 1.0f };

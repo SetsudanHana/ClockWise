@@ -8,7 +8,6 @@ class LoginView : public FastUI::View
 public:
 	LoginView(Authentication& AuthSystem);
 
-
 private:
 	void displayFailedLoginInfo();
 	void hideFailedLoginInfo();

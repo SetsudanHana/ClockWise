@@ -3,13 +3,14 @@
 #include "Authentication.h"
 #include "User.h"
 #include "LoginView.h"
+#include "SettingsView.h"
 #include "Config.h"
 #include <string>
 
 using namespace FastUI;
 
-WorkView::WorkView(Authentication& AuthSystem, LoginView& AppLoginView) 
-	: AuthenticationSystem(AuthSystem), LogInView(AppLoginView)
+WorkView::WorkView(Authentication& AuthSystem, LoginView& AppLoginView, SettingsView& NewSettingView)
+	: AuthenticationSystem(AuthSystem), LogInView(AppLoginView), AppSettingView(NewSettingView)
 {
 	BottomRect = new FastUI::Rectangle(Rect{ -1.0f, 550.0f, 360.0f, 605.0f });
 	BottomRect->setBackgroundColor(Color(0.95f, 0.95f, 0.95f, 1.0f));
@@ -31,6 +32,7 @@ WorkView::WorkView(Authentication& AuthSystem, LoginView& AppLoginView)
 
 	LogoutButton->addEventHandler(Event::Click, [this](const Event& EventData)
 	{
+		TimeLabelUpdate.stop();
 		getBackgroundObserver()->terminate();
 		AuthenticationSystem.logout();
 		LogInView.setVisible(true);
@@ -55,13 +57,28 @@ WorkView::WorkView(Authentication& AuthSystem, LoginView& AppLoginView)
 		onStartEndWork();
 	});
 
+	SettingsButton = new Button(FastUI::Rect{ 165.0f, 565.0f, 240.0f, 590.0f }, L"Settings");
+	SettingsButton->addEventHandler(Event::Click, [this](const Event& EventData)
+	{
+		AppSettingView.setVisible(true);
+	});
+
 	WorkBackgroundRect = new FastUI::Rectangle(Rect{ 20.0f, 400.0f, 330.0f, 530.0f });
 	WorkBackgroundRect->setBackgroundColor(Color(0.95f, 0.95f, 0.95f, 1.0f));
 	WorkBackgroundRect->setBorderColor(Color::LightGray());
 	WorkBackgroundRect->setBorderWidth(1);
 
+	ScreenshotPictureBox = new FastUI::PictureBox(Rect{ 20.0f, 250.0f, 330.0f, 390.0f });
+	ScreenshotImage = nullptr;
+
+	addEventHandler(Event::WindowClose, [this](const Event& EventData)
+	{
+		TimeLabelUpdate.stop();
+	});
+
 	addControl(*WorkBackgroundRect);
 	addControl(*WorkTimeLabel);
+	addControl(*ScreenshotPictureBox);
 	addControl(*KeyboardClicksLabel);
 	addControl(*MouseClicksLabel);
 	addControl(*MouseDeltaLabel);
@@ -69,6 +86,7 @@ WorkView::WorkView(Authentication& AuthSystem, LoginView& AppLoginView)
 	addControl(*BottomRect);
 	addControl(*UsernameLabel);
 	addControl(*LogoutButton);
+	addControl(*SettingsButton);
 	addControl(*InfoLabel);
 	addControl(*RoleLabel);
 }
@@ -103,6 +121,13 @@ void WorkView::onCountersUpdate()
 	KeyboardClicksLabel->setText(L"Keyboard click per minute: " + std::to_wstring(BackgroundWorkObserver->getLastKeybordClickPerMinute()));
 	MouseClicksLabel->setText(L"Mouse click per minute: " + std::to_wstring(BackgroundWorkObserver->getLastMouseClickPerMinute()));
 	MouseDeltaLabel->setText(L"Mouse travelled distance per minute: " + std::to_wstring(BackgroundWorkObserver->getLastMouseDistancePerMinute()));
+
+	if (ScreenshotImage == nullptr || (ScreenshotImage->getFilename() != BackgroundWorkObserver->getLastScreenshotFilename()))
+	{
+		delete ScreenshotImage;
+		ScreenshotImage = new FastUI::Image(BackgroundWorkObserver->getLastScreenshotFilename());
+		ScreenshotPictureBox->setImage(*ScreenshotImage);
+	}
 }
 
 void WorkView::onStartEndWork()

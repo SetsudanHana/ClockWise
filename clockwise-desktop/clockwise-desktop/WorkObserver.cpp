@@ -8,13 +8,13 @@
 #include <ctime>
 #include "StringUtility.h"
 #include <time.h>
+#include "ScreenCapturer.h"
+#include "Enviroment.h"
+#include "Base64.h"
 
 WorkObserver::WorkObserver(const std::string& EndpointAddress, Authentication& AuthSystem)
-	: Communicator(EndpointAddress, AuthSystem), UpdateNotifier([](){})
+	: Communicator(EndpointAddress, AuthSystem), UpdateNotifier([](){}), ScreenshotAppWorker(Communicator), StatisticsAppWorker(Communicator)
 {
-	LastKeyboardCount = 0;
-	LastMouseCount = 0;
-	LastMouseDelta = 0;
 }
 
 WorkObserver::~WorkObserver()
@@ -24,68 +24,45 @@ WorkObserver::~WorkObserver()
 
 void WorkObserver::start()
 {
-	if (Hooks.startHooks() != HookErrorCodes::Ok)
-	{
-		LOG_ERROR("Failed to create system hooks");
-		return;
-	}
+	UpdatesCount = 0;
+	ScreenshotAppWorker.createNewScreenshotInterval();
+	FirstRun = true;
+
+	StatisticsAppWorker.startHooks();
 
 	using namespace std::chrono_literals;
 	ThreadExecutor.start(60s, std::bind(&WorkObserver::run, this));
 }
 
-std::string get_date_string()
-{
-	std::time_t t = std::time(NULL);
-	tm tmStruct;
-	gmtime_s(&tmStruct, &t);
-	char mbstr[100];
-	std::strftime(mbstr, sizeof(mbstr), "%FT%T", &tmStruct);
-	return std::string(mbstr);
-}
-
 void WorkObserver::run()
 {
-	UpdateCounters();
+	StatisticsAppWorker.updateCounters();
+	auto ShouldUpdateScreenshots = UpdatesCount == ScreenshotAppWorker.getScreenshotInterval() || FirstRun;
+
+	if (ShouldUpdateScreenshots)
+	{
+		ScreenshotAppWorker.captureScreenshot();
+		ScreenshotAppWorker.createNewScreenshotInterval();
+	}
+
 	UpdateNotifier();
 
-	auto AuthSystem = Communicator.getAuthentication();
-	if (!AuthSystem)
+	//Safe check for possibility of timing out session
+	if (!Communicator.getAuthentication())
 	{
 		return;
 	}
 
-	web::json::value Statistics;
-	Statistics[L"keyboardClickedCount"] = KeyboardClicksPerMinute;
-	Statistics[L"mouseClickedCount"] = MouseClicksPerMinute;
-	Statistics[L"mouseMovementCount"] = MouseDistancePerMinute;
-	Statistics[L"date"] = web::json::value::string(StringUtility::s2ws(get_date_string()));
+	StatisticsAppWorker.uploadStatistics();
+	ScreenshotAppWorker.uploadScreenshots();
 
-	auto userId = std::to_string(AuthSystem->getUser()->getUserId());
-	Communicator.post("api/users/" + userId + "/statistics", Statistics);
-}
-
-void WorkObserver::UpdateCounters()
-{
-	auto CurrentKeyboardCount = Hooks.getKeyboardClickCount();
-	auto CurrentMouseCount = Hooks.getMouseClickCount();
-	auto CurrentDistanceCount = Hooks.getMouseDistance();
-
-	KeyboardClicksPerMinute = CurrentKeyboardCount - LastKeyboardCount;
-	MouseClicksPerMinute = CurrentMouseCount - LastMouseCount;
-	MouseDistancePerMinute = CurrentDistanceCount - LastMouseDelta;
-
-	LastKeyboardCount = CurrentKeyboardCount;
-	LastMouseCount = CurrentMouseCount;
-	LastMouseDelta = CurrentDistanceCount;
+	UpdatesCount++;
+	FirstRun = false;
 }
 
 void WorkObserver::stop()
 {
-	Hooks.stopHooks();
-	LastKeyboardCount = 0;
-	LastMouseCount = 0;
-	LastMouseDelta = 0;
+	StatisticsAppWorker.stopHooks();
 }
 
 void WorkObserver::terminate()
@@ -101,17 +78,22 @@ bool WorkObserver::isRunning()
 
 unsigned int WorkObserver::getLastKeybordClickPerMinute()
 {
-	return KeyboardClicksPerMinute;
+	return StatisticsAppWorker.getLastKeybordClickPerMinute();
 }
 
 unsigned int WorkObserver::getLastMouseClickPerMinute()
 {
-	return MouseClicksPerMinute;
+	return StatisticsAppWorker.getLastMouseClickPerMinute();
 }
 
 unsigned int WorkObserver::getLastMouseDistancePerMinute()
 {
-	return MouseDistancePerMinute;
+	return StatisticsAppWorker.getLastMouseDistancePerMinute();
+}
+
+std::wstring WorkObserver::getLastScreenshotFilename()
+{
+	return ScreenshotAppWorker.getLastScreenshotFilename();
 }
 
 void WorkObserver::setUpdateNotifier(const std::function<void(void)>& Callback)

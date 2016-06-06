@@ -7,11 +7,12 @@
 
 class Authentication;
 class LoginView;
+class SettingsView;
 
 class WorkView : public FastUI::View
 {
 public:
-	WorkView(Authentication& AuthSystem, LoginView& AppLoginView);
+	WorkView(Authentication& AuthSystem, LoginView& AppLoginView, SettingsView& NewSettingView);
 
 	void onStartEndWork();
 	virtual void onCreate() override;
@@ -22,10 +23,14 @@ private:
 
 	Authentication& AuthenticationSystem;
 	LoginView& LogInView;
+	SettingsView& AppSettingView;
 	std::unique_ptr<WorkObserver> BackgroundWorkObserver; 
 	std::chrono::time_point<std::chrono::system_clock> StartTime;
 	TimedExecutor TimeLabelUpdate;
 
+	FastUI::Image* ScreenshotImage;
+
+	FastUI::PictureBox* ScreenshotPictureBox;
 	FastUI::Rectangle* BottomRect;
 	FastUI::Rectangle* WorkBackgroundRect;
 	FastUI::Label* InfoLabel;
@@ -33,6 +38,7 @@ private:
 	FastUI::Label* RoleLabel;
 	FastUI::Button* LogoutButton;
 	FastUI::Button* StartJobButton;
+	FastUI::Button* SettingsButton;
 	FastUI::Label* KeyboardClicksLabel;
 	FastUI::Label* MouseClicksLabel;
 	FastUI::Label* MouseDeltaLabel;

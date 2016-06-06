@@ -2,6 +2,7 @@
 #include "Rectangle.h"
 #include "Button.h"
 #include "CheckBox.h"
+#include "SlideCheckBox.h"
 #include "TextBox.h"
 #include "PasswordBox.h"
 #include "Label.h"

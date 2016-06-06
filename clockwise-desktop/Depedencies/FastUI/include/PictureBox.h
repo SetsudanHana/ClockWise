@@ -8,14 +8,18 @@ namespace FastUI
 	class FASTUI_API PictureBox : public Control
 	{
 	public:
-		PictureBox(const Image& Bitmap, const Point& NewPosition);
+		PictureBox(const Rect& NewBoundingRect);
+		PictureBox(Image& Bitmap, const Rect& NewBoundingRect);
 		virtual ~PictureBox() = default;
 
 		virtual void onDraw(Renderer& GraphicsRenderer) override;
 
+		Image* getImage();
+		void setImage(Image& NewImage);
+
 	protected:
-		const Image& PictureBitmap;
-		Point Position;
+		Image* PictureBitmap;
+		Rect BoundingBox;
 	};
 }
 

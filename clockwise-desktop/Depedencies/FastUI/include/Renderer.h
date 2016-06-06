@@ -16,7 +16,7 @@ namespace FastUI
 
 		virtual void beginDraw(const Rect& DrawArea) = 0;
 		virtual void endDraw() = 0;
-		virtual void drawImage(const Image& Bitmap, const Point& Position) = 0;
+		virtual void drawImage(const Image& Bitmap, const Rect& BoundingBox) = 0;
 
 		virtual void drawLine(const Point& StartPoint, const Point& EndPoint, int LineWidth, const Color& LineColor) = 0;
 		virtual void drawRectangle(float X, float Y, float Width, float Height, int LineWidth, const Color& RectangleColor, const Color& BackgroundColor) = 0;
