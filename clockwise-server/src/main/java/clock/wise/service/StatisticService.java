@@ -5,8 +5,7 @@ import clock.wise.dto.StatisticDto;
 import java.util.Date;
 import java.util.List;
 
-public interface StatisticService
-{
+public interface StatisticService {
     StatisticDto createOrUpdateStatistic( final StatisticDto statisticDto, final Long userId );
 
     List< StatisticDto > createOrUpdateStatistics( final List< StatisticDto > statistics, final Long userId );

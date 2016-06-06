@@ -4,6 +4,5 @@ import clock.wise.dao.StatisticDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public abstract class StatisticDaoImpl implements StatisticDao
-{
+public abstract class StatisticDaoImpl implements StatisticDao {
 }

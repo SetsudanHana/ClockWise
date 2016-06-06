@@ -13,21 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping( "/api" )
-public class AuthenticationController
-{
+public class AuthenticationController {
     @Autowired
     AuthenticationService authenticationService;
 
     @RequestMapping( value = "/authenticate", method = RequestMethod.POST )
-    public TokenDto authenticate( @RequestBody UserFormDto userFormDto )
-    {
+    public TokenDto authenticate( @RequestBody UserFormDto userFormDto ) {
         return authenticationService.authenticate( userFormDto );
     }
 
     @RequestMapping( value = "/invalidatetoken", method = RequestMethod.POST )
-    public void invalidateToken()
-    {
-        authenticationService.invalidateToken((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    public void invalidateToken() {
+        authenticationService.invalidateToken( ( User ) SecurityContextHolder.getContext().getAuthentication().getPrincipal() );
     }
 
 }

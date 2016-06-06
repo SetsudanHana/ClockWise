@@ -5,18 +5,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserModelMapperUtils
-{
+public class UserModelMapperUtils {
 
     public ModelMapper modelMapper = new ModelMapper();
 
-    public UserModelMapperUtils()
-    {
+    public UserModelMapperUtils() {
         modelMapper.addConverter( new UserModelConverter() );
     }
 
-    public ModelMapper getModelMapper()
-    {
+    public ModelMapper getModelMapper() {
         return modelMapper;
     }
 }

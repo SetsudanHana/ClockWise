@@ -15,11 +15,11 @@ public class Token {
     public Token() {
     }
 
-    public Token(UUID uuid) {
+    public Token( UUID uuid ) {
         this.uuid = uuid;
     }
 
-    public Token(UUID uuid, long expiration) {
+    public Token( UUID uuid, long expiration ) {
         this.uuid = uuid;
         this.expirationTime = expiration;
         this.timestamp = Calendar.getInstance().getTimeInMillis() + expirationTime;
@@ -30,7 +30,7 @@ public class Token {
     }
 
     public void reinvokeToken() {
-        if (this.timestamp != NO_EXPIRE) {
+        if ( this.timestamp != NO_EXPIRE ) {
             this.timestamp = Calendar.getInstance().getTimeInMillis() + expirationTime;
         }
     }
@@ -38,18 +38,20 @@ public class Token {
     public boolean isExpired() {
         try {
             return timestamp != NO_EXPIRE && timestamp < Calendar.getInstance().getTimeInMillis();
-        } finally {
+        }
+        finally {
             reinvokeToken();
         }
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
             return true;
-        } else if (obj instanceof Token) {
-            Token other = (Token) obj;
-            return uuid.equals(other.uuid);
+        }
+        else if ( obj instanceof Token ) {
+            Token other = ( Token ) obj;
+            return uuid.equals( other.uuid );
         }
         return false;
     }

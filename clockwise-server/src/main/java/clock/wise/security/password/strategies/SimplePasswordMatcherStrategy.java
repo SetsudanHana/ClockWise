@@ -8,13 +8,13 @@ public class SimplePasswordMatcherStrategy implements PasswordMatcherStrategy {
 
     private PasswordEncoder passwordEncoder;
 
-    public SimplePasswordMatcherStrategy(PasswordEncoder passwordEncoder) {
+    public SimplePasswordMatcherStrategy( PasswordEncoder passwordEncoder ) {
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
+    public boolean matches( CharSequence rawPassword, String encodedPassword ) {
+        return passwordEncoder.matches( rawPassword, encodedPassword );
     }
 
 }

@@ -19,9 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class StatisticServiceImpl implements StatisticService
-{
-    private final static Logger logger = Logger.getLogger(StatisticServiceImpl.class);
+public class StatisticServiceImpl implements StatisticService {
+    private final static Logger logger = Logger.getLogger( StatisticServiceImpl.class );
 
     @Autowired
     private StatisticDao statisticDao;
@@ -32,99 +31,86 @@ public class StatisticServiceImpl implements StatisticService
 
     @Override
     @Transactional
-    public StatisticDto createOrUpdateStatistic( final StatisticDto statisticDto, final Long userId )
-    {
-        if ( LongUtils.isEmpty(userId) )
-        {
-            logger.error("User id cannot be null or empty");
-            throw new IllegalArgumentException("User id cannot be null or empty");
+    public StatisticDto createOrUpdateStatistic( final StatisticDto statisticDto, final Long userId ) {
+        if ( LongUtils.isEmpty( userId ) ) {
+            logger.error( "User id cannot be null or empty" );
+            throw new IllegalArgumentException( "User id cannot be null or empty" );
         }
 
-        User user = userDao.findOne(userId);
-        Statistic statistic = statisticModelMapperWrapper.getModelMapper().map(statisticDto, Statistic.class);
+        User user = userDao.findOne( userId );
+        Statistic statistic = statisticModelMapperWrapper.getModelMapper().map( statisticDto, Statistic.class );
 
-        statistic.setUser(user);
-        Statistic saved = statisticDao.save(statistic);
-        if ( statisticDao.exists(saved.getId()) )
-        {
-            logger.info("Statistics for user id: " + userId + " has been created");
+        statistic.setUser( user );
+        Statistic saved = statisticDao.save( statistic );
+        if ( statisticDao.exists( saved.getId() ) ) {
+            logger.info( "Statistics for user id: " + userId + " has been created" );
         }
-        return statisticModelMapperWrapper.getModelMapper().map(saved, StatisticDto.class);
+        return statisticModelMapperWrapper.getModelMapper().map( saved, StatisticDto.class );
     }
 
     @Override
     @Transactional
-    public List< StatisticDto > createOrUpdateStatistics( final List< StatisticDto > statistics, final Long userId )
-    {
-        List< StatisticDto > created = statistics.stream().map(statisticDto -> createOrUpdateStatistic(statisticDto, userId)).collect(Collectors.toList());
+    public List< StatisticDto > createOrUpdateStatistics( final List< StatisticDto > statistics, final Long userId ) {
+        List< StatisticDto > created = statistics.stream().map( statisticDto -> createOrUpdateStatistic( statisticDto, userId ) ).collect( Collectors.toList() );
         return created;
     }
 
     @Override
     @Transactional
-    public List< StatisticDto > findStatisticsByUserId( final Long userId )
-    {
-        if ( LongUtils.isEmpty(userId) )
-        {
-            logger.error("User id cannot be null or empty");
-            throw new IllegalArgumentException("User id cannot be null");
+    public List< StatisticDto > findStatisticsByUserId( final Long userId ) {
+        if ( LongUtils.isEmpty( userId ) ) {
+            logger.error( "User id cannot be null or empty" );
+            throw new IllegalArgumentException( "User id cannot be null" );
         }
 
         List< StatisticDto > statisticsDtoList = new ArrayList<>();
-        Iterable< Statistic > statistics = statisticDao.findByUserId(userId);
-        convertStatisticsToDto(statisticsDtoList, statistics);
+        Iterable< Statistic > statistics = statisticDao.findByUserId( userId );
+        convertStatisticsToDto( statisticsDtoList, statistics );
 
         return statisticsDtoList;
     }
 
     @Override
     @Transactional
-    public List< StatisticDto > findByDateBetween( final Date startDate, final Date endDate )
-    {
-        if ( startDate == null || endDate == null )
-        {
-            throw new IllegalArgumentException("Dates cannot be null");
+    public List< StatisticDto > findByDateBetween( final Date startDate, final Date endDate ) {
+        if ( startDate == null || endDate == null ) {
+            throw new IllegalArgumentException( "Dates cannot be null" );
         }
 
         List< StatisticDto > statisticsDtoList = new ArrayList<>();
-        List< Statistic > statistics = statisticDao.findByDateBetween(startDate, endDate);
-        convertStatisticsToDto(statisticsDtoList, statistics);
+        List< Statistic > statistics = statisticDao.findByDateBetween( startDate, endDate );
+        convertStatisticsToDto( statisticsDtoList, statistics );
 
-        logger.info("Stats between " + startDate + " and " + endDate + " received");
+        logger.info( "Stats between " + startDate + " and " + endDate + " received" );
 
         return statisticsDtoList;
     }
 
     @Override
     @Transactional
-    public List< StatisticDto > findByUserIdAndDateBetween( final Long userId, final Date startDate, final Date endDate )
-    {
-        if ( LongUtils.isEmpty(userId) )
-        {
-            logger.error("User id cannot be null or empty");
-            throw new IllegalArgumentException("User id cannot be null");
+    public List< StatisticDto > findByUserIdAndDateBetween( final Long userId, final Date startDate, final Date endDate ) {
+        if ( LongUtils.isEmpty( userId ) ) {
+            logger.error( "User id cannot be null or empty" );
+            throw new IllegalArgumentException( "User id cannot be null" );
         }
 
-        if ( startDate == null || endDate == null )
-        {
-            throw new IllegalArgumentException("Dates cannot be null");
+        if ( startDate == null || endDate == null ) {
+            throw new IllegalArgumentException( "Dates cannot be null" );
         }
 
         List< StatisticDto > statisticsDtoList = new ArrayList<>();
-        List< Statistic > statistics = statisticDao.findByUserIdAndDateBetween(userId, startDate, endDate);
-        convertStatisticsToDto(statisticsDtoList, statistics);
+        List< Statistic > statistics = statisticDao.findByUserIdAndDateBetween( userId, startDate, endDate );
+        convertStatisticsToDto( statisticsDtoList, statistics );
 
-        logger.info("Stats for user " + userId + ", between " + startDate + " and " + endDate + " received");
+        logger.info( "Stats for user " + userId + ", between " + startDate + " and " + endDate + " received" );
 
         return statisticsDtoList;
     }
 
-    private void convertStatisticsToDto( List< StatisticDto > statisticDtoList, Iterable< Statistic > statistics )
-    {
-        for ( final Statistic statistic : statistics )
-        {
-            StatisticDto statisticDto = statisticModelMapperWrapper.getModelMapper().map(statistic, StatisticDto.class);
-            statisticDtoList.add(statisticDto);
+    private void convertStatisticsToDto( List< StatisticDto > statisticDtoList, Iterable< Statistic > statistics ) {
+        for ( final Statistic statistic : statistics ) {
+            StatisticDto statisticDto = statisticModelMapperWrapper.getModelMapper().map( statistic, StatisticDto.class );
+            statisticDtoList.add( statisticDto );
         }
     }
 }

@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-public interface CompanyDao extends CrudRepository< Company, Long >
-{
+public interface CompanyDao extends CrudRepository< Company, Long > {
     Company findByName( final String name );
 
     @Query( "from User u join u.company c where c.id=:companyId and u.id=:userId" )

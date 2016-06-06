@@ -16,13 +16,13 @@ public class UserForm implements UserDetails {
         this.password = null;
     }
 
-    public UserForm(String username, String password) {
+    public UserForm( String username, String password ) {
         this.username = username;
         this.password = password;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection< ? extends GrantedAuthority > getAuthorities() {
         return null;
     }
 
@@ -57,12 +57,13 @@ public class UserForm implements UserDetails {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
             return true;
-        } else if (obj != null && obj instanceof UserForm) {
-            UserForm other = (UserForm) obj;
-            return username.equals(other.username);
+        }
+        else if ( obj != null && obj instanceof UserForm ) {
+            UserForm other = ( UserForm ) obj;
+            return username.equals( other.username );
         }
         return false;
     }

@@ -10,8 +10,8 @@ public abstract class ModelMapperWrapper {
     private ModelMapper modelMapper = new ModelMapper();
 
     public ModelMapperWrapper() {
-        for (AbstractConverter converter : convertersList()) {
-            modelMapper.addConverter(converter);
+        for ( AbstractConverter converter : convertersList() ) {
+            modelMapper.addConverter( converter );
         }
     }
 
@@ -19,5 +19,5 @@ public abstract class ModelMapperWrapper {
         return modelMapper;
     }
 
-    protected abstract List<AbstractConverter> convertersList();
+    protected abstract List< AbstractConverter > convertersList();
 }

@@ -5,15 +5,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface TokenManager {
 
-    Token getToken(UserDetails userDetails);
+    Token getToken( UserDetails userDetails );
 
-    Token getToken(UserDetails userDetails, Long expiration);
+    Token getToken( UserDetails userDetails, Long expiration );
 
-    boolean validate(Token token);
+    boolean validate( Token token );
 
-    UserDetails getUserFromToken(Token token);
+    UserDetails getUserFromToken( Token token );
 
-    void invalidateToken(UserDetails userDetails);
+    void invalidateToken( UserDetails userDetails );
 
-    void invalidateToken(Token token);
+    void invalidateToken( Token token );
 }

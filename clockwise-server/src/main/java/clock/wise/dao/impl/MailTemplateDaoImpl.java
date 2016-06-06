@@ -4,6 +4,5 @@ import clock.wise.dao.MailTemplateDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public abstract class MailTemplateDaoImpl implements MailTemplateDao
-{
+public abstract class MailTemplateDaoImpl implements MailTemplateDao {
 }

@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
+@Transactional( readOnly = true )
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -17,10 +17,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     UserDao userDao;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findOneByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("Username: " + username + " not found");
+    public UserDetails loadUserByUsername( String username ) throws UsernameNotFoundException {
+        User user = userDao.findOneByUsername( username );
+        if ( user == null ) {
+            throw new UsernameNotFoundException( "Username: " + username + " not found" );
         }
         return user;
     }

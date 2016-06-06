@@ -6,8 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-public class MailTemplate implements Serializable
-{
+public class MailTemplate implements Serializable {
     @Id
     @GeneratedValue
     @Column
@@ -23,47 +22,38 @@ public class MailTemplate implements Serializable
     @Column
     private String subject;
 
-    public MailTemplate()
-    {
+    public MailTemplate() {
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId( Long id )
-    {
+    public void setId( Long id ) {
         this.id = id;
     }
 
-    public String getContent()
-    {
+    public String getContent() {
         return content;
     }
 
-    public void setContent( String content )
-    {
+    public void setContent( String content ) {
         this.content = content;
     }
 
-    public MailTemplateEnum getMailType()
-    {
+    public MailTemplateEnum getMailType() {
         return mailType;
     }
 
-    public void setMailType( MailTemplateEnum mailType )
-    {
+    public void setMailType( MailTemplateEnum mailType ) {
         this.mailType = mailType;
     }
 
-    public String getSubject()
-    {
+    public String getSubject() {
         return subject;
     }
 
-    public void setSubject( String subject )
-    {
+    public void setSubject( String subject ) {
         this.subject = subject;
     }
 }

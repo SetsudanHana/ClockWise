@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private static final long TOKEN_EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(30);
+    private static final long TOKEN_EXPIRATION_TIME = TimeUnit.MINUTES.toMillis( 30 );
 
     @Autowired
     UserDao userDao;
@@ -39,22 +39,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     TokenModelMapperWrapper tokenModelMapperWrapper;
 
     @Override
-    public TokenDto authenticate(UserFormDto userFormDto) {
-        UserForm userForm = userFormModelMapperWrapper.getModelMapper().map(userFormDto, UserForm.class);
-        User user = userDao.findOneByUsername(userForm.getUsername());
-        if (user != null) {
-            if (passwordEncoder.matches(userForm.getPassword(), user.getPassword())) {
-                Token token = tokenManager.getToken(userForm, TOKEN_EXPIRATION_TIME);
-                return tokenModelMapperWrapper.getModelMapper().map(token, TokenDto.class);
+    public TokenDto authenticate( UserFormDto userFormDto ) {
+        UserForm userForm = userFormModelMapperWrapper.getModelMapper().map( userFormDto, UserForm.class );
+        User user = userDao.findOneByUsername( userForm.getUsername() );
+        if ( user != null ) {
+            if ( passwordEncoder.matches( userForm.getPassword(), user.getPassword() ) ) {
+                Token token = tokenManager.getToken( userForm, TOKEN_EXPIRATION_TIME );
+                return tokenModelMapperWrapper.getModelMapper().map( token, TokenDto.class );
             }
-            throw new BadCredentialsException("Invalid password for username: " + userFormDto.username);
+            throw new BadCredentialsException( "Invalid password for username: " + userFormDto.username );
         }
-        throw new UsernameNotFoundException("Username: " + userFormDto.username + " not found");
+        throw new UsernameNotFoundException( "Username: " + userFormDto.username + " not found" );
     }
 
     @Override
-    public void invalidateToken(User user) {
-        tokenManager.invalidateToken(userFormModelMapperWrapper.getModelMapper().map(user, UserForm.class));
+    public void invalidateToken( User user ) {
+        tokenManager.invalidateToken( userFormModelMapperWrapper.getModelMapper().map( user, UserForm.class ) );
     }
 
 }

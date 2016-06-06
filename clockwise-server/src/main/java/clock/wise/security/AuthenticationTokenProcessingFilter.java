@@ -32,30 +32,31 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     TokenModelMapperWrapper tokenModelMapperWrapper;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response,
-                         FilterChain chain) throws IOException, ServletException {
+    public void doFilter( ServletRequest request, ServletResponse response,
+                          FilterChain chain ) throws IOException, ServletException {
         String token = null;
 
-        if (request instanceof HttpServletRequest) {
-            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-            token = httpServletRequest.getHeader("ClockWise-Token");
+        if ( request instanceof HttpServletRequest ) {
+            HttpServletRequest httpServletRequest = ( HttpServletRequest ) request;
+            token = httpServletRequest.getHeader( "ClockWise-Token" );
         }
 
-        if (token != null) {
+        if ( token != null ) {
             TokenDto tokenDto = new TokenDto();
             tokenDto.token = token;
-            Token tokenModel = tokenModelMapperWrapper.getModelMapper().map(tokenDto, Token.class);
-            if (tokenManager.validate(tokenModel)) {
-                UserDetails userDetails = tokenManager.getUserFromToken(tokenModel);
+            Token tokenModel = tokenModelMapperWrapper.getModelMapper().map( tokenDto, Token.class );
+            if ( tokenManager.validate( tokenModel ) ) {
+                UserDetails userDetails = tokenManager.getUserFromToken( tokenModel );
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authentication));
-            } else {
-                tokenManager.invalidateToken(tokenModel);
+                        new UsernamePasswordAuthenticationToken( userDetails.getUsername(), userDetails.getPassword() );
+                authentication.setDetails( new WebAuthenticationDetailsSource().buildDetails( ( HttpServletRequest ) request ) );
+                SecurityContextHolder.getContext().setAuthentication( authenticationManager.authenticate( authentication ) );
+            }
+            else {
+                tokenManager.invalidateToken( tokenModel );
             }
         }
         // continue thru the filter chain
-        chain.doFilter(request, response);
+        chain.doFilter( request, response );
     }
 }

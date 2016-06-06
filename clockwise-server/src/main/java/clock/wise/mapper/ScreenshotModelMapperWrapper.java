@@ -12,10 +12,10 @@ import java.util.List;
 public class ScreenshotModelMapperWrapper extends ModelMapperWrapper {
 
     @Override
-    protected List<AbstractConverter> convertersList() {
-        List<AbstractConverter> converters = new ArrayList<>();
-        converters.add(new ScreenshotToDtoConverter());
-        converters.add(new DtoToScreenshotConverter());
+    protected List< AbstractConverter > convertersList() {
+        List< AbstractConverter > converters = new ArrayList<>();
+        converters.add( new ScreenshotToDtoConverter() );
+        converters.add( new DtoToScreenshotConverter() );
         return converters;
     }
 

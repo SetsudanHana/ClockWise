@@ -8,13 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CompanyModelMapperWrapper extends ModelMapperWrapper
-{
+public class CompanyModelMapperWrapper extends ModelMapperWrapper {
     @Override
-    protected List<AbstractConverter> convertersList()
-    {
-        List<AbstractConverter> converters = new ArrayList<>();
-        converters.add(new CompanyConverter());
+    protected List< AbstractConverter > convertersList() {
+        List< AbstractConverter > converters = new ArrayList<>();
+        converters.add( new CompanyConverter() );
         return converters;
     }
 

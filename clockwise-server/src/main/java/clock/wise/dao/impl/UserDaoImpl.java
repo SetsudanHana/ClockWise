@@ -4,6 +4,5 @@ import clock.wise.dao.UserDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public abstract class UserDaoImpl implements UserDao
-{
+public abstract class UserDaoImpl implements UserDao {
 }

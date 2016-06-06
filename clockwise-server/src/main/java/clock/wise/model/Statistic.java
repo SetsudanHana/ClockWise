@@ -5,8 +5,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-public class Statistic implements Serializable
-{
+public class Statistic implements Serializable {
     @Id
     @GeneratedValue
     @Column
@@ -29,67 +28,54 @@ public class Statistic implements Serializable
     @Temporal( TemporalType.TIMESTAMP )
     private Date date;
 
-    public Statistic()
-    {
+    public Statistic() {
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId( Long id )
-    {
+    public void setId( Long id ) {
         this.id = id;
     }
 
-    public int getMouseClickedCount()
-    {
+    public int getMouseClickedCount() {
         return mouseClickedCount;
     }
 
-    public void setMouseClickedCount( int mouseClickedCount )
-    {
+    public void setMouseClickedCount( int mouseClickedCount ) {
         this.mouseClickedCount = mouseClickedCount;
     }
 
-    public int getKeyboardClickedCount()
-    {
+    public int getKeyboardClickedCount() {
         return keyboardClickedCount;
     }
 
-    public void setKeyboardClickedCount( int keyboardClickedCount )
-    {
+    public void setKeyboardClickedCount( int keyboardClickedCount ) {
         this.keyboardClickedCount = keyboardClickedCount;
     }
 
-    public User getUser()
-    {
+    public User getUser() {
         return user;
     }
 
-    public void setUser( User user )
-    {
+    public void setUser( User user ) {
         this.user = user;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate( Date date )
-    {
+    public void setDate( Date date ) {
         this.date = date;
     }
 
-    public int getMouseMovementCount()
-    {
+    public int getMouseMovementCount() {
         return mouseMovementCount;
     }
 
-    public void setMouseMovementCount( int mouseMovementCount )
-    {
+    public void setMouseMovementCount( int mouseMovementCount ) {
         this.mouseMovementCount = mouseMovementCount;
     }
 }

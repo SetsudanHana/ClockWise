@@ -29,19 +29,19 @@ public class ScreenshotDto {
         return base64Data;
     }
 
-    public void setDate(Date date) {
+    public void setDate( Date date ) {
         this.date = date;
     }
 
-    public void setId(Long id) {
+    public void setId( Long id ) {
         this.id = id;
     }
 
-    public void setBase64Data(String base64Data) {
+    public void setBase64Data( String base64Data ) {
         this.base64Data = base64Data;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId( Long userId ) {
         this.userId = userId;
     }
 

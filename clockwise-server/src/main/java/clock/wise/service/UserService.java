@@ -6,8 +6,7 @@ import clock.wise.model.roles.Role;
 
 import java.util.List;
 
-public interface UserService
-{
+public interface UserService {
     UserDto createOrUpdate( final UserDto userDto );
 
     UserDto findById( Long id );

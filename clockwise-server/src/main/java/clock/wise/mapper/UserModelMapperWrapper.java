@@ -10,9 +10,9 @@ import java.util.List;
 @Component
 public class UserModelMapperWrapper extends ModelMapperWrapper {
     @Override
-    protected List<AbstractConverter> convertersList() {
-        List<AbstractConverter> converters = new ArrayList<>();
-        converters.add(new UserModelConverter());
+    protected List< AbstractConverter > convertersList() {
+        List< AbstractConverter > converters = new ArrayList<>();
+        converters.add( new UserModelConverter() );
         return converters;
     }
 }

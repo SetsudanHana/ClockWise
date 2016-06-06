@@ -8,13 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class StatisticModelMapperWrapper extends ModelMapperWrapper
-{
+public class StatisticModelMapperWrapper extends ModelMapperWrapper {
     @Override
-    protected List<AbstractConverter> convertersList()
-    {
-        List<AbstractConverter> converters = new ArrayList<>();
-        converters.add(new StatisticConverter());
+    protected List< AbstractConverter > convertersList() {
+        List< AbstractConverter > converters = new ArrayList<>();
+        converters.add( new StatisticConverter() );
         return converters;
     }
 }

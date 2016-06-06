@@ -26,7 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private Logger log = Logger.getLogger(WebSecurityConfig.class);
+    private Logger log = Logger.getLogger( WebSecurityConfig.class );
 
     @Autowired
     UserDetailsService userDetailsService;
@@ -43,25 +43,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     CompanyDao companyDao;
 
-    @Value("${default.superadmin.login}")
+    @Value( "${default.superadmin.login}" )
     private String superUserUsername;
-    @Value("${default.superadmin.password}")
+    @Value( "${default.superadmin.password}" )
     private String superUserPassword;
-    @Value("${default.superadmin.email}")
+    @Value( "${default.superadmin.email}" )
     private String superUserEmail;
 
     private PasswordEncoder encoder = new BasicPasswordEncoder();
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure( HttpSecurity http ) throws Exception {
         http.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionCreationPolicy( SessionCreationPolicy.STATELESS );
 
         http.exceptionHandling()
-                .authenticationEntryPoint(tokenAuthenticationEntryPoint);
+                .authenticationEntryPoint( tokenAuthenticationEntryPoint );
 
         http.authorizeRequests()
-                .antMatchers("/api/authenticate").permitAll()
+                .antMatchers( "/api/authenticate" ).permitAll()
                 .anyRequest().authenticated();
 
         http.formLogin()
@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout()
                 .disable();
 
-        http.addFilterBefore(authenticationTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore( authenticationTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class );
 
         http.csrf()
                 .disable();
@@ -78,8 +78,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(encoder);
+    public void configureGlobal( AuthenticationManagerBuilder auth ) throws Exception {
+        auth.userDetailsService( userDetailsService() ).passwordEncoder( encoder );
         checkAndCreateSuperAdmin();
     }
 
@@ -94,18 +94,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private void checkAndCreateSuperAdmin() {
-        if (userDao.findOneByRole(Role.ROLE_SUPER_ADMIN) == null) {
+        if ( userDao.findOneByRole( Role.ROLE_SUPER_ADMIN ) == null ) {
             Company company = new Company();
-            company.setName("Default");
-            company = companyDao.save(company);
+            company.setName( "Default" );
+            company = companyDao.save( company );
 
-            log.info("Creating SUPER ADMIN user");
-            User superAdmin = new User(superUserUsername,
-                    encoder.encode(superUserPassword),
+            log.info( "Creating SUPER ADMIN user" );
+            User superAdmin = new User( superUserUsername,
+                    encoder.encode( superUserPassword ),
                     superUserEmail,
-                    Role.ROLE_SUPER_ADMIN);
-            superAdmin.setCompany(company);
-            userDao.save(superAdmin);
+                    Role.ROLE_SUPER_ADMIN );
+            superAdmin.setCompany( company );
+            userDao.save( superAdmin );
         }
     }
 }

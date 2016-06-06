@@ -13,19 +13,16 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @SpringBootApplication
 @ComponentScan
 @EnableGlobalMethodSecurity( securedEnabled = true, prePostEnabled = true )
-public class Application
-{
+public class Application {
 
     private static final Logger log = LoggerFactory.getLogger( Application.class );
 
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) {
         ApplicationContext ctx = SpringApplication.run( Application.class, args );
     }
 
     @Bean
-    public CharacterEncodingFilter characterEncodingFilter()
-    {
+    public CharacterEncodingFilter characterEncodingFilter() {
         final CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding( "UTF-8" );
         characterEncodingFilter.setForceEncoding( true );

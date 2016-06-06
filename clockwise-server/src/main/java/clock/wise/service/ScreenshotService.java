@@ -9,20 +9,20 @@ import java.util.List;
 
 public interface ScreenshotService {
 
-    ScreenshotDto create(ScreenshotDto screenshotDto, User user);
+    ScreenshotDto create( ScreenshotDto screenshotDto, User user );
 
-    ScreenshotDto findById(Long id);
+    ScreenshotDto findById( Long id );
 
-    byte[] getImageDataById(Long id);
+    byte[] getImageDataById( Long id );
 
-    byte[] getThumbnailDataById(Long id);
+    byte[] getThumbnailDataById( Long id );
 
-    List<ScreenshotDto> findByUserId(Long userId);
+    List< ScreenshotDto > findByUserId( Long userId );
 
-    Page<ScreenshotDto> findPageByUserId(Long userId, Integer page, Integer pageLength);
+    Page< ScreenshotDto > findPageByUserId( Long userId, Integer page, Integer pageLength );
 
-    List<ScreenshotDto> findByUserIdBetween(Long userId, Date start, Date end);
+    List< ScreenshotDto > findByUserIdBetween( Long userId, Date start, Date end );
 
-    Page<ScreenshotDto> findPageByUserIdBetween(Long userId, Date start, Date end, Integer page, Integer pageLength);
+    Page< ScreenshotDto > findPageByUserIdBetween( Long userId, Date start, Date end, Integer page, Integer pageLength );
 
 }

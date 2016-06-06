@@ -9,13 +9,14 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Date;
 import java.util.List;
 
-public interface ScreenshotDao extends CrudRepository<Screenshot, Long> {
+public interface ScreenshotDao extends CrudRepository< Screenshot, Long > {
 
-    List<Screenshot> findByUserId(Long userId, Sort sort);
-    Page<Screenshot> findByUserId(Long userId, Pageable pageable);
+    List< Screenshot > findByUserId( Long userId, Sort sort );
 
-    List<Screenshot> findByUserIdAndDateBetween(Long userId, Date start, Date end, Sort sort);
+    Page< Screenshot > findByUserId( Long userId, Pageable pageable );
 
-    Page<Screenshot> findByUserIdAndDateBetween(Long userId, Date start, Date end, Pageable pageable);
+    List< Screenshot > findByUserIdAndDateBetween( Long userId, Date start, Date end, Sort sort );
+
+    Page< Screenshot > findByUserIdAndDateBetween( Long userId, Date start, Date end, Pageable pageable );
 
 }

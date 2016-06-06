@@ -11,19 +11,19 @@ public class Screenshot {
     private Long id;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY, optional = false)
+    @Basic( fetch = FetchType.LAZY, optional = false )
     private byte[] image;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
+    @Basic( fetch = FetchType.LAZY )
     private byte[] thumbnail;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "userId")
+    @ManyToOne( fetch = FetchType.LAZY, optional = false )
+    @JoinColumn( name = "userId" )
     private User user;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Basic(optional = false)
+    @Temporal( TemporalType.TIMESTAMP )
+    @Basic( optional = false )
     private Date date;
 
     public Screenshot() {
@@ -50,23 +50,23 @@ public class Screenshot {
         return thumbnail;
     }
 
-    public void setId(Long id) {
+    public void setId( Long id ) {
         this.id = id;
     }
 
-    public void setDate(Date date) {
+    public void setDate( Date date ) {
         this.date = date;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage( byte[] image ) {
         this.image = image;
     }
 
-    public void setUser(User user) {
+    public void setUser( User user ) {
         this.user = user;
     }
 
-    public void setThumbnail(byte[] thumbnail) {
+    public void setThumbnail( byte[] thumbnail ) {
         this.thumbnail = thumbnail;
     }
 }

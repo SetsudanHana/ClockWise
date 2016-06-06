@@ -6,9 +6,9 @@ import org.modelmapper.AbstractConverter;
 
 import java.util.UUID;
 
-public class TokenDtoConverter extends AbstractConverter<TokenDto, Token> {
+public class TokenDtoConverter extends AbstractConverter< TokenDto, Token > {
     @Override
-    protected Token convert(TokenDto source) {
-        return new Token(UUID.fromString(source.token));
+    protected Token convert( TokenDto source ) {
+        return new Token( UUID.fromString( source.token ) );
     }
 }

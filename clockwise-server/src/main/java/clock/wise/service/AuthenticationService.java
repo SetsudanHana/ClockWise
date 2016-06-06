@@ -6,8 +6,8 @@ import clock.wise.model.User;
 
 public interface AuthenticationService {
 
-    TokenDto authenticate(UserFormDto userFormDto);
+    TokenDto authenticate( UserFormDto userFormDto );
 
-    void invalidateToken(User username);
+    void invalidateToken( User username );
 
 }

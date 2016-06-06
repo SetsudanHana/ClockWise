@@ -5,8 +5,7 @@ import clock.wise.dto.UserDto;
 
 import java.util.List;
 
-public interface CompanyService
-{
+public interface CompanyService {
     CompanyDto createOrUpdate( final CompanyDto companyDto );
 
     CompanyDto findByName( final String name );
@@ -24,4 +23,6 @@ public interface CompanyService
     void removeCompanyById( final Long id );
 
     void removeCompanyByEntity( final CompanyDto company );
+
+    CompanyDto deactivateCompany( final String name );
 }

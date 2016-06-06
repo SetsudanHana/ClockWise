@@ -14,28 +14,28 @@ public class BasicPasswordEncoder implements PasswordEncoder {
 
     private final static int SECURITY_STRENGTH = 6;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(SECURITY_STRENGTH);
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder( SECURITY_STRENGTH );
 
-    private List<PasswordMatcherStrategy> passwordMatcherStrategies = new ArrayList<>();
+    private List< PasswordMatcherStrategy > passwordMatcherStrategies = new ArrayList<>();
 
     {
-        passwordMatcherStrategies.add(new SimplePasswordMatcherStrategy(encoder));
-        passwordMatcherStrategies.add(new BasicPasswordMatcherStrategy(encoder));
+        passwordMatcherStrategies.add( new SimplePasswordMatcherStrategy( encoder ) );
+        passwordMatcherStrategies.add( new BasicPasswordMatcherStrategy( encoder ) );
     }
 
     public BasicPasswordEncoder() {
     }
 
     @Override
-    public String encode(CharSequence rawPassword) {
-        String preHashedPassword = SHA1Utils.getInstance().encode(rawPassword.toString());
-        return encoder.encode(preHashedPassword);
+    public String encode( CharSequence rawPassword ) {
+        String preHashedPassword = SHA1Utils.getInstance().encode( rawPassword.toString() );
+        return encoder.encode( preHashedPassword );
     }
 
     @Override
-    public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        for (PasswordMatcherStrategy strategy : passwordMatcherStrategies) {
-            if (strategy.matches(rawPassword, encodedPassword)) {
+    public boolean matches( CharSequence rawPassword, String encodedPassword ) {
+        for ( PasswordMatcherStrategy strategy : passwordMatcherStrategies ) {
+            if ( strategy.matches( rawPassword, encodedPassword ) ) {
                 return true;
             }
         }

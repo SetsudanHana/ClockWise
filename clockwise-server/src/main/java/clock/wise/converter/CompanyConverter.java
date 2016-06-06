@@ -8,18 +8,16 @@ import org.modelmapper.AbstractConverter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CompanyConverter extends AbstractConverter< Company, CompanyDto >
-{
+public class CompanyConverter extends AbstractConverter< Company, CompanyDto > {
     @Override
-    protected CompanyDto convert( final Company company )
-    {
+    protected CompanyDto convert( final Company company ) {
         CompanyDto companyDto = new CompanyDto();
-        companyDto.setId(company.getId());
-        companyDto.setName(company.getName());
-        companyDto.setEmail(company.getEmail());
+        companyDto.setId( company.getId() );
+        companyDto.setName( company.getName() );
+        companyDto.setEmail( company.getEmail() );
 
-        List< UserDto > usersDtoList = company.getUsers().stream().map(user -> new UserModelConverter().convert(user)).collect(Collectors.toList());
-        companyDto.setUsers(usersDtoList);
+        List< UserDto > usersDtoList = company.getUsers().stream().map( user -> new UserModelConverter().convert( user ) ).collect( Collectors.toList() );
+        companyDto.setUsers( usersDtoList );
 
         return companyDto;
     }

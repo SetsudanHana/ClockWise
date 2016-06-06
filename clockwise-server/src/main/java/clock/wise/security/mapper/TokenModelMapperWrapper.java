@@ -12,10 +12,10 @@ import java.util.List;
 @Component
 public class TokenModelMapperWrapper extends ModelMapperWrapper {
     @Override
-    protected List<AbstractConverter> convertersList() {
-        List<AbstractConverter> converters = new ArrayList<>();
-        converters.add(new TokenConverter());
-        converters.add(new TokenDtoConverter());
+    protected List< AbstractConverter > convertersList() {
+        List< AbstractConverter > converters = new ArrayList<>();
+        converters.add( new TokenConverter() );
+        converters.add( new TokenDtoConverter() );
         return converters;
     }
 }
