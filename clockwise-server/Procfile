@@ -1,0 +1,1 @@
+web: java -Dserver.port=$PORT -Dspring.datasource.url=jdbc:postgresql://ec2-54-243-200-63.compute-1.amazonaws.com:5432/d6hkat01rd4s6b -Dspring.datasource.username=hqceagamxthtbi -Dspring.datasource.password=c_hhNqeTLJtx3g0GTUwSZLsbRH -jar build/libs/clockwise-server-0.1.0.jar
