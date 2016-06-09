@@ -1,6 +1,7 @@
 package clock.wise.controller;
 
-import clock.wise.dto.ActivationLinkDto;
+import clock.wise.dto.CompanyDto;
+import clock.wise.dto.UserDto;
 import clock.wise.service.ActivationLinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,13 +16,12 @@ public class ActivationLinkController {
     private ActivationLinkService linkService;
 
     @RequestMapping( value = "/{hash}/companies", method = RequestMethod.GET )
-    public ActivationLinkDto activateCompanyLink( @PathVariable( "hash" ) final String hash ) {
+    public CompanyDto activateCompanyLink( @PathVariable( "hash" ) final String hash ) {
         return linkService.activateCompanyByLink( hash );
     }
 
     @RequestMapping( value = "/{hash}/users", method = RequestMethod.GET )
-    public ActivationLinkDto activateUserLink( @PathVariable( "hash" ) final String hash ) {
-        //FIXME - user activation
-        return linkService.activateCompanyByLink( hash );
+    public UserDto activateUserLink( @PathVariable( "hash" ) final String hash ) {
+        return linkService.activateUserByLink( hash );
     }
 }

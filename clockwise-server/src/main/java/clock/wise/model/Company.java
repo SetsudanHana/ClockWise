@@ -30,8 +30,9 @@ public class Company implements Serializable {
     @OneToMany( mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List< User > users = new ArrayList<>();
 
-    @OneToMany( mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    private List< ActivationLink > activationLinks = new ArrayList<>();
+    @OneToOne( cascade = CascadeType.ALL )
+    @JoinColumn( name = "activationLink_id" )
+    private ActivationLink activationLink;
 
     public Company() {
     }
@@ -88,11 +89,11 @@ public class Company implements Serializable {
         return CompanyStatus.DISABLED.equals( getStatus() );
     }
 
-    public List< ActivationLink > getActivationLinks() {
-        return activationLinks;
+    public ActivationLink getActivationLink() {
+        return activationLink;
     }
 
-    public void setActivationLinks( List< ActivationLink > activationLinks ) {
-        this.activationLinks = activationLinks;
+    public void setActivationLink( ActivationLink activationLink ) {
+        this.activationLink = activationLink;
     }
 }

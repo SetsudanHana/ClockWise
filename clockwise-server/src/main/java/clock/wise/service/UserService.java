@@ -2,6 +2,7 @@ package clock.wise.service;
 
 import clock.wise.dto.PasswordDto;
 import clock.wise.dto.UserDto;
+import clock.wise.model.User;
 import clock.wise.model.roles.Role;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface UserService {
     void removeUserById( final Long id );
 
     void removeUserByEntity( final UserDto userDto );
+
+    void createActivationLinkAndSendMailToUser( final User saved );
 }

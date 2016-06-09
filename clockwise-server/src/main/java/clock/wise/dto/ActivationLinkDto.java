@@ -10,6 +10,7 @@ public class ActivationLinkDto {
     private Date createdDate;
     private ActivationLinkStatus status;
     private Long companyId;
+    private Long userId;
 
     public Long getId() {
         return id;
@@ -49,5 +50,13 @@ public class ActivationLinkDto {
 
     public void setCompanyId( Long companyId ) {
         this.companyId = companyId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId( Long userId ) {
+        this.userId = userId;
     }
 }

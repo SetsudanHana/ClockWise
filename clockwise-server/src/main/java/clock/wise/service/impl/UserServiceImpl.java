@@ -2,13 +2,18 @@ package clock.wise.service.impl;
 
 import clock.wise.dao.CompanyDao;
 import clock.wise.dao.UserDao;
+import clock.wise.dto.ActivationLinkDto;
 import clock.wise.dto.PasswordDto;
 import clock.wise.dto.UserDto;
 import clock.wise.enums.MailTemplateEnum;
+import clock.wise.enums.UserStatus;
 import clock.wise.exceptions.InvalidPasswordException;
+import clock.wise.exceptions.StatusStateException;
 import clock.wise.mapper.UserModelMapperWrapper;
+import clock.wise.model.Company;
 import clock.wise.model.User;
 import clock.wise.model.roles.Role;
+import clock.wise.service.ActivationLinkService;
 import clock.wise.service.MailService;
 import clock.wise.service.UserService;
 import clock.wise.utils.LongUtils;
@@ -38,29 +43,45 @@ public class UserServiceImpl implements UserService {
     private CompanyDao companyDao;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private ActivationLinkService activationLinkService;
 
     @Override
     @Transactional
     public UserDto createOrUpdate( final UserDto userDto ) {
-        String password = userDto.getPassword();
+        Company company = companyDao.findOne( userDto.getCompanyId() );
+        if ( company == null ) {
+            throw new EntityNotFoundException( "Company not found. Every user must be in a company." );
+        }
+        if ( company.isExpecting() ) {
+            throw new StatusStateException( "Company status is expecting. Try again later." );
+        }
+        else if ( company.isDisabled() ) {
+            throw new StatusStateException( "Company is disabled. User cannot be created." );
+        }
 
+        String password = userDto.getPassword();
         validateUserPassword( password );
         userDto.setPassword( hashUserPassword( password ) );
 
         User user = userModelMapperWrapper.getModelMapper().map( userDto, User.class );
-        user.setCompany( companyDao.findOne( userDto.getCompanyId() ) );
+        user.setCompany( company );
+        user.setStatus( UserStatus.EXPECTING );
+
         User saved = userDao.save( user );
-        UserDto created = userModelMapperWrapper.getModelMapper().map( saved, UserDto.class );
-
         if ( userDao.exists( saved.getId() ) ) {
-            logger.info( "User " + created.getUsername() + " has been created" );
-
-            MapUtils.fillMapWithParams( "username", created.getUsername() );
-            MapUtils.fillMapWithParams( "email", created.getEmail() );
-            mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.NEW_USER_REGISTERED );
+            createActivationLinkAndSendMailToUser( saved );
         }
 
-        return created;
+        return userModelMapperWrapper.getModelMapper().map( saved, UserDto.class );
+    }
+
+    public void createActivationLinkAndSendMailToUser( final User saved ) {
+        ActivationLinkDto activationLinkDto = activationLinkService.createLinkForUser( saved.getId() );
+        MapUtils.put( "username", saved.getUsername() );
+        MapUtils.put( "email", saved.getEmail() );
+        MapUtils.put( "link", activationLinkDto.getLink() );
+        mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.NEW_USER_REGISTERED );
     }
 
     @Override
@@ -155,8 +176,8 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = userModelMapperWrapper.getModelMapper().map( userDao.save( user ), UserDto.class );
 
-        MapUtils.fillMapWithParams( "email", userDto.getEmail() );
-        MapUtils.fillMapWithParams( "username", userDto.getUsername() );
+        MapUtils.put( "email", userDto.getEmail() );
+        MapUtils.put( "username", userDto.getUsername() );
         mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.USER_PASSWORD_UPDATE );
     }
 
@@ -175,9 +196,9 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = userModelMapperWrapper.getModelMapper().map( userDao.save( user ), UserDto.class );
         userDto.setPassword( generatedPassword );
 
-        MapUtils.fillMapWithParams( "email", userDto.getEmail() );
-        MapUtils.fillMapWithParams( "username", userDto.getUsername() );
-        MapUtils.fillMapWithParams( "password", userDto.getPassword() );
+        MapUtils.put( "email", userDto.getEmail() );
+        MapUtils.put( "username", userDto.getUsername() );
+        MapUtils.put( "password", userDto.getPassword() );
         mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.USER_PASSWORD_RESET );
     }
 

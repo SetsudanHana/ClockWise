@@ -2,6 +2,8 @@ package clock.wise.converter;
 
 import clock.wise.dto.ActivationLinkDto;
 import clock.wise.model.ActivationLink;
+import clock.wise.model.Company;
+import clock.wise.model.User;
 import org.modelmapper.AbstractConverter;
 
 public class ActivationLinkConverter extends AbstractConverter< ActivationLink, ActivationLinkDto > {
@@ -12,7 +14,14 @@ public class ActivationLinkConverter extends AbstractConverter< ActivationLink, 
         activationLinkDto.setStatus( activationLink.getStatus() );
         activationLinkDto.setLink( activationLink.getLink() );
         activationLinkDto.setCreatedDate( activationLink.getCreatedDate() );
-        activationLinkDto.setCompanyId( activationLink.getCompany().getId() );
+        Company company = activationLink.getCompany();
+        if ( company != null ) {
+            activationLinkDto.setCompanyId( company.getId() );
+        }
+        User user = activationLink.getUser();
+        if ( user != null ) {
+            activationLinkDto.setUserId( user.getId() );
+        }
 
         return activationLinkDto;
     }

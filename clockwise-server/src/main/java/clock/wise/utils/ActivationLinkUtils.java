@@ -3,7 +3,7 @@ package clock.wise.utils;
 import java.util.Random;
 
 public class ActivationLinkUtils {
-    private static final int HASH_LENGTH = 12;
+    private static final int HASH_LENGTH = 16;
     private static final char[] HASH_GENERATOR_CHARS = "ABCDEFGHIJKLMNOPRSTQWXYZabcdefghijklmnoprstqwxyz".toCharArray();
 
     public static String generateLinkHash() {

@@ -28,9 +28,11 @@ public class ActivationLink implements Serializable {
     @Enumerated( EnumType.STRING )
     private ActivationLinkStatus status;
 
-    @ManyToOne( fetch = FetchType.LAZY )
-    @JoinColumn( name = "companyId" )
+    @OneToOne
     private Company company;
+
+    @OneToOne
+    private User user;
 
     public Long getId() {
         return id;
@@ -78,5 +80,13 @@ public class ActivationLink implements Serializable {
 
     public void setHash( String hash ) {
         this.hash = hash;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser( User user ) {
+        this.user = user;
     }
 }

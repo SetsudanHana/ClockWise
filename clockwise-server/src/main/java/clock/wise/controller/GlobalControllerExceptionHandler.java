@@ -3,6 +3,7 @@ package clock.wise.controller;
 import clock.wise.dto.ErrorDto;
 import clock.wise.exceptions.InvalidPasswordException;
 import clock.wise.exceptions.MailSenderException;
+import clock.wise.exceptions.StatusStateException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -110,6 +111,14 @@ public class GlobalControllerExceptionHandler {
     @ResponseStatus( value = HttpStatus.BAD_REQUEST )
     @ResponseBody
     protected ErrorDto handleConstraintViolationException( ConstraintViolationException ex ) {
+        logger.error( "Exception: " + ex.getMessage() );
+        return new ErrorDto( ex );
+    }
+
+    @ExceptionHandler( StatusStateException.class )
+    @ResponseStatus( value = HttpStatus.BAD_REQUEST )
+    @ResponseBody
+    protected ErrorDto handleStatusStateException( StatusStateException ex ) {
         logger.error( "Exception: " + ex.getMessage() );
         return new ErrorDto( ex );
     }

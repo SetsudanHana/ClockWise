@@ -7,6 +7,7 @@ import clock.wise.dto.CompanyDto;
 import clock.wise.dto.UserDto;
 import clock.wise.enums.CompanyStatus;
 import clock.wise.enums.MailTemplateEnum;
+import clock.wise.enums.UserStatus;
 import clock.wise.mapper.CompanyModelMapperWrapper;
 import clock.wise.mapper.UserModelMapperWrapper;
 import clock.wise.model.Company;
@@ -14,6 +15,7 @@ import clock.wise.model.User;
 import clock.wise.service.ActivationLinkService;
 import clock.wise.service.CompanyService;
 import clock.wise.service.MailService;
+import clock.wise.service.UserService;
 import clock.wise.utils.ListUtils;
 import clock.wise.utils.LongUtils;
 import clock.wise.utils.MapUtils;
@@ -45,6 +47,8 @@ public class CompanyServiceImpl implements CompanyService {
     private MailService mailService;
     @Autowired
     private ActivationLinkService activationLinkService;
+    @Autowired
+    private UserService userService;
 
     @Override
     @Transactional
@@ -52,36 +56,22 @@ public class CompanyServiceImpl implements CompanyService {
         if ( LongUtils.isNotEmpty( companyDto.getId() ) && companyDao.exists( companyDto.getId() ) ) {
             return updateCompanyOnly( companyDto );
         }
-
         Company company = companyModelMapperWrapper.getModelMapper().map( companyDto, Company.class );
-        if ( ListUtils.isNotEmpty( company.getUsers() ) ) {
-            boolean hasSuperAdmin = false;
-            for ( final User user : company.getUsers() ) {
-                user.setCompany( company );
-                if ( ROLE_SUPER_ADMIN.equals( user.getRole() ) ) {
-                    hasSuperAdmin = true;
-                }
-            }
-            if ( !hasSuperAdmin ) {
-                throw new IllegalArgumentException( "Company with users must have a super admin" );
-            }
-            company.setStatus( CompanyStatus.ACTIVE );
-        }
-        else {
-            company.setStatus( CompanyStatus.EXPECTING );
-        }
+        prepareCompanyUsers( company );
 
         Company saved = companyDao.save( company );
         if ( saved.isActive() ) {
-            MapUtils.fillMapWithParams( "company", saved.getName() );
-            mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.NEW_COMPANY_CREATED_ACTIVATED );
+            MapUtils.put( "email", saved.getEmail() );
+            MapUtils.put( "company", saved.getName() );
+            mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.NEW_COMPANY_CREATED_AND_ACTIVATED );
+            createActivationLinksForCompanyUsers( saved );
         }
         else if ( saved.isExpecting() ) {
             ActivationLinkDto activationLinkDto = activationLinkService.createLinkForCompany( saved.getId() );
-            MapUtils.fillMapWithParams( "email", saved.getEmail() );
-            MapUtils.fillMapWithParams( "company", saved.getName() );
-            MapUtils.fillMapWithParams( "link", activationLinkDto.getLink() );
-            mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.NEW_COMPANY_CREATED_NOT_ACTIVATED );
+            MapUtils.put( "email", saved.getEmail() );
+            MapUtils.put( "company", saved.getName() );
+            MapUtils.put( "link", activationLinkDto.getLink() );
+            mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.NEW_COMPANY_CREATED_AND_NOT_ACTIVATED );
         }
 
         return companyModelMapperWrapper.getModelMapper().map( saved, CompanyDto.class );
@@ -225,5 +215,36 @@ public class CompanyServiceImpl implements CompanyService {
         Company saved = companyDao.save( company );
         return companyModelMapperWrapper.getModelMapper().map( saved, CompanyDto.class );
 
+    }
+
+    private void prepareCompanyUsers( final Company company ) {
+        if ( ListUtils.isNotEmpty( company.getUsers() ) ) {
+            boolean hasSuperAdmin = fillUsersDataAndFindSuperAdmin( company );
+            if ( !hasSuperAdmin ) {
+                throw new IllegalArgumentException( "Company with users must have a super admin" );
+            }
+            company.setStatus( CompanyStatus.ACTIVE );
+        }
+        else {
+            company.setStatus( CompanyStatus.EXPECTING );
+        }
+    }
+
+    private boolean fillUsersDataAndFindSuperAdmin( final Company company ) {
+        boolean hasSuperAdmin = false;
+        for ( final User user : company.getUsers() ) {
+            user.setCompany( company );
+            user.setStatus( UserStatus.EXPECTING );
+            if ( ROLE_SUPER_ADMIN.equals( user.getRole() ) ) {
+                hasSuperAdmin = true;
+            }
+        }
+        return hasSuperAdmin;
+    }
+
+    private void createActivationLinksForCompanyUsers( final Company company ) {
+        for ( final User user : company.getUsers() ) {
+            userService.createActivationLinkAndSendMailToUser( user );
+        }
     }
 }

@@ -7,7 +7,7 @@ public class MapUtils {
 
     private static Map< String, String > map = new HashMap<>();
 
-    public static Map< String, String > fillMapWithParams( final String key, final String value ) {
+    public static Map< String, String > put( final String key, final String value ) {
         map.put( key, value );
         return map;
     }

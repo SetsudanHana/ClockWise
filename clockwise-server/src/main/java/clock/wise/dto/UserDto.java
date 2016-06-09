@@ -1,5 +1,6 @@
 package clock.wise.dto;
 
+import clock.wise.enums.UserStatus;
 import clock.wise.model.roles.Role;
 
 public class UserDto {
@@ -9,6 +10,8 @@ public class UserDto {
     private String email;
     private Role role;
     private Long companyId;
+    private UserStatus status;
+    private Long activationLinkId;
 
     public Long getId() {
         return id;
@@ -56,5 +59,21 @@ public class UserDto {
 
     public void setCompanyId( Long companyId ) {
         this.companyId = companyId;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus( UserStatus status ) {
+        this.status = status;
+    }
+
+    public Long getActivationLinkId() {
+        return activationLinkId;
+    }
+
+    public void setActivationLinkId( Long activationLinkId ) {
+        this.activationLinkId = activationLinkId;
     }
 }

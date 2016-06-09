@@ -1,5 +1,6 @@
 package clock.wise.model;
 
+import clock.wise.enums.UserStatus;
 import clock.wise.model.roles.Role;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +15,8 @@ import java.util.Collections;
 @Table( name = "Users", uniqueConstraints = @UniqueConstraint( columnNames = { "username", "email" } ) )
 public class User implements UserDetails, Serializable {
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @GeneratedValue
+    @Column
     private Long id;
     private String username;
     private String password;
@@ -22,9 +24,17 @@ public class User implements UserDetails, Serializable {
     private String email;
     private Role role;
 
+    @Column
+    @Enumerated( EnumType.STRING )
+    private UserStatus status;
+
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "companyId" )
     private Company company;
+
+    @OneToOne( cascade = CascadeType.ALL )
+    @JoinColumn( name = "activationLink_id" )
+    private ActivationLink activationLink;
 
     public User() {
     }
@@ -89,6 +99,34 @@ public class User implements UserDetails, Serializable {
 
     public void setCompany( Company company ) {
         this.company = company;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus( UserStatus status ) {
+        this.status = status;
+    }
+
+    public ActivationLink getActivationLink() {
+        return activationLink;
+    }
+
+    public void setActivationLink( ActivationLink activationLink ) {
+        this.activationLink = activationLink;
+    }
+
+    public boolean isActive() {
+        return UserStatus.ACTIVE.equals( getStatus() );
+    }
+
+    public boolean isExpecting() {
+        return UserStatus.EXPECTING.equals( getStatus() );
+    }
+
+    public boolean isDisabled() {
+        return UserStatus.DISABLED.equals( getStatus() );
     }
 
     @Override

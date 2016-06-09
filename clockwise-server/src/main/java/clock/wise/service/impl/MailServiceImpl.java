@@ -79,6 +79,7 @@ public class MailServiceImpl implements MailService {
             case NEW_USER_REGISTERED:
                 parameters.put( "username", params.get( "username" ) );
                 parameters.put( "email", params.get( "email" ) );
+                parameters.put( "link", params.get( "link" ) );
                 break;
             case USER_PASSWORD_UPDATE:
                 parameters.put( "username", params.get( "username" ) );
@@ -88,11 +89,11 @@ public class MailServiceImpl implements MailService {
                 parameters.put( "password", params.get( "password" ) );
                 break;
 
-            case NEW_COMPANY_CREATED_NOT_ACTIVATED:
+            case NEW_COMPANY_CREATED_AND_NOT_ACTIVATED:
                 parameters.put( "company", params.get( "company" ) );
                 parameters.put( "link", params.get( "link" ) );
                 break;
-            case NEW_COMPANY_CREATED_ACTIVATED:
+            case NEW_COMPANY_CREATED_AND_ACTIVATED:
                 parameters.put( "company", params.get( "company" ) );
                 break;
         }
