@@ -11,7 +11,6 @@ public class UserDto {
     private Role role;
     private Long companyId;
     private UserStatus status;
-    private Long activationLinkId;
 
     public Long getId() {
         return id;
@@ -67,13 +66,5 @@ public class UserDto {
 
     public void setStatus( UserStatus status ) {
         this.status = status;
-    }
-
-    public Long getActivationLinkId() {
-        return activationLinkId;
-    }
-
-    public void setActivationLinkId( Long activationLinkId ) {
-        this.activationLinkId = activationLinkId;
     }
 }

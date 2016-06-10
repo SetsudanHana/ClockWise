@@ -9,7 +9,6 @@ public class CompanyDto {
     private Long id;
     private String name;
     private String email;
-    private Long activationLinkId;
     private CompanyStatus status;
     private List< UserDto > users = new ArrayList<>();
 
@@ -43,14 +42,6 @@ public class CompanyDto {
 
     public void setEmail( String email ) {
         this.email = email;
-    }
-
-    public Long getActivationLinkId() {
-        return activationLinkId;
-    }
-
-    public void setActivationLinkId( Long activationLinkId ) {
-        this.activationLinkId = activationLinkId;
     }
 
     public CompanyStatus getStatus() {

@@ -16,6 +16,7 @@ import clock.wise.service.ActivationLinkService;
 import clock.wise.service.CompanyService;
 import clock.wise.service.MailService;
 import clock.wise.service.UserService;
+import clock.wise.utils.CompanyUtils;
 import clock.wise.utils.ListUtils;
 import clock.wise.utils.LongUtils;
 import clock.wise.utils.MapUtils;
@@ -206,15 +207,15 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     private CompanyDto updateCompanyOnly( final CompanyDto companyDto ) {
-        Company company = companyModelMapperWrapper.getModelMapper().map( companyDto, Company.class );
-        if ( ListUtils.isNotEmpty( company.getUsers() ) ) {
-            for ( final User user : company.getUsers() ) {
-                user.setCompany( company );
-            }
+        Company company = companyDao.findOne( companyDto.getId() );
+        if ( company.isExpecting() || company.isDisabled() ) {
+            throw new IllegalArgumentException( "Company is " + company.getStatus() + ". It cannot be updated." );
         }
+
+        CompanyUtils.copyDtoToModel( companyDto, company );
+
         Company saved = companyDao.save( company );
         return companyModelMapperWrapper.getModelMapper().map( saved, CompanyDto.class );
-
     }
 
     private void prepareCompanyUsers( final Company company ) {

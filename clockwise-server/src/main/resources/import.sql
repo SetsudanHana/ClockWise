@@ -10,10 +10,10 @@ INSERT INTO mail_template(id, mail_type, content, subject) VALUES(6, 'NEW_COMPAN
 INSERT INTO mail_template(id, mail_type, content, subject) VALUES(7, 'NEW_COMPANY_CREATED_AND_ACTIVATED', '	<div style="margin: 0 auto; border: 1px groove; border-color: #FFC90E;width: 475px; background-color: #FFC90E "><div style="margin: 0 auto; border: 1px groove; border-top:none;border-color: #22B14C; width: 450px; background-color: #22B14C"><h3 style="text-align: center; margin: 0px">Nowa firma - <i>${company}</i> została utworzona</h3></div><table style="margin: 0 auto; margin-top: 50px; margin-bottom: 50px;"><tr style="line-height: 25px"><td><p>Stworzono nową firmę o nazwie <i>${company}</i></p>Super admin dla firmy został utworzony automatycznie.</tr></table></div>', 'Clockwise - utworzono i aktywowano firmę');
 
 --COMPANY
-INSERT INTO company(id, name) VALUES(2, 'Firma');
+INSERT INTO company(id, name, status, email) VALUES(2, 'Firma', 'ACTIVE', 'firma@firma.pl');
 
 --USER
-INSERT INTO users(id, username, password, email, role, company_id ) VALUES(3, 'Testowy', 'haselko3!', 'mail@mailik.com', 2, 2);
+INSERT INTO users(id, username, password, email, role, status, company_id ) VALUES(3, 'Testowy', 'haselko3!', 'mail@mailik.com', 2, 'ACTIVE', 2);
 
 --STATISTICS
 INSERT INTO statistic(id, mouse_clicked_count, keyboard_clicked_count, mouse_movement_count, date, user_id) VALUES(1, 231, 321, 234, '2016-05-02', 3);

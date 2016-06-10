@@ -19,6 +19,7 @@ import clock.wise.service.UserService;
 import clock.wise.utils.LongUtils;
 import clock.wise.utils.MapUtils;
 import clock.wise.utils.PasswordUtils;
+import clock.wise.utils.UserUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,10 @@ public class UserServiceImpl implements UserService {
             throw new StatusStateException( "Company is disabled. User cannot be created." );
         }
 
+        if ( LongUtils.isNotEmpty( userDto.getId() ) && userDao.exists( userDto.getId() ) ) {
+            return updateUserOnly( userDto );
+        }
+
         String password = userDto.getPassword();
         validateUserPassword( password );
         userDto.setPassword( hashUserPassword( password ) );
@@ -69,7 +74,7 @@ public class UserServiceImpl implements UserService {
         user.setStatus( UserStatus.EXPECTING );
 
         User saved = userDao.save( user );
-        if ( userDao.exists( saved.getId() ) ) {
+        if ( saved.isExpecting() ) {
             createActivationLinkAndSendMailToUser( saved );
         }
 
@@ -81,6 +86,7 @@ public class UserServiceImpl implements UserService {
         MapUtils.put( "username", saved.getUsername() );
         MapUtils.put( "email", saved.getEmail() );
         MapUtils.put( "link", activationLinkDto.getLink() );
+
         mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.NEW_USER_REGISTERED );
     }
 
@@ -200,6 +206,18 @@ public class UserServiceImpl implements UserService {
         MapUtils.put( "username", userDto.getUsername() );
         MapUtils.put( "password", userDto.getPassword() );
         mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.USER_PASSWORD_RESET );
+    }
+
+    private UserDto updateUserOnly( final UserDto userDto ) {
+        User user = userDao.findOne( userDto.getId() );
+        if ( user.isExpecting() || user.isDisabled() ) {
+            throw new IllegalArgumentException( "User with status " + user.getStatus() + " cannot be updated" );
+        }
+
+        UserUtils.copyDtoToModel( userDto, user );
+
+        User saved = userDao.save( user );
+        return userModelMapperWrapper.getModelMapper().map( saved, UserDto.class );
     }
 
     private void validateUserPassword( final String userPassword ) {

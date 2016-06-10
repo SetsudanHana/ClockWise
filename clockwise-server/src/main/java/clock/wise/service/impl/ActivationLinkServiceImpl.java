@@ -17,6 +17,7 @@ import clock.wise.model.Company;
 import clock.wise.model.User;
 import clock.wise.service.ActivationLinkService;
 import clock.wise.utils.ActivationLinkUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class ActivationLinkServiceImpl implements ActivationLinkService {
+    private final static Logger logger = Logger.getLogger( ActivationLinkServiceImpl.class );
+
     @Autowired
     private ActivationLinkDao activationLinkDao;
     @Autowired
@@ -106,6 +110,25 @@ public class ActivationLinkServiceImpl implements ActivationLinkService {
         User saved = userDao.save( user );
 
         return userModelMapperWrapper.getModelMapper().map( saved, UserDto.class );
+    }
+
+    @Override
+    @Transactional
+    public List< ActivationLinkDto > findAll() {
+        List< ActivationLinkDto > activationLinkDtoList = new ArrayList<>();
+        Iterable< ActivationLink > activationLinks = activationLinkDao.findAll();
+
+        if ( activationLinks == null ) {
+            logger.error( "There are no activation links in database" );
+            throw new EntityNotFoundException( "There are no activation links in database" );
+        }
+
+        for ( final ActivationLink activationLink : activationLinks ) {
+            ActivationLinkDto activationLinkDto = activationLinkModelMapperWrapper.getModelMapper().map( activationLink, ActivationLinkDto.class );
+            activationLinkDtoList.add( activationLinkDto );
+        }
+
+        return activationLinkDtoList;
     }
 
     private ActivationLink prepareActivationLink( final String hash ) {
