@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SettingsView.h"
 #include "Enviroment.h"
+#include "Config.h"
 
 using namespace FastUI;
 
@@ -26,13 +27,55 @@ SettingsView::SettingsView()
 	SettingLabel->setTextAlignment(Alignment::Left);
 	SettingLabel->setTextColor(Color::Gray());
 
-	AutoRemovalSlideBox = new SlideCheckBox(FastUI::Rect{ 10.0f, 65.0f, 390.0f, 80.0f }, L"Auto remove screenshots after 30 days");
+	DaysRemovalTextBox = new TextBox(FastUI::Rect{ 30.0f, 90.0f, 90.0f, 112.0f }, L"");
+	DaysRemovalTextBox->setTextSize(16);
+
+	DaysRemovalLabel = new Label(FastUI::Rect{ 95.0f, 92.0f, 400.0f, 108.0f }, L"Days (must be bigger than 0)");
+	DaysRemovalLabel->setTextAlignment(Alignment::Left);
+	DaysRemovalLabel->setTextColor(Color::DarkGray());
+
+	AutoRemovalSlideBox = new SlideCheckBox(FastUI::Rect{ 10.0f, 65.0f, 390.0f, 80.0f }, L"Auto remove screenshots after: ");
+	AutoRemovalSlideBox->addEventHandler(Event::Click, [this](const Event& EventData)
+	{
+		AutoRemovalSlideBox->setChecked(!AutoRemovalSlideBox->isChecked());
+		DaysRemovalTextBox->setDisabled(!DaysRemovalTextBox->isDisabled());
+		DaysRemovalLabel->setDisabled(!DaysRemovalLabel->isDisabled());
+	});
+
+	SizeRemovalTextBox = new TextBox(FastUI::Rect{ 30.0f, 150.0f, 90.0f, 172.0f }, L"");
+	SizeRemovalTextBox->setTextSize(16);
+
+	SizeRemovalLabel = new Label(FastUI::Rect{ 95.0f, 152.0f, 400.0f, 168.0f }, L"Megabytes (must be bigger than 0)");
+	SizeRemovalLabel->setTextAlignment(Alignment::Left);
+	SizeRemovalLabel->setTextColor(Color::DarkGray());
+
+	AutoRemovalSizeSlideBox = new SlideCheckBox(FastUI::Rect{ 10.0f, 125.0f, 390.0f, 140.0f }, L"Auto remove screenshots after it exceeds: ");
+	AutoRemovalSizeSlideBox->addEventHandler(Event::Click, [this](const Event& EventData)
+	{
+		AutoRemovalSizeSlideBox->setChecked(!AutoRemovalSizeSlideBox->isChecked());
+		SizeRemovalTextBox->setDisabled(!SizeRemovalTextBox->isDisabled());
+		SizeRemovalLabel->setDisabled(!SizeRemovalLabel->isDisabled());
+	});
+
+	SaveButton = new Button(FastUI::Rect{ 250.0f, 565.0f, 335.0f, 590.0f }, L"Save");
+	SaveButton->addEventHandler(Event::Click, [this](const Event& EventData)
+	{
+		saveSettings();
+	});
+
+	ReadSettings();
 
 	addControl(*AutoRemovalSlideBox);
 	addControl(*BottomRect);
 	addControl(*TopRect);
 	addControl(*SettingLabel);
 	addControl(*GoBackButton);
+	addControl(*SaveButton);
+	addControl(*DaysRemovalTextBox);
+	addControl(*DaysRemovalLabel);
+	addControl(*SizeRemovalTextBox);
+	addControl(*SizeRemovalLabel);
+	addControl(*AutoRemovalSizeSlideBox);
 }
 
 std::wstring SettingsView::getUserConfigPath()
@@ -43,4 +86,55 @@ std::wstring SettingsView::getUserConfigPath()
 bool SettingsView::isAutoRemoveChecked()
 {
 	return AutoRemovalSlideBox->isChecked();
+}
+
+unsigned int SettingsView::getAutoRemoveDays()
+{
+	try
+	{
+		auto AutoRemoveDays = std::stoi(DaysRemovalTextBox->getText());
+		return AutoRemoveDays > 0 ? AutoRemoveDays : 1;
+	}
+	catch (std::exception* e)
+	{
+		return 1;
+	}
+}
+
+void SettingsView::saveSettings()
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+void SettingsView::ReadSettings()
+{
+	Config UserSetting(getUserConfigPath());
+	DaysRemovalTextBox->setText(StringUtility::s2ws(UserSetting.get("AutoRemovalScreenshotDays", "30")));
+	SizeRemovalTextBox->setText(StringUtility::s2ws(UserSetting.get("AutoRemovalScreenshotSize", "100")));
+
+	if (UserSetting.getBool("EnabledAutoRemovalAfterDays", true))
+	{
+		AutoRemovalSlideBox->setChecked(true);
+		DaysRemovalTextBox->setDisabled(false);
+		DaysRemovalLabel->setDisabled(false);
+	}
+	else
+	{
+		AutoRemovalSlideBox->setChecked(false);
+		DaysRemovalTextBox->setDisabled(true);
+		DaysRemovalLabel->setDisabled(true);
+	}
+
+	if (UserSetting.getBool("EnabledAutoRemovalAfterSize", true))
+	{
+		AutoRemovalSizeSlideBox->setChecked(true);
+		SizeRemovalTextBox->setDisabled(false);
+		SizeRemovalLabel->setDisabled(false);
+	}
+	else
+	{
+		AutoRemovalSizeSlideBox->setChecked(false);
+		SizeRemovalTextBox->setDisabled(true);
+		SizeRemovalLabel->setDisabled(true);
+	}
 }
