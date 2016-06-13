@@ -61,6 +61,7 @@ SettingsView::SettingsView()
 	SaveButton->addEventHandler(Event::Click, [this](const Event& EventData)
 	{
 		saveSettings();
+		setVisible(false);
 	});
 
 	ReadSettings();
@@ -103,7 +104,29 @@ unsigned int SettingsView::getAutoRemoveDays()
 
 void SettingsView::saveSettings()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	Config UserConfig(getUserConfigPath());
+
+	if (AutoRemovalSlideBox->isChecked()) 
+	{
+		UserConfig.set("EnabledAutoRemovalAfterDays", true);
+		UserConfig.set("AutoRemovalScreenshotDays", DaysRemovalTextBox->getText());
+	}
+	else 
+	{
+		UserConfig.set("EnabledAutoRemovalAfterDays", false);
+	}
+
+	if (AutoRemovalSizeSlideBox->isChecked()) 
+	{
+		UserConfig.set("EnabledAutoRemovalAfterSize", true);
+		UserConfig.set("AutoRemovalScreenshotSize", SizeRemovalTextBox->getText());
+	} 
+	else
+	{
+		UserConfig.set("EnabledAutoRemovalAfterSize", false);
+	}
+	
+	UserConfig.save(getUserConfigPath());
 }
 
 void SettingsView::ReadSettings()

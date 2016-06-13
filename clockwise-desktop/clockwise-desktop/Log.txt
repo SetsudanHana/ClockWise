@@ -1,15 +1,17 @@
-06/12/16 17:25:12 [ERROR]: Request failed with code: 409 and message: HTTP/1.1 409 Conflict
+06/13/16 23:04:05 [INFO]: Cannot open or find backup screenshot file. This is fine if no backup was done.
+06/13/16 23:14:05 [ERROR]: Request failed with code: 409 and message: HTTP/1.1 409 Conflict
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Connection: close
 Content-Type: application/json;charset=UTF-8
-Date: Sun, 12 Jun 2016 15:25:12 GMT
+Date: Mon, 13 Jun 2016 21:13:55 GMT
 Expires: 0
 Pragma: no-cache
 Server: Jetty(9.2.15.v20160210)
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-Transfer-Encoding: chunked
-X-Application-Context: application:8080
+Via: 1.1 vegur
+X-Application-Context: application:19000
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
+X-Xss-Protection: 1; mode=block
 
-{"Error":"could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement","Exception":"DataIntegrityViolationException"}
+{"Error":"could not execute statement; SQL [n/a]; constraint [statistic_pkey]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement","Exception":"DataIntegrityViolationException"}
