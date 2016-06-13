@@ -104,23 +104,11 @@ User* Authentication::loadUser(const std::wstring& Username)
 
 	if (userResponse.has_field(L"username"))
 	{
-		LoggedUser = std::make_unique<User>(userResponse, getCompany(userResponse[L"companyId"].as_integer()));
+		LoggedUser = std::make_unique<User>(userResponse);
 		return LoggedUser.get();
 	}
 	else
 	{
 		return nullptr;
 	}
-}
-
-std::wstring Authentication::getCompany(int CompanyId)
-{
-	auto companyResponse = communicator.get("/api/companies/" + std::to_string(CompanyId), std::map<std::string, std::string>());
-
-	if (companyResponse.has_field(L"name"))
-	{
-		return companyResponse[L"name"].as_string().c_str();
-	}
-
-	return L"";
 }

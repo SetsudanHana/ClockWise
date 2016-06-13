@@ -102,13 +102,6 @@ void WorkView::onCreate()
 	WorkTimeLabel->setVisible(false);
 	TimeLabelUpdate.stop();
 	StartJobButton->setText(L"Start Work");
-
-	auto& CompanyName = AuthenticationSystem.getUser()->getCompany();
-
-	if (!CompanyName.empty())
-	{
-		InfoLabel->setText(L"Working for company: " + CompanyName);
-	}
 }
 
 WorkObserver* WorkView::getBackgroundObserver()
