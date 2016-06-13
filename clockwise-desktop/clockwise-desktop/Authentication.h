@@ -23,6 +23,7 @@ public:
 
 private:
 	User* loadUser(const std::wstring& Username);
+	std::wstring getCompany(int CompanyId);
 
 	ServiceCommunicator& communicator;
 	std::unique_ptr<User> LoggedUser;
