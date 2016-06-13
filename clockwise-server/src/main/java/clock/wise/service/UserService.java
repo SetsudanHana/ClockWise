@@ -16,6 +16,8 @@ public interface UserService {
 
     UserDto findByRole( Role role );
 
+    UserDto deactivateUser( final String username );
+
     List< UserDto > findAll();
 
     void changePassword( final PasswordDto passwordDto );

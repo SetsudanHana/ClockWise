@@ -8,6 +8,7 @@ import clock.wise.dto.CompanyDto;
 import clock.wise.dto.UserDto;
 import clock.wise.enums.ActivationLinkStatus;
 import clock.wise.enums.CompanyStatus;
+import clock.wise.enums.MailTemplateEnum;
 import clock.wise.enums.UserStatus;
 import clock.wise.mapper.ActivationLinkModelMapperWrapper;
 import clock.wise.mapper.CompanyModelMapperWrapper;
@@ -16,7 +17,9 @@ import clock.wise.model.ActivationLink;
 import clock.wise.model.Company;
 import clock.wise.model.User;
 import clock.wise.service.ActivationLinkService;
+import clock.wise.service.MailService;
 import clock.wise.utils.ActivationLinkUtils;
+import clock.wise.utils.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +48,8 @@ public class ActivationLinkServiceImpl implements ActivationLinkService {
     private UserModelMapperWrapper userModelMapperWrapper;
     @Autowired
     private CompanyModelMapperWrapper companyModelMapperWrapper;
+    @Autowired
+    private MailService mailService;
 
     @Value( "${server.link.api.address}" )
     private String serverLinkApi;
@@ -91,6 +96,10 @@ public class ActivationLinkServiceImpl implements ActivationLinkService {
         activationLinkDao.delete( activationLink.getId() );
         Company saved = companyDao.save( company );
 
+        MapUtils.put( "name", saved.getName() );
+        MapUtils.put( "email", saved.getEmail() );
+        mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.COMPANY_ACTIVATED );
+
         return companyModelMapperWrapper.getModelMapper().map( saved, CompanyDto.class );
     }
 
@@ -108,6 +117,10 @@ public class ActivationLinkServiceImpl implements ActivationLinkService {
         user.setActivationLink( null );
         activationLinkDao.delete( activationLink.getId() );
         User saved = userDao.save( user );
+
+        MapUtils.put( "username", saved.getUsername() );
+        MapUtils.put( "email", saved.getEmail() );
+        mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.USER_ACTIVATED );
 
         return userModelMapperWrapper.getModelMapper().map( saved, UserDto.class );
     }

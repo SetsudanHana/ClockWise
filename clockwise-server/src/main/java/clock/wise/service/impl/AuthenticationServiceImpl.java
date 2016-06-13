@@ -3,6 +3,7 @@ package clock.wise.service.impl;
 import clock.wise.dao.UserDao;
 import clock.wise.dto.TokenDto;
 import clock.wise.dto.UserFormDto;
+import clock.wise.exceptions.StatusStateException;
 import clock.wise.model.User;
 import clock.wise.security.interfaces.TokenManager;
 import clock.wise.security.mapper.TokenModelMapperWrapper;
@@ -43,6 +44,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserForm userForm = userFormModelMapperWrapper.getModelMapper().map( userFormDto, UserForm.class );
         User user = userDao.findOneByUsername( userForm.getUsername() );
         if ( user != null ) {
+            if ( !user.isActive() ) {
+                throw new StatusStateException( "User is not active. Cannot be logged in. Active user and try again." );
+            }
             if ( passwordEncoder.matches( userForm.getPassword(), user.getPassword() ) ) {
                 Token token = tokenManager.getToken( userForm, TOKEN_EXPIRATION_TIME );
                 return tokenModelMapperWrapper.getModelMapper().map( token, TokenDto.class );

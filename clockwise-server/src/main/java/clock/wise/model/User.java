@@ -18,10 +18,17 @@ public class User implements UserDetails, Serializable {
     @GeneratedValue
     @Column
     private Long id;
+
+    @Column
     private String username;
+
+    @Column
     private String password;
+
     @Email
     private String email;
+
+    @Column
     private Role role;
 
     @Column

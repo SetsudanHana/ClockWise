@@ -42,6 +42,11 @@ public class UserController {
         return userService.createOrUpdate( userDto );
     }
 
+    @RequestMapping( method = RequestMethod.PATCH )
+    public UserDto deactivateUser( @RequestParam( value = "username" ) final String username ) {
+        return userService.deactivateUser( username );
+    }
+
     @RequestMapping( value = "/{id}/statistics", method = RequestMethod.POST )
     public StatisticDto updateUserStatistics( @PathVariable( "id" ) final Long userId, @RequestBody final StatisticDto statisticDto ) {
         return statisticService.createOrUpdateStatistic( statisticDto, userId );
