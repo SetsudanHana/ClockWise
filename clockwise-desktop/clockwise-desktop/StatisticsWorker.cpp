@@ -22,11 +22,11 @@ StatisticsWorker::StatisticsWorker(ServiceCommunicator& AppCommunicator)
 void StatisticsWorker::startHooks()
 {
 	//Comment below lines to enable stutter free debugging
-	/*if (Hooks.startHooks() != HookErrorCodes::Ok)
+	if (Hooks.startHooks() != HookErrorCodes::Ok)
 	{
 		LOG_ERROR("Failed to create system hooks");
 		return;
-	}*/
+	}
 	///////////////////////////////////////////////////////
 }
 

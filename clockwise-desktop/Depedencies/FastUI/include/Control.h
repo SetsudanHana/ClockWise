@@ -13,6 +13,7 @@ namespace FastUI
 
 		virtual void invalidate() override;
 		bool isMouseOver() { return MouseHover; }
+		bool isDisabled() { return Disabled; }
 
 		const Color& getBorderColor() { return BorderColor; }
 		const Color& getBackgroundColor() { return BackgroundColor; }
@@ -25,6 +26,8 @@ namespace FastUI
 		void setHoverColor(const Color& NewColor) { HoverColor = NewColor; }
 		void setPressColor(const Color& NewColor) { PressColor = NewColor; }
 		void setTextColor(const Color& NewColor) { TextColor = NewColor; }
+
+		void setDisabled(bool IsDisabled) { Disabled = IsDisabled; }
 
 	protected:
 		void onClick(const MouseEvent& ClickPoint);

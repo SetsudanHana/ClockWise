@@ -21,13 +21,16 @@ namespace FastUI
 		const Color& getDefaultTextColor() { return DefaultTextColor; }
 		void setDefaultTextColor(const Color& NewColor) { DefaultTextColor = NewColor; }
 
+		unsigned int getTextSize() { return TextSize; }
+		void setTextSize(unsigned int NewTextSize) { TextSize = NewTextSize; }
+
 	protected:
 		virtual void drawText(Renderer& GraphicsRenderer, Color TextColor, Rect TextRect);
 		void handlePaste();
 		void onKeyboardPressed(const KeyboardEvent& Key);
 
 		std::wstring InputText;
-		
+		unsigned int TextSize;
 		Color DefaultTextColor;
 	};
 }
