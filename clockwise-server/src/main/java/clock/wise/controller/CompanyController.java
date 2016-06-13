@@ -64,4 +64,9 @@ public class CompanyController {
     public void removeCompanyByEntity( @RequestBody final CompanyDto companyDto ) {
         companyService.removeCompanyByEntity( companyDto );
     }
+
+    @RequestMapping( method = RequestMethod.PATCH )
+    public CompanyDto deactivateUser( @RequestParam( value = "name" ) final String companyName ) {
+        return companyService.deactivateCompany( companyName );
+    }
 }

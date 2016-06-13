@@ -88,6 +88,15 @@ public class MailServiceImpl implements MailService {
                 parameters.put( "username", params.get( "username" ) );
                 parameters.put( "password", params.get( "password" ) );
                 break;
+            case USER_ACTIVATED:
+                parameters.put( "username", params.get( "username" ) );
+                break;
+            case USER_DEACTIVATED:
+                parameters.put( "username", params.get( "username" ) );
+                break;
+            case USER_DELETED:
+                parameters.put( "username", params.get( "username" ) );
+                break;
 
             case NEW_COMPANY_CREATED_AND_NOT_ACTIVATED:
                 parameters.put( "company", params.get( "company" ) );
@@ -95,6 +104,15 @@ public class MailServiceImpl implements MailService {
                 break;
             case NEW_COMPANY_CREATED_AND_ACTIVATED:
                 parameters.put( "company", params.get( "company" ) );
+                break;
+            case COMPANY_ACTIVATED:
+                parameters.put( "company", params.get( "name" ) );
+                break;
+            case COMPANY_DEACTIVATED:
+                parameters.put( "company", params.get( "name" ) );
+                break;
+            case COMPANY_DELETED:
+                parameters.put( "company", params.get( "name" ) );
                 break;
         }
 

@@ -81,15 +81,6 @@ public class UserServiceImpl implements UserService {
         return userModelMapperWrapper.getModelMapper().map( saved, UserDto.class );
     }
 
-    public void createActivationLinkAndSendMailToUser( final User saved ) {
-        ActivationLinkDto activationLinkDto = activationLinkService.createLinkForUser( saved.getId() );
-        MapUtils.put( "username", saved.getUsername() );
-        MapUtils.put( "email", saved.getEmail() );
-        MapUtils.put( "link", activationLinkDto.getLink() );
-
-        mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.NEW_USER_REGISTERED );
-    }
-
     @Override
     @Transactional
     public UserDto findById( final Long id ) {
@@ -125,20 +116,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public UserDto deactivateUser( final String username ) {
+        User user = userDao.findOneByUsername( username );
+        if ( user == null ) {
+            throw new EntityNotFoundException( "User does not exist" );
+        }
+        user.setStatus( UserStatus.DISABLED );
+
+        User saved = userDao.save( user );
+
+        MapUtils.put( "username", saved.getUsername() );
+        MapUtils.put( "email", saved.getEmail() );
+        mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.USER_DEACTIVATED );
+
+        return userModelMapperWrapper.getModelMapper().map( saved, UserDto.class );
+    }
+
+    @Override
+    @Transactional
     public List< UserDto > findAll() {
-        List< UserDto > userDtoList = new ArrayList<>();
+        List< UserDto > usersDtoList = new ArrayList<>();
         Iterable< User > users = userDao.findAll();
         if ( users == null ) {
-            logger.error( "There are no users in databse" );
+            logger.error( "There are no users in database" );
             throw new EntityNotFoundException( "There are no users in database" );
         }
 
         for ( final User user : users ) {
             UserDto userDto = userModelMapperWrapper.getModelMapper().map( user, UserDto.class );
-            userDtoList.add( userDto );
+            usersDtoList.add( userDto );
         }
 
-        return userDtoList;
+        return usersDtoList;
     }
 
     @Override
@@ -149,13 +158,18 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException( "Id cannot be null" );
         }
 
+        User user = userDao.findOne( id );
         userDao.delete( id );
-        logger.info( "User: " + id + " removed" );
+        sendUserDeletedEmail( user );
     }
 
     @Override
     @Transactional
     public void removeUserByEntity( final UserDto userDto ) {
+        if ( LongUtils.isEmpty( userDto.getId() ) ) {
+            logger.error( "Error while removing user by id: " + userDto.getId() );
+            throw new IllegalArgumentException( "Id cannot be null" );
+        }
         if ( !userDao.exists( userDto.getId() ) ) {
             logger.error( "User with id: " + userDto.getId() + " does not exist" );
             throw new EntityNotFoundException( "User with id: " + userDto.getId() + " does not exist" );
@@ -163,7 +177,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userDao.findOne( userDto.getId() );
         userDao.delete( user );
-        logger.info( "User: " + userDto.getId() + " removed" );
+        sendUserDeletedEmail( user );
     }
 
     @Override
@@ -173,7 +187,7 @@ public class UserServiceImpl implements UserService {
         String currentPassword = user.getPassword();
 
         if ( !passwordUtils.matches( passwordDto.getOldPassword(), currentPassword ) ) {
-            throw new InvalidPasswordException( "Given password is not equals to the current user password" );
+            throw new InvalidPasswordException( "Given password is not equal to the current user password" );
         }
 
         String newPassword = passwordDto.getNewPassword();
@@ -208,6 +222,15 @@ public class UserServiceImpl implements UserService {
         mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.USER_PASSWORD_RESET );
     }
 
+    public void createActivationLinkAndSendMailToUser( final User saved ) {
+        ActivationLinkDto activationLinkDto = activationLinkService.createLinkForUser( saved.getId() );
+
+        MapUtils.put( "username", saved.getUsername() );
+        MapUtils.put( "email", saved.getEmail() );
+        MapUtils.put( "link", activationLinkDto.getLink() );
+        mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.NEW_USER_REGISTERED );
+    }
+
     private UserDto updateUserOnly( final UserDto userDto ) {
         User user = userDao.findOne( userDto.getId() );
         if ( user.isExpecting() || user.isDisabled() ) {
@@ -218,6 +241,12 @@ public class UserServiceImpl implements UserService {
 
         User saved = userDao.save( user );
         return userModelMapperWrapper.getModelMapper().map( saved, UserDto.class );
+    }
+
+    private void sendUserDeletedEmail( final User user ) {
+        MapUtils.put( "username", user.getUsername() );
+        MapUtils.put( "email", user.getEmail() );
+        mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.USER_DELETED );
     }
 
     private void validateUserPassword( final String userPassword ) {

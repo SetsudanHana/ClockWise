@@ -179,8 +179,9 @@ public class CompanyServiceImpl implements CompanyService {
             throw new EntityNotFoundException( "Company with id: " + id + " does not exist" );
         }
 
+        Company company = companyDao.findOne( id );
         companyDao.delete( id );
-        logger.info( "Company " + id + " removed" );
+        sendCompanyDeletedMail( company );
     }
 
     @Override
@@ -193,16 +194,24 @@ public class CompanyServiceImpl implements CompanyService {
 
         Company company = companyDao.findOne( companyDto.getId() );
         companyDao.delete( company );
-        logger.info( "Company " + companyDto.getId() + " removed" );
+        sendCompanyDeletedMail( company );
     }
 
     @Override
     @Transactional
     public CompanyDto deactivateCompany( final String name ) {
         Company company = companyDao.findByName( name );
+        if ( company == null ) {
+            throw new EntityNotFoundException( "Company does not exist" );
+        }
         company.setStatus( CompanyStatus.DISABLED );
 
         Company saved = companyDao.save( company );
+
+        MapUtils.put( "name", saved.getName() );
+        MapUtils.put( "email", saved.getEmail() );
+        mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.COMPANY_DEACTIVATED );
+
         return companyModelMapperWrapper.getModelMapper().map( saved, CompanyDto.class );
     }
 
@@ -216,6 +225,12 @@ public class CompanyServiceImpl implements CompanyService {
 
         Company saved = companyDao.save( company );
         return companyModelMapperWrapper.getModelMapper().map( saved, CompanyDto.class );
+    }
+
+    private void sendCompanyDeletedMail( final Company company ) {
+        MapUtils.put( "name", company.getName() );
+        MapUtils.put( "email", company.getEmail() );
+        mailService.sendMessage( MapUtils.getMap(), MailTemplateEnum.COMPANY_DELETED );
     }
 
     private void prepareCompanyUsers( final Company company ) {

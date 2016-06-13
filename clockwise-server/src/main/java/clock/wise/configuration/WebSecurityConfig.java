@@ -2,6 +2,7 @@ package clock.wise.configuration;
 
 import clock.wise.dao.CompanyDao;
 import clock.wise.dao.UserDao;
+import clock.wise.enums.UserStatus;
 import clock.wise.model.Company;
 import clock.wise.model.User;
 import clock.wise.model.roles.Role;
@@ -105,6 +106,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     superUserEmail,
                     Role.ROLE_SUPER_ADMIN );
             superAdmin.setCompany( company );
+            superAdmin.setStatus( UserStatus.ACTIVE );
             userDao.save( superAdmin );
         }
     }
