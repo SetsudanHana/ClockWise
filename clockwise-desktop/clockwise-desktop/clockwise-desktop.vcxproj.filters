@@ -90,7 +90,13 @@
     <ClInclude Include="StatisticsWorker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EncryptedConfig.h">
+    <ClInclude Include="InputValidator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileListItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cryptography.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -144,6 +150,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StatisticsWorker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cryptography.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

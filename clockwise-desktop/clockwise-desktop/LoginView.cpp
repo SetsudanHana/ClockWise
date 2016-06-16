@@ -63,7 +63,7 @@ void LoginView::onSuccesfullLogin()
 	{
 		Config UserSettings(getUserConfigPath());
 		UserSettings.set("username", LoginTextBox->getText());
-		UserSettings.set("password", PasswordTextBox->getText());
+		UserSettings.setEncryptedValue("password", PasswordTextBox->getText());
 		UserSettings.set("remember_me", true);
 		UserSettings.save(getUserConfigPath());	
 	}
@@ -82,7 +82,7 @@ void LoginView::fillCredentialsFromSettings()
 	if (UserSettings.open(Enviroment::getAppDataPath() + UserConfigFilename))
 	{
 		LoginTextBox->setText(UserSettings.getWString("username"));
-		PasswordTextBox->setText(UserSettings.getWString("password"));
+		PasswordTextBox->setText(UserSettings.getEncryptedValueW("password"));
 		RememberMeCheckBox->setChecked(UserSettings.getBool("remember_me"));
 	}
 }

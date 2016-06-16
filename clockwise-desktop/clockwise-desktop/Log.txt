@@ -1,0 +1,33 @@
+06/16/16 23:23:01 [ERROR]: Request failed with code: 404 and message: HTTP/1.1 404 Not Found
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Connection: close
+Content-Type: application/json;charset=UTF-8
+Date: Thu, 16 Jun 2016 21:23:00 GMT
+Expires: 0
+Pragma: no-cache
+Server: Jetty(9.2.15.v20160210)
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Via: 1.1 vegur
+X-Application-Context: application:29067
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Xss-Protection: 1; mode=block
+
+{"Error":"Username: test not found","Exception":"UsernameNotFoundException"}
+06/16/16 23:23:01 [ERROR]: Request failed with code: 404 and message: HTTP/1.1 404 Not Found
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Connection: close
+Content-Type: application/json;charset=UTF-8
+Date: Thu, 16 Jun 2016 21:23:00 GMT
+Expires: 0
+Pragma: no-cache
+Server: Jetty(9.2.15.v20160210)
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Via: 1.1 vegur
+X-Application-Context: application:29067
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Xss-Protection: 1; mode=block
+
+{"Error":"Username: test not found","Exception":"UsernameNotFoundException"}
+06/16/16 23:23:21 [INFO]: Cannot open or find backup screenshot file. This is fine if no backup was done.

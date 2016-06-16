@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "StringUtility.h"
 #include "Enviroment.h"
+#include "Cryptography.h"
 
 class Config
 {
@@ -114,6 +115,26 @@ public:
 	void set(const std::string& Key, const T& Value)
 	{
 		Values[Key] = std::to_string(Value);
+	}
+
+	void setEncryptedValue(const std::string& Key, const std::string& Value)
+	{
+		Values[Key] = Cryptography::encode(Value);
+	}
+
+	void setEncryptedValue(const std::string& Key, const std::wstring& Value)
+	{
+		Values[Key] = Cryptography::encode(StringUtility::ws2s(Value));
+	}
+
+	std::string getEncryptedValue(const std::string& Key)
+	{
+		return Cryptography::decode(Values[Key]);
+	}
+
+	std::wstring getEncryptedValueW(const std::string& Key)
+	{
+		return StringUtility::s2ws(Cryptography::decode(Values[Key]));
 	}
 
 private:
