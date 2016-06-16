@@ -14,3 +14,6 @@ After cloning this, go to clockwise-web and run:
  and then:
  
  `meteor`
+
+
+App will run on: http://localhost:3000
