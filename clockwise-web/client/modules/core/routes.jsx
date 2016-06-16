@@ -6,8 +6,8 @@ import {Grid} from 'react-bootstrap';
 import MainLayout from './components/MainLayout.jsx';
 import Login from '../users/containers/Login.js';
 import Register from '../users/containers/Register.js';
-import BasicChart from '../dashboard/containers/BasicChart.js';
-import NavBar from './components/NavBar.jsx';
+import MainDashboard from '../dashboard/components/Dashboard.jsx';
+import DashboardStatistics from '../dashboard/components/DashboardStatistics.jsx';
 
 export default function (injectDeps, {FlowRouter}) {
     const MainLayoutCtx = injectDeps(MainLayout);
@@ -15,27 +15,54 @@ export default function (injectDeps, {FlowRouter}) {
     FlowRouter.route('/', {
         name: 'main.page',
         action() {
+            if(Session.get('user_token')) {
+                FlowRouter.go('/dashboard');
+            } else {
+                FlowRouter.go('/login');
+            }
+        }
+    });
+
+    FlowRouter.route('/login', {
+        name: 'main.login',
+        action() {
             mount(MainLayoutCtx, {
-                content: () => (<div className="wrapper">
-                                    <Grid>
-                                        <Login />
-                                    </Grid>
-                                </div>)
-            });
+                    content: () => (<div className="wrapper">
+                                        <Grid>
+                                            <Login />
+                                        </Grid>
+                                    </div>)
+                });
         }
     });
 
     FlowRouter.route('/dashboard', {
         name: 'main.dashboard',
         action() {
-            mount(MainLayoutCtx, {
-                content: () => (<div>
-                                <NavBar/>
-                                <div className="dashboard">
-                                    <BasicChart/>
-                                </div>
-                            </div>)
-            });
+            if(Session.get('user_token')) {
+                mount(MainLayoutCtx, {
+                    content: () => (<div>
+                            <MainDashboard />
+                        </div>)
+                });
+            } else {
+                FlowRouter.go('/login')
+            }
+        }
+    });
+
+    FlowRouter.route('/statistics', {
+        name: 'dashboard.statistics',
+        action() {
+            if(Session.get('user_token')) {
+                mount(MainLayoutCtx, {
+                    content: () => (<div>
+                                    <DashboardStatistics />
+                                    </div>)
+                });
+            } else {
+                FlowRouter.go('/login');
+            }
         }
     });
     
@@ -44,9 +71,9 @@ export default function (injectDeps, {FlowRouter}) {
         action() {
             mount(MainLayoutCtx, {
                 content: () => (<div className="wrapper">
-                                <Grid>
-                                    <Register />
-                                </Grid>
+                                    <Grid>
+                                        <Register />
+                                    </Grid>
                                 </div>)
             });
         } 

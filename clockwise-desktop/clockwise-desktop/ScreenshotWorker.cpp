@@ -4,6 +4,7 @@
 #include "StringUtility.h"
 #include "ScreenCapturer.h"
 #include "Logger.h"
+#include "Config.h"
 #include "ServiceCommunicator.h"
 #include "Authentication.h"
 #include "User.h"
@@ -11,6 +12,8 @@
 #include <fstream>
 #include <cpprest\oauth2.h>
 #include "Base64.h"
+#include <Windows.h>
+#include <vector>
 
 ScreenshotWorker::ScreenshotWorker(ServiceCommunicator& WorkerCommunicator) : Communicator(WorkerCommunicator)
 {
@@ -83,10 +86,26 @@ void ScreenshotWorker::uploadSingleScreenshot(const std::wstring& Filename)
 	}
 }
 
+std::wstring ScreenshotWorker::getUserConfigPath()
+{
+	return Enviroment::getAppDataPath() + UserConfigFilename;
+}
+
 void ScreenshotWorker::captureScreenshot()
 {
 	auto ScreenshotFilepath = Enviroment::getAppDataPath() + L"images\\";
 	auto ScreenshotFilenameOnly = L"screenshot" + StringUtility::getDateString() + L".jpg";
+
+	std::wstring& todayDate = StringUtility::getDateString();
+	std::replace(todayDate.begin(), todayDate.end(), ':', '-');
+
+	Config UserConfig(getUserConfigPath());
+	std::string timePeriod = UserConfig.get("AutoRemovalScreenshotDays", "30");
+	
+	for (auto const& screenshotName : CachedScreenshotsNames)
+	{
+		
+	}
 
 	std::replace(ScreenshotFilenameOnly.begin(), ScreenshotFilenameOnly.end(), ':', '-'); // ':' are invalid characters in win32
 	Enviroment::createPath(ScreenshotFilepath);

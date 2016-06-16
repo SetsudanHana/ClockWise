@@ -17,6 +17,10 @@ public:
 	std::wstring getLastScreenshotFilename();
 
 private:
+	const std::wstring UserConfigFilename = L"user_settings.cfg";
+
+	std::wstring getUserConfigPath();
+
 	void uploadSingleScreenshot(const std::wstring& Filename);
 	void loadScreenshotBackup();
 

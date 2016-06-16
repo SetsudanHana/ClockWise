@@ -61,7 +61,7 @@ void LoginView::onSuccesfullLogin()
 {
 	if (RememberMeCheckBox->isChecked())
 	{
-		Config UserSettings;
+		Config UserSettings(getUserConfigPath());
 		UserSettings.set("username", LoginTextBox->getText());
 		UserSettings.set("password", PasswordTextBox->getText());
 		UserSettings.set("remember_me", true);

@@ -10,6 +10,7 @@ class Register extends React.Component {
                     <Panel header="SIGN UP" bsStyle="default" className="heading-text panel-default">
                         <form>
                             <Col md={12}>
+                                <Input ref="username" type="text" placeholder="Username" />
                                 <Input ref="email" type="text" placeholder="email"/>
                                 <Input ref="password" type="password" placeholder="password" />
                                 <Input ref="confirmPassword" type="password" placeholder="confirm password" />
@@ -31,9 +32,10 @@ class Register extends React.Component {
     register(e) {
         e.preventDefault();
         const {registerUser} = this.props;
-        const {email, password, confirmPassword} = this.refs;
-        registerUser(email.refs.value, 
+        const {username, email, password, confirmPassword} = this.refs;
+        registerUser(username.refs.input.value, email.refs.input.value, 
             password.refs.input.value, confirmPassword.refs.input.value);
+        username.value = '';
         email.value = '';
         password.value = '';
         confirmPassword.value = '';

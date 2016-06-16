@@ -1,26 +1,47 @@
+import  { HTTP } from 'meteor/http';
+
 export default {
-	login({Meteor, LocalState, FlowRouter}, login, password) {
+	login({Meteor, LocalState, FlowRouter, Session}, login, password) {
     if (!login) {
-      return LocalState.set('LOGIN_ERROR', 'Login jest wymagany.');
+      return LocalState.set('LOGIN_ERROR', 'Email is required.');
     }
 
     if (!password) {
-      return LocalState.set('LOGIN_ERROR', 'Hasło jest wymagane.');
+      return LocalState.set('LOGIN_ERROR', 'Password is required.');
     }
 
-    console.log("Getting ready for subscription");
+    Meteor.call('user.login', login, password, (err, response) => {
+      if(err) {
+        return LocalState.set('LOGIN_ERROR', 'There is a problem with signing in.');
+      } 
 
-    var responseToken = Meteor.subscribe('user.login', login, password);
-    if(responseToken) {
-      FlowRouter.go('/dashboard');
-    } else {
-      return LocalState.set('LOGIN_ERROR', 'Problem przy logowaniu.');
-    }
+      Session.set('user_token', response);
+      Session.set('username', login);
+
+      Meteor.call('user.info', Session.get('username'), Session.get('user_token'), function(error, response) {
+        if(error) {
+          console.log("Error", error);
+        }
+
+        Session.set('user_info', response.data);
+      });
+
+
+      if(Session.get('user_token')) {
+        FlowRouter.go('/dashboard');
+      } else {
+        return LocalState.set('LOGIN_ERROR', 'There is a problem with signing in.');
+      }
+    });
 
     LocalState.set('LOGIN_ERROR', null);
   },
   
-  register({Meteor, FlowRouter, LocalState}, email, password, confirmPassword) {
+  register({Meteor, FlowRouter, LocalState}, username, email, password, confirmPassword) {
+    if(!username) {
+        return LocalState.set("CREATE_USER_ERROR", "Username is required");
+    }
+
       if (!email) {
         return LocalState.set('CREATE_USER_ERROR', 'Email is required.');
       }
@@ -35,11 +56,15 @@ export default {
       
       LocalState.set('CREATE_USER_ERROR', null);
 
-      var responseToken = Meteor.subscribe('user.register', login, password);
-      if(responseToken) {
+      Meteor.call('user.register', username, email, password, (err, resposne) => {
+        if(err) {
+          return LocalState.set('CREATE_USER_ERROR', 'There is a problem with creating an account.');
+        }
+      });
+      if(Session.get('user_token')) {
         FlowRouter.go('/dashboard');
       } else {
-        return LocalState.set('CREATE_USER_ERROR', 'Problem przy rejestracji.');
+        return LocalState.set('CREATE_USER_ERROR', 'There is a problem with creating an account.');
       }
   },
 
