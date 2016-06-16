@@ -1,6 +1,9 @@
 # ClockWise Desktop
 
-#Run application only from Debug if you've installed VS2015, otherwise always use Release
+#To run application start Clockwise-desktop.exe from Release folder
 
-#If you receive error about missing vs redistributables install this:
+#If you receive error about missing visual redistributables install this:
 https://www.microsoft.com/pl-pl/download/details.aspx?id=48145 (32bit)
+
+#Minimal requirements:
+#Two core desktop machine with at least Windows Vista SP2
