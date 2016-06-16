@@ -11,10 +11,10 @@ public:
 
 private:
 	std::wstring getUserConfigPath();
-	bool isAutoRemoveChecked();
-	unsigned int getAutoRemoveDays();
 	void saveSettings();
+
 	FastUI::Label* SettingLabel;
+	FastUI::Label* ErrorLabel;
 	FastUI::Button* GoBackButton;
 	FastUI::Button* SaveButton;
 	FastUI::Rectangle* BottomRect;

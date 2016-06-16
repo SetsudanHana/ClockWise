@@ -8,6 +8,7 @@
 #include "StringUtility.h"
 #include "User.h"
 #include "Logger.h"
+#include "Cryptography.h"
 
 StatisticsWorker::StatisticsWorker(ServiceCommunicator& AppCommunicator) 
 	: Communicator(AppCommunicator)
@@ -48,7 +49,7 @@ void StatisticsWorker::uploadStatistics()
 
 	auto AuthSystem = Communicator.getAuthentication();
 	auto userId = std::to_string(AuthSystem->getUser()->getUserId());
-	std::fstream backupStream(Enviroment::getAppDataPath() + L"/backup.clk", std::ios::out | std::ios::trunc);
+	std::fstream backupStream(getStatisticsBackupPath(), std::ios::out | std::ios::trunc);
 
 	try
 	{
@@ -71,26 +72,54 @@ void StatisticsWorker::uploadStatistics()
 			return;
 		}
 
+		backupStream << Cryptography::encode(std::to_string(Communicator.getAuthentication()->getUser()->getUserId())) << std::endl;
 		for (auto& CachedValue : CachedValues)
 		{
-			CachedValue.serialize(backupStream);
-			backupStream << std::endl;
+			auto LineData = std::wstring(CachedValue.serialize().c_str());
+			backupStream << Cryptography::encode(StringUtility::ws2s(LineData)) << std::endl;
 		}
 	}
 }
 
 void StatisticsWorker::loadStatisticsBackup()
 {
-	std::fstream backupStream(Enviroment::getAppDataPath() + L"/backup.clk", std::ios::in);
+	//TODO: Make one with Screenshot worker
+	std::fstream backupStream(getStatisticsBackupPath(), std::ios::in);
 	std::string Line;
+	int UserId = -1;
+	int CurrentUserId = Communicator.getAuthentication()->getUser()->getUserId();
 
 	while (std::getline(backupStream, Line))
 	{
-		auto WideLine = StringUtility::s2ws(Line);
+		if (UserId == -1)
+		{
+			try
+			{
+				UserId = std::stoi(Cryptography::decode(Line));
+				if (CurrentUserId != UserId)
+				{
+					LOG_ERROR("Tried open wrong user backup data! File user: " + std::to_string(UserId) + " but logged user is: " + std::to_string(CurrentUserId));
+					return;
+				}
 
+				continue;
+			}
+			catch (const std::exception& e)
+			{
+				return;
+			}
+		}
+
+		auto WideLine = StringUtility::s2ws(Cryptography::decode(Line));
 		auto Statistics = web::json::value::parse(WideLine);
 		CachedValues.push_back(Statistics);
 	}
+}
+
+std::wstring StatisticsWorker::getStatisticsBackupPath()
+{
+	auto UserId = Communicator.getAuthentication()->getUser()->getUserId();
+	return Enviroment::getAppDataPath() + L"/backup" + std::to_wstring(UserId) + L".clk";
 }
 
 void StatisticsWorker::updateCounters()

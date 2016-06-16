@@ -157,8 +157,9 @@
     <ClInclude Include="clockwise-desktop.h" />
     <ClInclude Include="Clockwise.h" />
     <ClInclude Include="Config.h" />
-    <ClInclude Include="EncryptedConfig.h" />
+    <ClInclude Include="Cryptography.h" />
     <ClInclude Include="Enviroment.h" />
+    <ClInclude Include="FileListItem.h" />
     <ClInclude Include="HookErrorCodes.h" />
     <ClInclude Include="ISystemHooks.h" />
     <ClInclude Include="Logger.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TimedExecutor.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="InputValidator.h" />
     <ClInclude Include="WorkObserver.h" />
     <ClInclude Include="WorkView.h" />
   </ItemGroup>
@@ -183,6 +185,7 @@
     <ClCompile Include="Base64.cpp" />
     <ClCompile Include="clockwise-desktop.cpp" />
     <ClCompile Include="Clockwise.cpp" />
+    <ClCompile Include="Cryptography.cpp" />
     <ClCompile Include="Enviroment.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LoginView.cpp" />

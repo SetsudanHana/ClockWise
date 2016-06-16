@@ -10,6 +10,8 @@ public:
 	ScreenshotWorker(ServiceCommunicator& WorkerCommunicator);
 	
 	void captureScreenshot();
+
+	
 	void createNewScreenshotInterval();
 	unsigned int getScreenshotInterval();
 	void uploadScreenshots();
@@ -20,7 +22,10 @@ private:
 	const std::wstring UserConfigFilename = L"user_settings.cfg";
 
 	std::wstring getUserConfigPath();
+	std::wstring getScreenshotsDirectoryPath();
+	std::wstring getScreenshotsBackupPath();
 
+	void removeOldScreenshots();
 	void uploadSingleScreenshot(const std::wstring& Filename);
 	void loadScreenshotBackup();
 

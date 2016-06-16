@@ -22,6 +22,7 @@ public:
 
 private:
 	void loadStatisticsBackup();
+	std::wstring getStatisticsBackupPath();
 
 	WindowsSystemHooks Hooks;
 	ServiceCommunicator& Communicator;

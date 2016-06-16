@@ -2,6 +2,7 @@
 #include "SettingsView.h"
 #include "Enviroment.h"
 #include "Config.h"
+#include "InputValidator.h"
 
 using namespace FastUI;
 
@@ -26,6 +27,11 @@ SettingsView::SettingsView()
 	SettingLabel = new FastUI::Label(Rect{ 10.0f, 3.0f, 150.0f, 40.0f }, L"Settings");
 	SettingLabel->setTextAlignment(Alignment::Left);
 	SettingLabel->setTextColor(Color::Gray());
+
+	ErrorLabel = new FastUI::Label(Rect{ 5.0f, 200.0f, 335.0f, 216.0f }, L"");
+	ErrorLabel->setTextAlignment(Alignment::Left);
+	ErrorLabel->setTextColor(Color::Red());
+	ErrorLabel->setVisible(false);
 
 	DaysRemovalTextBox = new TextBox(FastUI::Rect{ 30.0f, 90.0f, 90.0f, 112.0f }, L"");
 	DaysRemovalTextBox->setTextSize(16);
@@ -61,7 +67,6 @@ SettingsView::SettingsView()
 	SaveButton->addEventHandler(Event::Click, [this](const Event& EventData)
 	{
 		saveSettings();
-		setVisible(false);
 	});
 
 	ReadSettings();
@@ -69,6 +74,7 @@ SettingsView::SettingsView()
 	addControl(*AutoRemovalSlideBox);
 	addControl(*BottomRect);
 	addControl(*TopRect);
+	addControl(*ErrorLabel);
 	addControl(*SettingLabel);
 	addControl(*GoBackButton);
 	addControl(*SaveButton);
@@ -84,42 +90,39 @@ std::wstring SettingsView::getUserConfigPath()
 	return Enviroment::getAppDataPath() + UserConfigFilename;
 }
 
-bool SettingsView::isAutoRemoveChecked()
-{
-	return AutoRemovalSlideBox->isChecked();
-}
-
-unsigned int SettingsView::getAutoRemoveDays()
-{
-	try
-	{
-		auto AutoRemoveDays = std::stoi(DaysRemovalTextBox->getText());
-		return AutoRemoveDays > 0 ? AutoRemoveDays : 1;
-	}
-	catch (std::exception* e)
-	{
-		return 1;
-	}
-}
-
 void SettingsView::saveSettings()
 {
 	Config UserConfig(getUserConfigPath());
+	std::wstring ErrorText;
 
-	if (AutoRemovalSlideBox->isChecked()) 
+	if (AutoRemovalSlideBox->isChecked())
 	{
-		UserConfig.set("EnabledAutoRemovalAfterDays", true);
-		UserConfig.set("AutoRemovalScreenshotDays", DaysRemovalTextBox->getText());
+		if (InputValidator::validateInt(DaysRemovalTextBox->getText(), 1, 1024 * 1024))
+		{
+			UserConfig.set("EnabledAutoRemovalAfterDays", true);
+			UserConfig.set("AutoRemovalScreenshotDays", DaysRemovalTextBox->getText());
+		}
+		else
+		{
+			ErrorText += L"Invalid value of 'Auto remove screenshots: " + DaysRemovalTextBox->getText() + L"'. ";
+		}
 	}
 	else 
 	{
 		UserConfig.set("EnabledAutoRemovalAfterDays", false);
 	}
 
-	if (AutoRemovalSizeSlideBox->isChecked()) 
+	if (AutoRemovalSizeSlideBox->isChecked())
 	{
-		UserConfig.set("EnabledAutoRemovalAfterSize", true);
-		UserConfig.set("AutoRemovalScreenshotSize", SizeRemovalTextBox->getText());
+		if (InputValidator::validateInt(SizeRemovalTextBox->getText(), 1, 1024 * 1024))
+		{
+			UserConfig.set("EnabledAutoRemovalAfterSize", true);
+			UserConfig.set("AutoRemovalScreenshotSize", SizeRemovalTextBox->getText());
+		}
+		else
+		{
+			ErrorText += L"Invalid value of 'Auto remove screenshots size: " + SizeRemovalTextBox->getText() + L"'. ";
+		}
 	} 
 	else
 	{
@@ -127,6 +130,17 @@ void SettingsView::saveSettings()
 	}
 	
 	UserConfig.save(getUserConfigPath());
+
+	if (!ErrorText.empty())
+	{
+		ErrorLabel->setText(ErrorText);
+		ErrorLabel->setVisible(true);
+	}
+	else
+	{
+		ErrorLabel->setVisible(false);
+		ReadSettings();
+	}
 }
 
 void SettingsView::ReadSettings()
@@ -135,7 +149,7 @@ void SettingsView::ReadSettings()
 	DaysRemovalTextBox->setText(StringUtility::s2ws(UserSetting.get("AutoRemovalScreenshotDays", "30")));
 	SizeRemovalTextBox->setText(StringUtility::s2ws(UserSetting.get("AutoRemovalScreenshotSize", "100")));
 
-	if (UserSetting.getBool("EnabledAutoRemovalAfterDays", true))
+	if (UserSetting.getBool("EnabledAutoRemovalAfterDays", false))
 	{
 		AutoRemovalSlideBox->setChecked(true);
 		DaysRemovalTextBox->setDisabled(false);
@@ -148,7 +162,7 @@ void SettingsView::ReadSettings()
 		DaysRemovalLabel->setDisabled(true);
 	}
 
-	if (UserSetting.getBool("EnabledAutoRemovalAfterSize", true))
+	if (UserSetting.getBool("EnabledAutoRemovalAfterSize", false))
 	{
 		AutoRemovalSizeSlideBox->setChecked(true);
 		SizeRemovalTextBox->setDisabled(false);
