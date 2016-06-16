@@ -17,3 +17,6 @@ After cloning this, go to clockwise-web and run:
 
 
 App will run on: http://localhost:3000
+
+username: superadmin
+password: 123234345b
