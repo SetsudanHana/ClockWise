@@ -13,8 +13,6 @@ export default function() {
 					"Clockwise-Token": token
 				}
 			});
-			
-			console.log(statistics);
 
 			return statistics;
 		},
@@ -23,8 +21,6 @@ export default function() {
 			check(userId, Number);
 
 			let screenshots = HTTP.get('https://peaceful-garden-30857.herokuapp.com/api/screenshot/all/' + userId, {});
-
-			console.log(screenshots);
 
 			return screenshots;
 		}

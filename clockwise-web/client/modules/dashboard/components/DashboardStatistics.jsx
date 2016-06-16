@@ -1,38 +1,92 @@
 import React, { Component } from 'react';
 
-import BasicChart from './BasicChart.jsx';
 import NavBar from '../../core/components/NavBar.jsx';
 import {FlowRouter} from 'meteor/kadira:flow-router-ssr';
 
 import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 
+import { LineChart } from 'rd3';
+
 import { Grid, Col, Nav, NavItem, Button, Row } from 'react-bootstrap';
 
 class DashboardStatistics extends Component {
+
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			lineData: [],
+			selectedTab: 1
+		};
+	}
 
 	goToMainDashboard() {
 		FlowRouter.go('/dashboard');
 	}
 
-	getStatistics() {
-		let userInfo = Session.get('user_info');
+	getMouseClickedCount() {
+		let data = Session.get('user_statistics');
 
-		Meteor.call('statistics.user', userInfo.id, Session.get('user_token'), function(error, response) {
-			if(error) {
-				console.log("error", error);
-			}
+		let dates = _.pluck(data, 'date');
+		let mouseClickedCounts = _.pluck(data, 'mouseClickedCount');
 
-			console.log(response);
+		let lineData = [];
 
-			Session.set('user_statistics', response);
-		});
+		for(var i = 0; i<data.length; i++) {
+			lineData.push({x: dates[i], y: mouseClickedCounts[i]});
+		}
 
-		return Session.get('user_statistics');
+		let series = [{ 
+                name: 'series1',
+                values: lineData
+            }];
+
+		this.setState({lineData: series});
+	}
+
+	getKeyboardClickedCount() {
+		let data = Session.get('user_statistics');
+
+		let dates = _.pluck(data, 'date');
+		let counts = _.pluck(data, 'keyboardClickedCount');
+
+		let lineData = [];
+
+		for(var i = 0; i<data.length; i++) {
+			lineData.push({x: dates[i], y: counts[i]});
+		}
+
+		let series = [{ 
+                name: 'series1',
+                values: lineData
+            }];
+
+		this.setState({lineData: series});
+	}
+
+	getMouseMovement() {
+		let data = Session.get('user_statistics');
+
+		let dates = _.pluck(data, 'date');
+		let counts = _.pluck(data, 'mouseMovement');
+
+		let lineData = [];
+
+		for(var i = 0; i<data.length; i++) {
+			lineData.push({x: dates[i], y: counts[i]});
+		}
+
+		let series = [{ 
+                name: 'series1',
+                values: lineData
+            }];
+
+		this.setState({lineData: series});
 	}
 
 	handleSelect(selectedKey) {
-		let globalSelectedKey = selectedKey;
+		
 	}
 
 	render() {
@@ -50,16 +104,32 @@ class DashboardStatistics extends Component {
              		</Col>
              		<Col sm={9}>
              			<div className="dashboard">
-	             			<Row>
-	             				<Button onClick={this.getStatistics.bind(this)}>Load Statistics</Button>
-	             			</Row>
 	             			<Nav bsStyle="tabs" justified stacked={false} onSelect={this.handleSelect}>
-	             				<NavItem eventKey={1}>Mouse Clicked</NavItem>
-	             				<NavItem eventKey={2}>Keyboard Clicked</NavItem>
-	             				<NavItem eventKey={3}>Mouse Movement</NavItem>
+	             				<NavItem eventKey={1} onClick={this.getMouseClickedCount.bind(this)}>Mouse Clicked</NavItem>
+	             				<NavItem eventKey={2} onClick={this.getKeyboardClickedCount.bind(this)}>Keyboard Clicked</NavItem>
+	             				<NavItem eventKey={3} onClick={this.getMouseMovement.bind(this)}>Mouse Movement</NavItem>
 	             			</Nav>
 	             			<div className="charts">
-	             				<BasicChart />
+	             				<LineChart
+					                  data={this.state.lineData}
+					                  width='100%'
+					                  height={500}
+					                  viewBoxObject={{
+					                    x: 0,
+					                    y: 0,
+					                    width: 700,
+					                    height: 500
+					                  }}
+					                  xAxisLabel="days"
+					                  domain={{x: [,], y: [0,]}}
+					                  gridHorizontal={true}
+					                  xAccessor={(d)=> {
+					                      return new Date(d.x);
+					                    }     
+					                  }
+					                  yAccessor={(d)=>d.y}
+					                  xAxisTickInterval={{unit: 'month', interval: 3}}
+					                />
 	             			</div>
              			</div>
              		</Col>

@@ -15,6 +15,8 @@ export default function() {
 				}
 			});
 
+			console.log(responseTk.data.token);
+
 			return responseTk.data.token;
 		},
 
