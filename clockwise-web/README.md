@@ -2,9 +2,9 @@
 
 Things you need to run this application:
 
-1. NPM.
+1. NPM: https://nodejs.org/en/
 
-2. Meteor.
+2. Meteor: https://www.meteor.com/
 
 
 After cloning this, go to clockwise-web and run:
