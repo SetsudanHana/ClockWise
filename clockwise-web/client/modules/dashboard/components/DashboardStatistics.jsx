@@ -38,7 +38,7 @@ class DashboardStatistics extends Component {
 		}
 
 		let series = [{ 
-                name: 'series1',
+                name: 'series',
                 values: lineData
             }];
 
@@ -58,7 +58,7 @@ class DashboardStatistics extends Component {
 		}
 
 		let series = [{ 
-                name: 'series1',
+                name: 'series',
                 values: lineData
             }];
 
@@ -69,7 +69,7 @@ class DashboardStatistics extends Component {
 		let data = Session.get('user_statistics');
 
 		let dates = _.pluck(data, 'date');
-		let counts = _.pluck(data, 'mouseMovement');
+		let counts = _.pluck(data, 'mouseMovementCount');
 
 		let lineData = [];
 
@@ -78,7 +78,7 @@ class DashboardStatistics extends Component {
 		}
 
 		let series = [{ 
-                name: 'series1',
+                name: 'series',
                 values: lineData
             }];
 

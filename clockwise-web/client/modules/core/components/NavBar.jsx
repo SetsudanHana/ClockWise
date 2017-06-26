@@ -20,6 +20,7 @@ class NavBar extends React.Component {
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav pullRight>
+                        <NavItem eventKey={3.1}>{Session.get('username')}</NavItem>
                         <NavDropdown eventKey={3}>
                             <MenuItem eventKey={3.1}>Settings</MenuItem>
                             <MenuItem divider />

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Collections;
 
 @Service
 public class StatisticServiceImpl implements StatisticService {
@@ -66,7 +67,8 @@ public class StatisticServiceImpl implements StatisticService {
         List< StatisticDto > statisticsDtoList = new ArrayList<>();
         Iterable< Statistic > statistics = statisticDao.findByUserId( userId );
         convertStatisticsToDto( statisticsDtoList, statistics );
-
+		Collections.sort(statisticsDtoList, (StatisticDto a, StatisticDto b) -> a.getDate().compareTo(b.getDate()));
+		
         return statisticsDtoList;
     }
 

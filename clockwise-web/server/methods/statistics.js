@@ -8,7 +8,7 @@ export default function() {
 			check(userId, Number);
 			check(token, String);
 
-			let statistics = HTTP.call('GET', 'https://peaceful-garden-30857.herokuapp.com/api/users/' + userId + '/statistics', {
+			let statistics = HTTP.call('GET', 'https://localhost:8080/api/users/' + userId + '/statistics', {
 				headers: {
 					"Clockwise-Token": token
 				}
@@ -20,7 +20,7 @@ export default function() {
 		'statistics.screenshots.user.all'(userId) {
 			check(userId, Number);
 
-			let screenshots = HTTP.get('https://peaceful-garden-30857.herokuapp.com/api/screenshot/all/' + userId, {});
+			let screenshots = HTTP.get('https://localhost:8080/api/screenshot/all/' + userId, {});
 
 			return screenshots;
 		}

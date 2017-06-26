@@ -8,7 +8,7 @@ export default function() {
 			check(login, String);
 			check(password, String);
 
-			var responseTk = HTTP.call('POST', 'https://peaceful-garden-30857.herokuapp.com/api/authenticate', {
+			var responseTk = HTTP.call('POST', 'https://localhost:8080/api/authenticate', {
 				data: {
 					"username": login,
 					"password": password
@@ -24,7 +24,7 @@ export default function() {
 			check(username, String);
 			check(token, String);
 
-			let response = HTTP.call('GET', 'https://peaceful-garden-30857.herokuapp.com/api/users?username='+username, {
+			let response = HTTP.call('GET', 'https://localhost:8080/api/users?username='+username, {
 				headers: {
 					"Clockwise-Token": token
 				}
@@ -38,7 +38,7 @@ export default function() {
 			check(email, String);
 			check(password, String);
 
-			var responseToken = HTTP.call('POST', 'https://peaceful-garden-30857.herokuapp.com/api/users', {
+			var responseToken = HTTP.call('POST', 'https://localhost:8080/api/users', {
 				data: {
 					"username": username,
 					"email"	  : email,
