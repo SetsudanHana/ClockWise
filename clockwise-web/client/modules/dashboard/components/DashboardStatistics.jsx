@@ -99,6 +99,7 @@ class DashboardStatistics extends Component {
              				<Nav stacked={true}>
              					<NavItem onClick={this.goToMainDashboard.bind(this)}>Dashboard</NavItem>
              					<NavItem active={true}>Charts</NavItem>
+								<NavItem onClick={this.goToScreenshots.bind(this)}>Screenshots</NavItem>
              				</Nav>
              			</div>
              		</Col>

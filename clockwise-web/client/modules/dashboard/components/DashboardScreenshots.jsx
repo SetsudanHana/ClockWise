@@ -43,6 +43,7 @@ class DashboardScreenshots extends Component {
                         <div className="sidebar">
                             <Nav stacked={true}>
                                 <NavItem onClick={this.goToMainDashboard.bind(this)}>Dashboard</NavItem>
+                                <NavItem onClick={this.goToCharts.bind(this)}>Charts</NavItem>
                                 <NavItem active={true}>Screenshots</NavItem>
                             </Nav>
                         </div>
